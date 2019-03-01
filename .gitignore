@@ -1,0 +1,60 @@
+# Windows thumbnail cache files
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# testing
+/coverage
+
+# production
+/build
+
+#other
+node_modules/
+dist/
+.DS_Store
+.sass-cache
+.stylelintrc
+bower_components
+__pycache__
+/migrations
+*.pyc
+bin
+obj
+*.db
+*.sqlite3
+.vscode
+_codeLibrary
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+scratch.*
+scratchNotes/
+*env/
+Pipfile*
+migrations
+db.sqlite3-journal
+django_data.sh
+/media
