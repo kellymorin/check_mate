@@ -10,5 +10,7 @@ urlpatterns=[
     # ex. /logout
     path("logout", views.user_logout, name="logout"),
     # ex. /register
-    path("register", views.register, name="register")
+    path("register", views.register, name="register"),
+    # ex. /projects
+    path("projects", views.projects, name="projects")
 ]
