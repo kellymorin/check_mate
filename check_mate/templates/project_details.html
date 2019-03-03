@@ -3,5 +3,21 @@
 {% block content %}
 <div>
   <h6>{{project_detail.project_name}}</h6>
+  <div class="row">
+    <div class="col">Backlog</div>
+    <div class="col">In Process</div>
+    <div class="col">Review</div>
+    <div class="col">Complete</div>
+  </div>
+  <div class="row">
+    <div class="col">
+      {% for ticket in tickets %}
+      <h2>{{ticket.ticket_name}}</h2>
+      {% endfor %}
+    </div>
+    <div class="col">In Process</div>
+    <div class="col">Review</div>
+    <div class="col">Complete</div>
+  </div>
 </div>
 {% endblock content %}

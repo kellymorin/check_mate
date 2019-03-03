@@ -3,6 +3,7 @@
 {% block content %}
 <div class="row">
   <div class="col-md-4 col-lg-3">
+    <a href="{% url 'check_mate:project_add'%}">
     <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
       <div class="card-header">Header</div>
       <div class="card-body">
@@ -10,6 +11,7 @@
         <p class="card-text"></p>
       </div>
     </div>
+  </a>
   </div>
   {% if projects%}
     {% for project in projects %}

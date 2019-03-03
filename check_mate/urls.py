@@ -16,5 +16,6 @@ urlpatterns=[
     # ex. /projects/5
     path("projects/<int:project_id>", views.project_details, name="project_details"),
     # ex. /projects/add
-    path("projects/add", views.project_add, name="project_add")
+    path("projects/add", views.project_add, name="project_add"),
+    path("projects/<int:project_id>/delete", views.project_delete, name="project_delete")
 ]
