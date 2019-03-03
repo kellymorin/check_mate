@@ -1,0 +1,1578 @@
+[
+{
+  "model": "check_mate.project",
+  "pk": 1,
+  "fields": {
+    "project_name": "Bangazon Workflow",
+    "project_description": "An internal HR management app for the Bangazon Corporation."
+  }
+},
+{
+  "model": "check_mate.project",
+  "pk": 2,
+  "fields": {
+    "project_name": "Bangazon E-Commerce",
+    "project_description": "An e-commerce application for the Bangazon Corporation"
+  }
+},
+{
+  "model": "check_mate.project",
+  "pk": 3,
+  "fields": {
+    "project_name": "Bangazon Developer Tools: Phase 1",
+    "project_description": "An API for developers who would like to access the Bangazon Corporation's resources"
+  }
+},
+{
+  "model": "check_mate.project",
+  "pk": 4,
+  "fields": {
+    "project_name": "Bangazon Developer Tools: Phase 2",
+    "project_description": "A research interface for developers who would like to access the data of the Bangazon Corporation"
+  }
+},
+{
+  "model": "check_mate.ticket",
+  "pk": 2,
+  "fields": {
+    "project": 1,
+    "ticket_name": "Employee Resource",
+    "ticket_description": "Users should be able to access the employee resource using the Bangazon App. Views include: view all, view one, add, edit, and delete",
+    "ticket_created": "2019-01-25T17:19:33Z"
+  }
+},
+{
+  "model": "check_mate.ticket",
+  "pk": 3,
+  "fields": {
+    "project": 1,
+    "ticket_name": "Department Resource",
+    "ticket_description": "Provide access to all functionality for the departments resource for the Bangazon corporation",
+    "ticket_created": "2019-01-25T20:57:07Z"
+  }
+},
+{
+  "model": "check_mate.ticket",
+  "pk": 4,
+  "fields": {
+    "project": 1,
+    "ticket_name": "Training Resource",
+    "ticket_description": "Provide access to all functionality for the training resource for the Bangazon corporation",
+    "ticket_created": "2019-01-25T21:15:57Z"
+  }
+},
+{
+  "model": "check_mate.ticket",
+  "pk": 5,
+  "fields": {
+    "project": 1,
+    "ticket_name": "Past Training Resource",
+    "ticket_description": "Provide access to all functionality for the previous training resource for the Bangazon corporation",
+    "ticket_created": "2019-01-25T21:16:21Z"
+  }
+},
+{
+  "model": "check_mate.ticket",
+  "pk": 6,
+  "fields": {
+    "project": 1,
+    "ticket_name": "Computer Resource",
+    "ticket_description": "Provide access to all functionality for the computer resource for the Bangazon corporation",
+    "ticket_created": "2019-01-25T15:35:21Z"
+  }
+},
+{
+  "model": "check_mate.tickethistory",
+  "pk": 1,
+  "fields": {
+    "ticket": 2,
+    "ticket_active_user": 2,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T20:55:24Z"
+  }
+},
+{
+  "model": "check_mate.tickethistory",
+  "pk": 2,
+  "fields": {
+    "ticket": 2,
+    "ticket_active_user": 3,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-30T20:55:42Z"
+  }
+},
+{
+  "model": "check_mate.tickethistory",
+  "pk": 3,
+  "fields": {
+    "ticket": 2,
+    "ticket_active_user": 3,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-31T20:56:15Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 1,
+  "fields": {
+    "ticket": 2,
+    "task_name": "HR should be able to see a list of employees",
+    "task_description": "Given an HR employee wants to view employees\r\nWhen the employee clicks on the Employees item in the navigation bar\r\nThen all current employees should be listed with the following information: First and Last Name, Department",
+    "task_created": "2019-01-25T17:21:42Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 2,
+  "fields": {
+    "ticket": 2,
+    "task_name": "Testing: HR should be able to see a list of employees",
+    "task_description": "Your test suite must verify that the content of the response has one, or more, of the values that are expected. For example, if one of the employees in Fred Jackson, then your test must test that both \"Fred\" and \"Jackson\" are in the response content. Likewise for the department that the employee is assigned to.",
+    "task_created": "2019-01-25T17:21:49Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 3,
+  "fields": {
+    "ticket": 2,
+    "task_name": "HR should be able to view employee details",
+    "task_description": "Given a user is viewing the employee list\r\nWhen the user clicks on an individual employee\r\nThen the user should be shown a detail view of that employee, and it must contain the following information: First and Last Name, Department, Currently Assigned Computer, Training Programs they have attended, or plan on attending\r\n\r\nTesting Requirements: Your test suite must verify that the content of the response has all of the expected values of the employee - name, department, computer, and training programs.",
+    "task_created": "2019-01-25T17:23:10Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 5,
+  "fields": {
+    "ticket": 2,
+    "task_name": "HR should be able to add an employee",
+    "task_description": "Given the user is viewing the list of employees\r\nWhen the user clicks the Create New link\r\nThen a form for be displayed on which the following information can be entered: First and Last Name, Is the employee a supervisor, Select department from dropdown\r\n\r\nTesting Requirements: Your test suite must verify that the content of the GET response has all of the required input fields in the HTML.\r\nYour test suite must be able to successfully create a new employee.",
+    "task_created": "2019-01-25T17:24:37Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 7,
+  "fields": {
+    "ticket": 2,
+    "task_name": "HR should be able to edit an employee",
+    "task_description": "Given user is viewing an employee\r\nWhen user clicks on the Edit link\r\nThen user should be able to edit the last name of the employee\r\nOr change the department to which the employee is assigned\r\nOr change the computer assigned to the employee\r\nOr add/remove training programs for the employee to attend in the future",
+    "task_created": "2019-01-25T17:25:32Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 8,
+  "fields": {
+    "ticket": 2,
+    "task_name": "Testing: HR should be able to see a list of employees",
+    "task_description": "Your test suite must verify that the content of the response has all of the required input fields.\r\nYour test suite must verify that submitting the form correctly edits the employee.",
+    "task_created": "2019-01-25T17:25:59Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 9,
+  "fields": {
+    "ticket": 3,
+    "task_name": "HR should be able to view all departments",
+    "task_description": "Given user wants to view departments\r\nWhen user clicks on the Departments section in the navigation bar\r\nThen all current departments should be listed\r\nAnd the following information should be presented to the user: Department Name, Department Budget, Size of Department (number of employees assigned)\r\n\r\nTesting Criteria: Your test suite must verify that the content of the response has one, or more, of the expected values. For example, if one of the departments in your database in \"Sales\", then you must verify that is exists in the content.",
+    "task_created": "2019-01-25T20:59:23Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 10,
+  "fields": {
+    "ticket": 3,
+    "task_name": "HR should be able to create a department",
+    "task_description": "Given user is viewing all departments\r\nWhen user clicks on the Create New link\r\nThen a form should be presented in which the new department name can be entered\r\n\r\nTesting Criteria:\r\nYour test suite must verify that the content of the response has the required input fields.\r\nYour test suite must verify that when a POST operation is performed to the corresponding URL, then a successful response is received (i.e. status code must be 200)",
+    "task_created": "2019-01-25T21:00:00Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 11,
+  "fields": {
+    "ticket": 3,
+    "task_name": "HR should be able to view department details",
+    "task_description": "Given user is viewing list of departments\r\nWhen user clicks on a department\r\nThen a view should be presented with the department name as a header\r\nAnd a list of employees currently assigned to that department should be listed\r\n\r\nTesting Criteria: Your test suite must verify that all labels and values are in the response for the requested department",
+    "task_created": "2019-01-25T21:00:55Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 12,
+  "fields": {
+    "ticket": 3,
+    "task_name": "Department details should itemize teammates",
+    "task_description": "Given the user wants to see all of the employees in a department\r\nWhen the user performs a gesture on the department detail affordance\r\nThen the user should see the department name\r\nAnd the user should see the department budget\r\nAnd the user should see the full name of each employee in that department",
+    "task_created": "2019-01-25T21:01:18Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 13,
+  "fields": {
+    "ticket": 4,
+    "task_name": "HR should be able to edit training program details",
+    "task_description": "Given user is viewing the details of a training program\r\nWhen the user clicks on the edit link\r\nThen the user should be presented with a form that allows the user to edit any property of the training program unless the training program has already taken place\r\n\r\nTesting Requirements:\r\nYour test suite must verify that the content of the responses contain all required input fields, where appropriate.\r\nYour test suite must verify that when a PUT operation is performed to the corresponding URL, then a successful response is received. Status code must be 200.",
+    "task_created": "2019-01-25T21:17:47Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 14,
+  "fields": {
+    "ticket": 4,
+    "task_name": "HR should be able to create training programs",
+    "task_description": "Given the user is viewing all training programs\r\nWhen the user clicks the Create New link\r\nThen the user should be presented with a form in which the following information can be entered: Name, Title, Start Day, End Day, Maximum Number of Attendees\r\n\r\nTesting Requirements:\r\nYour test suite must verify that the content of the responses contain all required input fields, where a form is requested.\r\nYour test suite must verify that when a POST operation is performed to the corresponding URL, then a successful response is received. Status code must be 200.",
+    "task_created": "2019-01-25T21:18:44Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 15,
+  "fields": {
+    "ticket": 4,
+    "task_name": "HR should be able to view training program details",
+    "task_description": "Given user is viewing the list of training programs\r\nWhen the user clicks on a training program\r\nThen the user should see all details of that training program\r\nAnd any employees that are currently attending the program",
+    "task_created": "2019-01-25T21:19:11Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 16,
+  "fields": {
+    "ticket": 4,
+    "task_name": "HR should be able to view a list of training programs",
+    "task_description": "Given a user wants to view all training programs\r\nWhen the user clicks the Training Programs item in the navigation bar\r\nThen the user will see a list of all training programs that have not taken place yet",
+    "task_created": "2019-01-25T21:19:35Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 17,
+  "fields": {
+    "ticket": 5,
+    "task_name": "HR should see a list of past training programs",
+    "task_description": "Given the user wants to see past training programs\r\nWhen the user is views the list of future training programs\r\nThen the user should have an affordance labeled \"View Past Programs\" at the end of the list\r\n\r\nGiven the user is viewing the list of future training programs\r\nWhen the user performs a gesture of the past programs affordance\r\nThen the user should see a list of all training programs that ended before the current day",
+    "task_created": "2019-01-25T01:39:20Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 18,
+  "fields": {
+    "ticket": 5,
+    "task_name": "HR should see past training attendees",
+    "task_description": "Given the user wants to see which employees attended a training program\r\nWhen the user performs a gesture of the past programs affordance\r\nAnd then performs a gesture on a program details affordance (e.g. detail hyperlink)\r\nThen the user should see the full name of each person that attended the program",
+    "task_created": "2019-01-25T01:39:45Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 19,
+  "fields": {
+    "ticket": 4,
+    "task_name": "HR should be able to delete future training programs",
+    "task_description": "Given user wants to remove a training program\r\nWhen the user clicks on a training program\r\nAnd then clicks on the delete button\r\nThen the training program should be deleted unless the training program has already taken place\r\n\r\nTesting Requirements:\r\nYour test suite must verify that when a DELETE operation is performed to the corresponding URL, then a successful response is received. Status code must be 200.\r\nYour test suite must verify that if the training program is currently underway or has completed, that the operation is rejected by the server.",
+    "task_created": "2019-01-25T01:40:35Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 20,
+  "fields": {
+    "ticket": 6,
+    "task_name": "IT should be able to view computers",
+    "task_description": "Given a user wants to view all computers\r\nWhen the user clicks on the Computers item in the navigation bar\r\nThen the user should see a list of all computers\r\nAnd each item should be a hyperlink that can be clicked to view the details\r\n\r\nTesting Requirements \r\nTest suite must verify that the content of the response has one, or more, of the values that are expected.",
+    "task_created": "2019-01-28T15:37:51Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 21,
+  "fields": {
+    "ticket": 6,
+    "task_name": "IT should be able to filter computer list",
+    "task_description": "Given a user wants to view specific computers by make or manufacturer\r\nWhen the user views the computer list\r\nThen the user should have an affordance to type in the name of a computer make or computer manufacturer\r\n\r\nGiven the user has entered in the name of a computer make || manufacturer in the computer filter affordance\r\nWhen the user presses the enter key\r\nThen the computer list should be re-rendered with computers that matches the make || manufacturer",
+    "task_created": "2019-01-25T15:38:19Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 22,
+  "fields": {
+    "ticket": 6,
+    "task_name": "IT should be able to assign employee when creating computer",
+    "task_description": "Given a user wants to assign a new computer to an employee\r\nWhen the user clicks on the create computer affordance\r\nThen the creation form should include an affordance that lists all employees\r\n\r\nGiven the user is viewing the computer creation for\r\nWhen the user fills out all properties for the computer\r\nAnd has chosen an employee\r\nThen the user should be redirected back to the list of computers\r\n\r\nGiven the user has created a new computer\r\nWhen the user is redirected to the computer list\r\nThen the currently assigned employee's full name should be displayed in the list",
+    "task_created": "2019-01-25T15:38:44Z"
+  }
+},
+{
+  "model": "check_mate.task",
+  "pk": 23,
+  "fields": {
+    "ticket": 6,
+    "task_name": "IT should be able to view, create and delete computers",
+    "task_description": "Given a user wants to view all computers\r\nWhen the user clicks on the Computers item in the navigation bar\r\nThen the user should see a list of all computers\r\nAnd each item should be a hyperlink that can be clicked to view the details\r\n\r\nGiven a user is viewing all computers\r\nWhen the user clicks the Create New link\r\nThen the user should be presented with a form in which the following information can be entered\r\n\r\nComputer manufacturer\r\nComputer make\r\nPurchase date\r\nGiven user is viewing a single computer\r\nWhen the user clicks on the Delete link\r\nThen the user should be presented with a screen to verify that it should be deleted\r\nAnd if the user chooses Yes from that screen, the computer should be deleted only if it is has never been assigned to an employee\r\n\r\nTesting Requirements\r\nYour test suite must verify that the content of the responses contain all required input fields, where appropriate.\r\nYour test suite must verify that when a POST operation is performed to the corresponding URL, then a successful response is received. Status code must be 200.\r\nYour test suite must verify that when a DELETE operation is performed to the corresponding URL, then a successful response is received. Status code must be 200.",
+    "task_created": "2019-01-25T15:40:01Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 3,
+  "fields": {
+    "task": 1,
+    "task_active_user": 3,
+    "task_affected_user": 3,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T20:32:56Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 4,
+  "fields": {
+    "task": 1,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T20:38:43Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 5,
+  "fields": {
+    "task": 1,
+    "task_active_user": 3,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-28T20:37:12Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 6,
+  "fields": {
+    "task": 1,
+    "task_active_user": 3,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-28T20:44:39Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 7,
+  "fields": {
+    "task": 1,
+    "task_active_user": 3,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-28T20:45:08Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 8,
+  "fields": {
+    "task": 3,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T20:46:17Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 9,
+  "fields": {
+    "task": 3,
+    "task_active_user": 3,
+    "task_affected_user": 3,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T20:46:39Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 10,
+  "fields": {
+    "task": 3,
+    "task_active_user": 3,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-28T20:47:07Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 11,
+  "fields": {
+    "task": 3,
+    "task_active_user": 3,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-29T20:47:33Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 12,
+  "fields": {
+    "task": 3,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-29T20:48:06Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 13,
+  "fields": {
+    "task": 5,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T20:48:41Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 14,
+  "fields": {
+    "task": 5,
+    "task_active_user": 3,
+    "task_affected_user": 3,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T20:49:05Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 15,
+  "fields": {
+    "task": 5,
+    "task_active_user": 3,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-28T20:49:25Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 16,
+  "fields": {
+    "task": 5,
+    "task_active_user": 3,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-29T20:50:04Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 17,
+  "fields": {
+    "task": 5,
+    "task_active_user": 3,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-29T20:50:23Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 18,
+  "fields": {
+    "task": 7,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T20:50:57Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 19,
+  "fields": {
+    "task": 7,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Comment",
+    "status": null,
+    "activity_description": "Dependent on task: HR should be able to view employee details",
+    "activity_date": "2019-01-25T20:51:38Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 20,
+  "fields": {
+    "task": 7,
+    "task_active_user": 3,
+    "task_affected_user": 3,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-30T20:52:31Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 21,
+  "fields": {
+    "task": 7,
+    "task_active_user": 3,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-30T20:53:12Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 22,
+  "fields": {
+    "task": 7,
+    "task_active_user": 3,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-31T20:54:02Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 23,
+  "fields": {
+    "task": 7,
+    "task_active_user": 3,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-31T20:54:24Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 24,
+  "fields": {
+    "task": 12,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-30T21:02:17Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 25,
+  "fields": {
+    "task": 12,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-30T21:02:45Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 26,
+  "fields": {
+    "task": 12,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-30T21:03:06Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 27,
+  "fields": {
+    "task": 11,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T21:04:11Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 28,
+  "fields": {
+    "task": 11,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Comment",
+    "status": null,
+    "activity_description": "Dependent on task: HR should be able to view all departments",
+    "activity_date": "2019-01-25T21:05:17Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 29,
+  "fields": {
+    "task": 11,
+    "task_active_user": 5,
+    "task_affected_user": 5,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T21:05:46Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 30,
+  "fields": {
+    "task": 11,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-28T21:06:18Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 31,
+  "fields": {
+    "task": 11,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Comment",
+    "status": null,
+    "activity_description": "Finished testing task",
+    "activity_date": "2019-01-28T21:06:43Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 32,
+  "fields": {
+    "task": 11,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-28T21:07:07Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 33,
+  "fields": {
+    "task": 11,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-30T21:07:27Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 34,
+  "fields": {
+    "task": 10,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Comment",
+    "status": null,
+    "activity_description": "Dependent on task: HR should be able to view all departments",
+    "activity_date": "2019-01-25T21:08:10Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 35,
+  "fields": {
+    "task": 10,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T21:08:33Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 36,
+  "fields": {
+    "task": 10,
+    "task_active_user": 5,
+    "task_affected_user": 5,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T21:08:48Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 37,
+  "fields": {
+    "task": 10,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-28T21:09:11Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 38,
+  "fields": {
+    "task": 10,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Comment",
+    "status": null,
+    "activity_description": "Finished testing task. Need to pass data back to form if not filled out completely.",
+    "activity_date": "2019-01-29T21:09:59Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 39,
+  "fields": {
+    "task": 10,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-29T21:10:17Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 40,
+  "fields": {
+    "task": 10,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-29T21:10:32Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 41,
+  "fields": {
+    "task": 9,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T21:11:03Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 42,
+  "fields": {
+    "task": 9,
+    "task_active_user": 5,
+    "task_affected_user": 5,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T21:11:21Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 43,
+  "fields": {
+    "task": 9,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-28T21:11:39Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 44,
+  "fields": {
+    "task": 9,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Comment",
+    "status": null,
+    "activity_description": "Departments now displays all but last requirement of task",
+    "activity_date": "2019-01-28T21:12:22Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 45,
+  "fields": {
+    "task": 9,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Comment",
+    "status": null,
+    "activity_description": "Finished task, need commas in budget string",
+    "activity_date": "2019-01-28T21:12:53Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 46,
+  "fields": {
+    "task": 9,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-28T21:13:08Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 47,
+  "fields": {
+    "task": 9,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-28T21:13:24Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 48,
+  "fields": {
+    "task": 16,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T21:20:14Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 49,
+  "fields": {
+    "task": 16,
+    "task_active_user": 4,
+    "task_affected_user": 4,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T21:20:37Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 50,
+  "fields": {
+    "task": 16,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-28T21:21:00Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 51,
+  "fields": {
+    "task": 16,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-28T21:21:17Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 52,
+  "fields": {
+    "task": 16,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-28T21:21:32Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 53,
+  "fields": {
+    "task": 15,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T01:31:15Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 54,
+  "fields": {
+    "task": 15,
+    "task_active_user": 4,
+    "task_affected_user": 4,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T01:31:41Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 55,
+  "fields": {
+    "task": 15,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-28T01:32:04Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 56,
+  "fields": {
+    "task": 15,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-29T01:32:31Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 57,
+  "fields": {
+    "task": 15,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-29T01:32:51Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 58,
+  "fields": {
+    "task": 14,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T01:33:37Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 59,
+  "fields": {
+    "task": 14,
+    "task_active_user": 4,
+    "task_affected_user": 4,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T01:34:31Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 60,
+  "fields": {
+    "task": 14,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-29T01:35:08Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 61,
+  "fields": {
+    "task": 14,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-29T01:35:32Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 62,
+  "fields": {
+    "task": 14,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-29T01:35:52Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 63,
+  "fields": {
+    "task": 13,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T01:36:53Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 64,
+  "fields": {
+    "task": 13,
+    "task_active_user": 4,
+    "task_affected_user": 4,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T01:37:15Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 65,
+  "fields": {
+    "task": 13,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-29T01:37:49Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 66,
+  "fields": {
+    "task": 13,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:38:09Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 67,
+  "fields": {
+    "task": 13,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:38:25Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 68,
+  "fields": {
+    "task": 19,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:41:43Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 69,
+  "fields": {
+    "task": 19,
+    "task_active_user": 5,
+    "task_affected_user": 5,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:42:06Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 70,
+  "fields": {
+    "task": 19,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:42:36Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 71,
+  "fields": {
+    "task": 19,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-31T01:43:05Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 72,
+  "fields": {
+    "task": 19,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-31T01:43:28Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 73,
+  "fields": {
+    "task": 17,
+    "task_active_user": 4,
+    "task_affected_user": 4,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:46:11Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 74,
+  "fields": {
+    "task": 17,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T01:46:30Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 75,
+  "fields": {
+    "task": 17,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:46:55Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 76,
+  "fields": {
+    "task": 17,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:47:31Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 77,
+  "fields": {
+    "task": 17,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-31T01:47:56Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 78,
+  "fields": {
+    "task": 18,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T01:48:41Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 79,
+  "fields": {
+    "task": 18,
+    "task_active_user": 4,
+    "task_affected_user": 4,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:50:10Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 80,
+  "fields": {
+    "task": 17,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:50:35Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 81,
+  "fields": {
+    "task": 18,
+    "task_active_user": 5,
+    "task_affected_user": 5,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:50:56Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 82,
+  "fields": {
+    "task": 18,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-30T01:51:33Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 83,
+  "fields": {
+    "task": 18,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-31T01:52:14Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 84,
+  "fields": {
+    "task": 22,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T15:41:06Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 85,
+  "fields": {
+    "task": 23,
+    "task_active_user": 2,
+    "task_affected_user": 2,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T15:41:36Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 86,
+  "fields": {
+    "task": 23,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-29T15:42:46Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 87,
+  "fields": {
+    "task": 23,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-30T15:43:27Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 88,
+  "fields": {
+    "task": 22,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Comment",
+    "status": null,
+    "activity_description": "Dependent on task: IT should be able to view, create and delete computers",
+    "activity_date": "2019-01-25T15:44:38Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 89,
+  "fields": {
+    "task": 22,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-25T15:45:07Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 90,
+  "fields": {
+    "task": 22,
+    "task_active_user": 2,
+    "task_affected_user": 2,
+    "activity_type": "Assignment",
+    "status": null,
+    "activity_description": "",
+    "activity_date": "2019-01-25T15:45:31Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 91,
+  "fields": {
+    "task": 22,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Active",
+    "activity_description": "",
+    "activity_date": "2019-01-30T15:45:55Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 92,
+  "fields": {
+    "task": 22,
+    "task_active_user": 5,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-31T15:46:22Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 93,
+  "fields": {
+    "task": 22,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-31T15:46:44Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 94,
+  "fields": {
+    "task": 21,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-31T15:48:00Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 95,
+  "fields": {
+    "task": 21,
+    "task_active_user": 4,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Ready for Review",
+    "activity_description": "",
+    "activity_date": "2019-01-31T15:49:32Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 96,
+  "fields": {
+    "task": 21,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-02-01T15:49:51Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 97,
+  "fields": {
+    "task": 20,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Not Started",
+    "activity_description": "",
+    "activity_date": "2019-01-28T15:51:07Z"
+  }
+},
+{
+  "model": "check_mate.taskhistory",
+  "pk": 98,
+  "fields": {
+    "task": 20,
+    "task_active_user": 2,
+    "task_affected_user": null,
+    "activity_type": "Status",
+    "status": "Complete",
+    "activity_description": "",
+    "activity_date": "2019-01-28T15:51:29Z"
+  }
+}
+]
