@@ -12,5 +12,9 @@ urlpatterns=[
     # ex. /register
     path("register", views.register, name="register"),
     # ex. /projects
-    path("projects", views.projects, name="projects")
+    path("projects", views.projects, name="projects"),
+    # ex. /projects/5
+    path("projects/<int:project_id>", views.project_details, name="project_details"),
+    # ex. /projects/add
+    path("projects/add", views.project_add, name="project_add")
 ]
