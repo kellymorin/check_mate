@@ -1,0 +1,29 @@
+<!-- {% extends 'index.html' %} -->
+
+<!-- {% block content %} -->
+
+  {% for message in messages %}
+  <div class="{{messages.tags}} alert alert-danger" role="alert">{{message}}</div>
+  {% endfor %}
+
+    <h1>Login to Check Mate</h1>
+
+    <form id="login_form" method="post" action="{% url 'check_mate:login' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input class="form-control" type="text" id="username" name="username" value="" size="50" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input class="form-control" type="password" id="password" name="password" value="" size="50" />
+      </div>
+      <input type="hidden" value="{{next}}" name="next" />
+      <div>
+        <input class="btn btn-primary" type="Submit" value="Submit" />
+      </div>
+    </form>
+    {% if next != "/" %}
+      <a class ="btn btn-primary" href="/register?next={{next}}">Register</a>
+    {% endif %}
+<!-- {% endblock content %} -->
