@@ -12,12 +12,32 @@
   <div class="row">
     <div class="col">
       {% for ticket in tickets %}
-      <h2>{{ticket.ticket_name}}</h2>
+        {% if ticket.ticket_status == "Not Started" %}
+          <h2>{{ticket.ticket_name}}</h2>
+        {% endif %}
       {% endfor %}
     </div>
-    <div class="col">In Process</div>
-    <div class="col">Review</div>
-    <div class="col">Complete</div>
+    <div class="col">
+      {% for ticket in tickets %}
+        {% if ticket.ticket_status == "Active" %}
+          <h2>{{ticket.ticket_name}}</h2>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="col">
+      {% for ticket in tickets %}
+        {% if ticket.ticket_status == "Ready for Review" %}
+          <h2>{{ticket.ticket_name}}</h2>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="col">
+      {% for ticket in tickets %}
+        {% if ticket.ticket_status == "Complete" %}
+          <h2>{{ticket.ticket_name}}</h2>
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
 </div>
 {% endblock content %}
