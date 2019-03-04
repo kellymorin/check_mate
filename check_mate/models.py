@@ -20,6 +20,8 @@ class Project(models.Model):
     )
     project_name = models.CharField(max_length=100)
     project_description = models.TextField(blank=True, null=True)
+    project_created = models.DateField(default=None, null=True, blank=True)
+    project_due = models.DateField(default=None, null=True, blank=True)
     project_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
 
     def __str__(self):
@@ -38,6 +40,7 @@ class Ticket(models.Model):
     ticket_name=models.CharField(max_length=100)
     ticket_description = models.TextField(blank=True, null=True)
     ticket_created = models.DateTimeField(default=None, null=True, blank=True)
+    ticket_due = models.DateField(default=None, null=True, blank=True)
     ticket_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
 
     def __str__(self):
@@ -81,6 +84,7 @@ class Task(models.Model):
     task_name=models.CharField(max_length=100)
     task_description = models.TextField(blank=True, null=True)
     task_created = models.DateTimeField(default=None, null=True, blank=True)
+    task_due = models.DateField(default=None, null=True, blank=True)
     task_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
 
     def __str__(self):
