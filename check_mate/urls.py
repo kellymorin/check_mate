@@ -27,4 +27,6 @@ urlpatterns=[
     # ex. /ticket/add
     # ex. /ticket/1/delete
     path("ticket/<int:ticket_id>/delete", views.ticket_delete, name="ticket_delete"),
+    # ex. /ticket/1/edit
+    path("ticket/<int:ticket_id>/edit", views.ticket_edit, name="ticket_edit"),
 ]

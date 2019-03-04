@@ -9,6 +9,7 @@
   <p>Completed tasks: {{ticket_detail.get_task_status.Complete}}</p>
   <p>Total tasks: {{ticket_detail.get_task_status.Total}}</p>
   <a href="{% url 'check_mate:ticket_delete' ticket_detail.id %}">Delete Ticket</a>
+  <a href="{% url 'check_mate:ticket_edit' ticket_detail.id %}">Edit Ticket</a>
   <div class="text-center">
     <h5>Related Tasks:</h5> <i class="fas fa-plus"></i>
   </div>

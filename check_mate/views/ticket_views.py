@@ -95,9 +95,26 @@ def ticket_delete(request, ticket_id):
 
 
 
-# When the user selects the option to edit ticket details
-# Then they should be presented with a form, that is pre-populated with existing ticket data, where they can update information about the task such as name, description, status and assigned team member
+@login_required
+def ticket_edit(request, ticket_id):
+    if request.method == "GET":
+        ticket = Ticket.objects.get(pk=ticket_id)
+        ticket_form = TicketForm(instance=ticket)
+        template_name = "ticket_edit.html"
+        context = {
+            "ticket": ticket,
+            "ticket_form": ticket_form
+        }
+        return render(request, template_name, context)
+    elif request.method == "POST":
+        ticket = Ticket.objects.get(pk=ticket_id)
 
-# When the user submits the form
-# If the data is valid, they will be taken back to the updated ticket detail page
-# If the data is not valid, they will be shown an error message on the form and asked to supply valid data
+        if request.POST["ticket_due"]:
+            ticket.ticket_name = request.POST["ticket_name"]
+            ticket.ticket_description = request.POST["ticket_description"]
+            ticket.ticket_due = request.POST["ticket_due"]
+            ticket.save()
+        else:
+            ticket.ticket_name = request.POST["ticket_name"]
+            ticket.ticket_description = request.POST["ticket_description"]
+        return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
