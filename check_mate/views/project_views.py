@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from check_mate.models import *
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -46,7 +45,6 @@ def project_details(request, project_id):
 
     project_detail = Project.objects.filter(pk=project_id)[0]
     tickets = Ticket.objects.filter(project=project_id)
-    print(project_detail)
     context = {
         "project_detail": project_detail,
         "tickets": tickets
@@ -75,14 +73,16 @@ def project_add(request):
         try:
             project_name = request.POST["project_name"]
             project_description = request.POST["project_description"]
+            project_due = request.POST["project_due"]
             if project_name == "" or project_description == "":
                 return render(request, "project_add.html", {
                     "error_message": "You must complete all fields in the form",
                     "project_name": project_name,
-                    "project_description": project_description
+                    "project_description": project_description,
+                    "project_due": project_due
                 })
             else:
-                new_project = Project(project_name=project_name, project_description= project_description)
+                new_project = Project(project_name=project_name, project_description= project_description, project_due=project_due, project_status = "Not Started")
                 new_project.save()
 
                 return HttpResponseRedirect(reverse("check_mate:projects"))
