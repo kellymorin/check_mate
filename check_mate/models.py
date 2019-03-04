@@ -1,17 +1,15 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-# Completed Models
-# Project Board(id, name, description)
-# user (first_name, last_name, email, password, username)
-#  Ticket(id, project_id(foreign key), title, description)
-# Tasks (id, ticket_id (foreign key), title, description)
-# Ticket History(id, ticket_id(foreign key), user_id(foreign_key, mandatory), user_id(foreign_key, optional), activity_type(choices), timestamp)
-# Task History(id, task_id(foreign key), user_id(foreign_key, mandatory), user_id(foreign_key, optional), activity_type(choices), timestamp)
-
-# Create your models here.
 
 class Project(models.Model):
+    """Defines a current, upcoming or past project
+
+
+    Returns:
+        __str__ -- Project name
+    """
+
     STATUS_TYPE_CHOICES=(
         ('Not Started', 'Not Started'),
         ('Active', 'Active'),
@@ -29,6 +27,13 @@ class Project(models.Model):
 
 
 class Ticket(models.Model):
+    """Defines a ticket and associates it with a project instance
+
+
+    Returns:
+        __str__ -- Ticket Name
+    """
+
     STATUS_TYPE_CHOICES=(
         ('Not Started', 'Not Started'),
         ('Active', 'Active'),
@@ -48,6 +53,12 @@ class Ticket(models.Model):
 
 
 class TicketHistory(models.Model):
+    """Captures all activity on a ticket: including changes to status, assignments and comments
+
+    Returns:
+        __str__ -- Ticket Name, Activity Date and Activity Type
+    """
+
     ACTIVITY_TYPE_CHOICES= (
         ('Comment', 'Comment'),
         ('Status', 'Status'),
@@ -73,6 +84,13 @@ class TicketHistory(models.Model):
 
 
 class Task(models.Model):
+    """Defines a task and associates it with a ticket instance
+
+
+    Returns:
+        __str__ -- Task Name
+    """
+
     STATUS_TYPE_CHOICES=(
         ('Not Started', 'Not Started'),
         ('Active', 'Active'),
@@ -92,6 +110,11 @@ class Task(models.Model):
 
 
 class TaskHistory(models.Model):
+    """Captures all activity on a task: including changes to status, assignments and comments
+
+    Returns:
+        __str__ -- Task Name, Activity Date and Activity Type
+    """
     ACTIVITY_TYPE_CHOICES= (
         ('Comment', 'Comment'),
         ('Status', 'Status'),
