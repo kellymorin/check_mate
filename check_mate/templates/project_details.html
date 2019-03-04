@@ -7,7 +7,14 @@
   <h6>Project Due: {{project_detail.project_due|date:'l, F d, Y'}}</h6>
   <h6>Project Status: {{project_detail.project_status}}</h6>
   <div class="row">
-    <div class="col">Backlog <i class="fas fa-plus"></i></div>
+    <div class="col">Backlog
+      <form action="{% url 'check_mate:ticket_add'%}" method="POST">
+        {% csrf_token %}
+        <input type="submit"><i class="fas fa-plus"></i></input>
+        <input type="hidden" name="project" value="{{project_detail.id}}"/>
+        <input type="hidden" name="first_request"/>
+      </form>
+    </div>
     <div class="col">In Process</div>
     <div class="col">Review</div>
     <div class="col">Complete</div>
