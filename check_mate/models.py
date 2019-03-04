@@ -12,18 +12,33 @@ from django.db import models
 # Create your models here.
 
 class Project(models.Model):
+    STATUS_TYPE_CHOICES=(
+        ('Not Started', 'Not Started'),
+        ('Active', 'Active'),
+        ('Road Block', 'Road Block'),
+        ('Complete', 'Complete')
+    )
     project_name = models.CharField(max_length=100)
     project_description = models.TextField(blank=True, null=True)
+    project_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
 
     def __str__(self):
         return self.project_name
 
 
 class Ticket(models.Model):
+    STATUS_TYPE_CHOICES=(
+        ('Not Started', 'Not Started'),
+        ('Active', 'Active'),
+        ('Ready for Review', 'Ready for Review'),
+        ('Road Block', 'Road Block'),
+        ('Complete', 'Complete')
+    )
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     ticket_name=models.CharField(max_length=100)
     ticket_description = models.TextField(blank=True, null=True)
     ticket_created = models.DateTimeField(default=None, null=True, blank=True)
+    ticket_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
 
     def __str__(self):
         return self.ticket_name
@@ -55,10 +70,18 @@ class TicketHistory(models.Model):
 
 
 class Task(models.Model):
+    STATUS_TYPE_CHOICES=(
+        ('Not Started', 'Not Started'),
+        ('Active', 'Active'),
+        ('Ready for Review', 'Ready for Review'),
+        ('Road Block', 'Road Block'),
+        ('Complete', 'Complete')
+    )
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
     task_name=models.CharField(max_length=100)
     task_description = models.TextField(blank=True, null=True)
     task_created = models.DateTimeField(default=None, null=True, blank=True)
+    task_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
 
     def __str__(self):
         return self.task_name
