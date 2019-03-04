@@ -125,3 +125,37 @@ def project_delete(request, project_id):
         return render(request, "project_delete.html", context)
 
 
+@login_required
+def project_edit(request, project_id):
+    """Handles rendering a pre-populated edit form with existing project data and update of project details
+
+    Arguments:
+        project_id {int} -- The id of the project we would like to edit
+
+    Returns:
+        [render] -- if the request is a GET, will return a render of project_edit.html with pre-populated information in project form
+        [HttpResponseRedirect] -- when the POST request to update a project is successful, it will redirect to the project detail view with the project details updated
+    """
+
+    if request.method == "GET":
+        project = Project.objects.get(pk=project_id)
+        project_form = ProjectForm(instance=project)
+        template_name = "project_edit.html"
+        context = {"project": project, "project_form": project_form}
+
+        return render(request, template_name, context)
+    elif request.method == "POST":
+        project = Project.objects.get(pk=project_id)
+
+        if request.POST["project_due"]:
+            project.project_name = request.POST["project_name"]
+            project.project_description = request.POST["project_description"]
+            project.project_due = request.POST["project_due"]
+            project.save()
+
+        else:
+            project.project_name = request.POST["project_name"]
+            project.project_description = request.POST["project_description"]
+            project.save()
+
+        return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id, )))
