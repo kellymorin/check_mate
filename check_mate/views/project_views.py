@@ -79,6 +79,7 @@ def project_add(request):
                     "error_message": "You must complete all fields in the form",
                     "project_name": project_name,
                     "project_description": project_description,
+                    "project_form": ProjectForm(),
                     "project_due": project_due
                 })
             else:
