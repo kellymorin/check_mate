@@ -20,6 +20,15 @@ from check_mate.forms import TicketForm
 
 @login_required
 def ticket_detail(request, ticket_id):
+    """Loads a specific ticket's detail page
+
+    Arguments:
+        ticket_id {int} -- the id of the specific ticket details being requested
+
+    Returns:
+        [render] -- returns the ticket_details.html template with specific ticket details and all associated tasks passed in
+    """
+
 # When the user selects the ticket detail view
 # Then they should be able to see the assigned team member, activity history
 
@@ -34,9 +43,14 @@ def ticket_detail(request, ticket_id):
 
 @login_required
 def ticket_add(request):
+    """Handles the addition of new tickets from the project detail view
 
-# When the user selects the option to add a new issue ticket
-# Then they should be presented with a form, where they can provide information about the task such as name, description, status and assigned team member
+    Returns:
+        [render] -- if the request is a GET, or there is an error with the form data, will return a render of ticket_add.html with an error message (when applicable)
+        [HttpResponseRedirect] -- when the request to POST a new ticket is successful, it will redirect to the project detail view with the new ticket added
+    """
+    # When the user selects the option to add a new issue ticket
+    # Then they should be presented with a form, where they can provide information about the task such as name, description, status and assigned team member
 
     if request.method == "POST":
         if "first_request" in request.POST:
@@ -74,6 +88,16 @@ def ticket_add(request):
 
 @login_required
 def ticket_delete(request, ticket_id):
+    """Handles checking if a ticket can be deleted and the deletion of appropriate tickets. Tickets can only be deleted if they do not have any tasks associated with them
+
+    Arguments:
+        ticket_id {int} -- the id of the ticket we are trying to delete
+
+    Returns:
+        [render] -- if the reuqest is a GET, will return a render of ticket_delete.html with permissions to delete a ticket
+        [HttpResponseRedirect] -- when the POST request to remove a ticket is successful, it will redirect to the project detail view with the requested ticket removed
+    """
+
     if request.method == "POST":
         ticket = Ticket.objects.get(pk=ticket_id)
         project_id = ticket.project.id
@@ -99,6 +123,16 @@ def ticket_delete(request, ticket_id):
 
 @login_required
 def ticket_edit(request, ticket_id):
+    """[summary]
+
+    Arguments:
+        ticket_id {int} -- The id of the ticket we would like to edit
+
+    Returns:
+        [render] -- if the request is a GET, will return a render of ticket_edit.html with pre-populated information in ticket form
+        [HttpResponseRedirect] -- when the POST request to update a ticket is successful, it will redirect to the ticket detail view with the ticket details updated
+    """
+
     if request.method == "GET":
         ticket = Ticket.objects.get(pk=ticket_id)
         ticket_form = TicketForm(instance=ticket)
