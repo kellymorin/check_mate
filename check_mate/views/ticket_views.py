@@ -136,21 +136,31 @@ def ticket_edit(request, ticket_id):
     if request.method == "GET":
         ticket = Ticket.objects.get(pk=ticket_id)
         ticket_form = TicketForm(instance=ticket)
+        ticket_status = TicketStatusForm(instance=ticket)
         template_name = "ticket_edit.html"
         context = {
             "ticket": ticket,
-            "ticket_form": ticket_form
+            "ticket_form": ticket_form,
+            "ticket_status": ticket_status
         }
         return render(request, template_name, context)
     elif request.method == "POST":
         ticket = Ticket.objects.get(pk=ticket_id)
+        project_id = ticket.project.id
+        project = Project.objects.get(pk=project_id)
 
         if request.POST["ticket_due"]:
             ticket.ticket_name = request.POST["ticket_name"]
             ticket.ticket_description = request.POST["ticket_description"]
+            ticket.ticket_status = request.POST["ticket_status"]
             ticket.ticket_due = request.POST["ticket_due"]
             ticket.save()
         else:
             ticket.ticket_name = request.POST["ticket_name"]
             ticket.ticket_description = request.POST["ticket_description"]
+            ticket.ticket_status = request.POST["ticket_status"]
+            ticket.save()
+        if request.POST["ticket_status"] == "Active" and project.project_status == "Not Started":
+            project.project_status = "Active"
+            project.save()
         return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))

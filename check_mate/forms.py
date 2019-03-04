@@ -34,3 +34,9 @@ class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = ("ticket_name", "ticket_description")
+
+class TicketStatusForm(forms.ModelForm):
+
+    class Meta:
+        model = Ticket
+        fields = ("ticket_status",)
