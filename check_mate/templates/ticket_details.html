@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div>
+  <h6>{{ticket_detail.ticket_name}}</h6>
+  <p>{{ticket_detail.ticket_description}}</p>
+  <h6>Ticket Due: {{ticket_detail.ticket_due|date:'l, F d, Y'}}</h6>
+  <h6>Ticket Status: {{ticket_detail.ticket_status}}</h6>
+  <p>Completed tasks: {{ticket_detail.get_task_status.Complete}}</p>
+  <p>Total tasks: {{ticket_detail.get_task_status.Total}}</p>
+  <a href="{% url 'check_mate:ticket_delete' ticket_detail.id %}">Delete Ticket</a>
+  <a href="{% url 'check_mate:ticket_edit' ticket_detail.id %}">Edit Ticket</a>
+  <div class="text-center">
+    <h5>Related Tasks:</h5> <i class="fas fa-plus"></i>
+  </div>
+  <div class="list-group">
+      {% if  not tasks %}
+          <p class="mb-1">No tasks currently available for this ticket</p>
+      {% endif %}
+      {% for task in tasks %}
+          <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">{{task.task_name}}</h5>
+                  <p>{{task.task_status}}</p>
+                  <p>{{task.task_description}}</p>
+              </div>
+          </a>
+      {% endfor %}
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h1>Edit Ticket</h1>
+
+  {% if error_message %}
+    <p class="alert alert-danger">{{error_message}}</p>
+  {% endif %}
+
+  <form action="{% url 'check_mate:ticket_edit' ticket.id %}" method="POST">
+    {% csrf_token %}
+    {{ticket_form|crispy}}
+    {{ticket_status|crispy}}
+    <div class="form-group">
+      <label for="ticket_due">Ticket Due Date</label>
+      <input type="date" class="form-control" name="ticket_due" value="{{ticket.ticket_due | date:'Y-m-d'}}"/>
+    </div>
+    <input class="btn btn-primary" type="submit" value="Save Changes"/>
+  </form>
+  <a class="btn btn-success" href="{% url 'check_mate:ticket_details' ticket.id %}">Go Back</a>
+{% endblock content %}
