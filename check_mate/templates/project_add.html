@@ -11,7 +11,7 @@
 
   <form action="{% url 'check_mate:project_add' %}" method="POST">
     {% csrf_token %}
-    {{ project_form }}
+    {{ project_form|crispy}}
     <input class="btn btn-primary" type="submit" value="Add Project"/>
   </form>
 {% endblock content %}
