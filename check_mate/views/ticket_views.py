@@ -70,13 +70,30 @@ def ticket_add(request):
                     "error_message": "You must complete all fields in the form"
                 })
 
+@login_required
+def ticket_delete(request, ticket_id):
+    if request.method == "POST":
+        ticket = Ticket.objects.get(pk=ticket_id)
+        project_id = ticket.project.id
+        ticket.delete()
+        return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
+    else:
+        ticket = Ticket.objects.get(pk=ticket_id)
+        tasks = Task.objects.filter(ticket=ticket_id)
 
-# login_required
-# def ticket_edit(request, ticket_id):
-# Given a user is authenticated
-# When the user is viewing a issue ticket detail view
-# Then the user should be able to view all details of the ticket, including name, description, ticket status, completion status bar, ticket history and all related tasks
-# And they should be given an affordance to edit the details of the issue ticket
+        if len(tasks) == 0:
+            context = {
+                "ticket": ticket,
+                "can_delete": True
+            }
+        else:
+            context={
+                "ticket": ticket,
+                "can_delete": False
+            }
+        return render(request, "ticket_delete.html", context)
+
+
 
 # When the user selects the option to edit ticket details
 # Then they should be presented with a form, that is pre-populated with existing ticket data, where they can update information about the task such as name, description, status and assigned team member
