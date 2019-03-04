@@ -1,6 +1,8 @@
-<!-- {% extends 'index.html' %} -->
+{% extends 'index.html' %}
 
-<!-- {% block content %} -->
+{% block content %}
+
+{% load crispy_forms_tags %}
 
   {% for message in messages %}
   <div class="{{messages.tags}} alert alert-danger" role="alert">{{message}}</div>
@@ -10,20 +12,11 @@
 
     <form id="login_form" method="post" action="{% url 'check_mate:login' %}">
       {% csrf_token %}
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input class="form-control" type="text" id="username" name="username" value="" size="50" />
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input class="form-control" type="password" id="password" name="password" value="" size="50" />
-      </div>
+      {{login_form|crispy}}
       <input type="hidden" value="{{next}}" name="next" />
-      <div>
-        <input class="btn btn-primary" type="Submit" value="Submit" />
-      </div>
+      <input class="btn btn-primary" type="Submit" value="Submit" />
     </form>
     {% if next != "/" %}
       <a class ="btn btn-primary" href="/register?next={{next}}">Register</a>
     {% endif %}
-<!-- {% endblock content %} -->
+{% endblock content %}

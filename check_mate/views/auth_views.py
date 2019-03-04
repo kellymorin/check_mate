@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.urls import reverse
 from django.contrib import messages
 
-from check_mate.forms import UserForm
+from check_mate.forms import UserForm, LogInForm
 
 def register(request):
     '''Handles the creation of a new user for authentication
@@ -56,7 +56,7 @@ def login_user(request):
     '''
 
     # Obtain the context for the user's request.
-    context = {'next': request.GET.get('next', '/')}
+    context = {'next': request.GET.get('next', '/'), "login_form": LogInForm()}
 
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
