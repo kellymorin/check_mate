@@ -15,6 +15,8 @@ from check_mate.forms import TicketForm
 # Once all tasks are marked as complete, update ticket status to complete
 # -------------------------------------------
 
+# TODO: Have not added ability to update status or assigned team member
+
 
 @login_required
 def ticket_detail(request, ticket_id):
