@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
 from check_mate.models import *
-from check_mate.forms import TicketForm
+from check_mate.forms import TicketForm, TicketStatusForm
 
 # Automation Notes --------------------
 # when the first ticket is added to a project, set the project status to active, set ticket status to not started
@@ -15,7 +15,7 @@ from check_mate.forms import TicketForm
 # Once all tasks are marked as complete, update ticket status to complete
 # -------------------------------------------
 
-# TODO: Have not added ability to update status or assigned team member
+# TODO: Have not added ability to update assigned team member
 
 
 @login_required
@@ -28,9 +28,7 @@ def ticket_detail(request, ticket_id):
     Returns:
         [render] -- returns the ticket_details.html template with specific ticket details and all associated tasks passed in
     """
-
-# When the user selects the ticket detail view
-# Then they should be able to see the assigned team member, activity history
+    # Then they should be able to see the assigned team member, activity history
 
     ticket_detail = Ticket.objects.filter(pk=ticket_id)[0]
     tasks = Task.objects.filter(ticket=ticket_id)
@@ -49,8 +47,7 @@ def ticket_add(request):
         [render] -- if the request is a GET, or there is an error with the form data, will return a render of ticket_add.html with an error message (when applicable)
         [HttpResponseRedirect] -- when the request to POST a new ticket is successful, it will redirect to the project detail view with the new ticket added
     """
-    # When the user selects the option to add a new issue ticket
-    # Then they should be presented with a form, where they can provide information about the task such as name, description, status and assigned team member
+    # Then they should be presented with a form, where they can provide information about the task such as assigned team member
 
     if request.method == "POST":
         if "first_request" in request.POST:
