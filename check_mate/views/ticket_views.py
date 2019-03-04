@@ -8,19 +8,27 @@ from django.urls import reverse
 from check_mate.models import *
 from check_mate.forms import TicketForm
 
+# Automation Notes --------------------
 # when the first ticket is added to a project, set the project status to active, set ticket status to not started
 # When task is added to a ticket keep status as not started, until a task is set to active, or the ticket settings are manually overwritten
 # While tasks are active in ticket, keep ticket status set to active
 # Once all tasks are marked as complete, update ticket status to complete
+# -------------------------------------------
 
-# Given a user is authenticated
-# When the user is viewing a project board
-# And it's associated issue tickets
-# Then they should be able to select an issue ticket to open up the detail view
 
+@login_required
+def ticket_detail(request, ticket_id):
 # When the user selects the ticket detail view
-# Then they should be able to see the ticket name, description, status, completion status bar, assigned team member, activity history, and all associated tasks
-# And they should be given an affordance to add a new related task
+# Then they should be able to see the assigned team member, activity history
+
+    ticket_detail = Ticket.objects.filter(pk=ticket_id)[0]
+    tasks = Task.objects.filter(ticket=ticket_id)
+    context={
+        "ticket_detail": ticket_detail,
+        "tasks": tasks
+    }
+    return render(request, "ticket_details.html", context)
+
 
 @login_required
 def ticket_add(request):
@@ -63,6 +71,8 @@ def ticket_add(request):
                 })
 
 
+# login_required
+# def ticket_edit(request, ticket_id):
 # Given a user is authenticated
 # When the user is viewing a issue ticket detail view
 # Then the user should be able to view all details of the ticket, including name, description, ticket status, completion status bar, ticket history and all related tasks

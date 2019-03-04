@@ -48,6 +48,17 @@ class Ticket(models.Model):
     ticket_due = models.DateField(default=None, null=True, blank=True)
     ticket_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
 
+    @property
+    def get_task_status(self):
+        all_tasks = Task.objects.filter(ticket = self.id)
+
+        task_status={"Not Started": 0, "Active": 0, "Ready for Review": 0, "Complete": 0, "Total": len(all_tasks)}
+        for task in all_tasks:
+            task_status[task.task_status] += 1
+        print(task_status)
+
+        return task_status
+
     def __str__(self):
         return self.ticket_name
 
