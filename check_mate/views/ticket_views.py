@@ -16,6 +16,7 @@ from check_mate.forms import TicketForm, TicketStatusForm
 # -------------------------------------------
 
 # TODO: Have not added ability to update assigned team member
+# TODO: Update edit functionality to first post to the ticket history section, then to the ticket
 
 
 @login_required
@@ -117,7 +118,7 @@ def ticket_delete(request, ticket_id):
         return render(request, "ticket_delete.html", context)
 
 
-
+# TODO: UPDATE TO INCLUDE SUMMARY
 @login_required
 def ticket_edit(request, ticket_id):
     """[summary]

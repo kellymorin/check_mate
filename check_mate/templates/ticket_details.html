@@ -29,6 +29,8 @@
                   <h5 class="mb-1">{{task.task_name}}</h5>
                   <p>{{task.task_status}}</p>
                   <p>{{task.task_description}}</p>
+                  <a href="{% url 'check_mate:task_edit' task.id %}">Edit Task</a>
+                  <a href="{% url 'check_mate:task_delete' task.id %}">Delete Task</a>
               </div>
           </a>
       {% endfor %}

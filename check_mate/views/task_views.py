@@ -18,6 +18,7 @@ from check_mate.forms import TaskForm, TaskStatusForm
 
 @login_required
 def task_add(request):
+    # Then they should be presented with a form, where they can provide information about the task such as assigned team member
 
     if request.method == "POST":
         if "first_request" in request.POST:
@@ -53,32 +54,73 @@ def task_add(request):
                 return render(request, "task_add.html", {
                     "error_message": "You must complete all fields in the form"
                 })
-# When the user selects the option to add a new related task
-# Then they should be presented with a form, where they can provide information about the task such as name, description, status and assigned team member
-
-# When the user submits the form
-# If the data is valid, they will be taken back to the ticket detail page with the related task added
-# If the data is not valid, they will be shown an error message on the form and asked to supply valid data
 
 
-# @login_required
-# def task_edit(request, task_id):
-# When the user selects the option to edit task details
-# Then they should be presented with a form, that is pre-populated with existing task data, where they can update information about the task such as name, description, status and assigned team member
+@login_required
+def task_edit(request, task_id):
+    # Then they should be presented with a form, that is pre-populated with existing task data, where they can update information about the task such as assigned team member
 
-# When the user submits the form
-# If the data is valid, they will be taken back to the ticket detail page with the related task updated completed
-# If the data is not valid, they will be shown an error message on the form and asked to supply valid data
+    # Automation Notes:
+    # Currently set up to update ticket if task is updated, but does not currently flow through to projects
 
-# @login_required
-# def task_delete(request, task_id):
-# And an option to delete the entire task
+    # TODO: Need to add automation to post to task history before saving changes
 
-# When the user selects the options to delete
-# Then they will be presented with an option to confirm that they would like to delete the task
+    if request.method == "GET":
+        task = Task.objects.get(pk=task_id)
+        task_form = TaskForm(instance=task)
+        task_status = TaskStatusForm(instance=task)
+        ticket_id = task.ticket.id
+        ticket = Ticket.objects.get(pk=ticket_id)
+        template_name = "task_edit.html"
+        context = {
+            "task": task,
+            "task_form": task_form,
+            "task_status": task_status,
+            "ticket": ticket
+        }
+        return render(request, template_name, context)
+    elif request.method == "POST":
+        task = Task.objects.get(pk=task_id)
+        ticket_id = task.ticket.id
+        ticket = Ticket.objects.get(pk=ticket_id)
 
-# If the user confirms deletion
-# Then they will be taken back to the ticket detail page, with the related task removed from the list
+        if request.POST["task_due"]:
+            task.task_name = request.POST["task_name"]
+            task.task_description = request.POST["task_description"]
+            task.task_status = request.POST["task_status"]
+            task.task_due = request.POST["task_due"]
+            task.save()
+        else:
+            task.task_name = request.POST["task_name"]
+            task.task_description = request.POST["task_description"]
+            task.task_status = request.POST["task_status"]
+            task.save()
+        if request.POST["task_status"] == "Active" and ticket.ticket_status == "Not Started":
+            ticket.ticket_status = "Active"
+            ticket.save()
+        return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
 
-# If the user cancels deletion
-# Then they will be taken back to the ticket detail page, with no changes made to the related task
+
+@login_required
+def task_delete(request, task_id):
+
+    if request.method == "POST":
+        task = Task.objects.get(pk=task_id)
+        ticket_id = task.ticket.id
+        task.delete()
+        return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
+    else:
+        task = Task.objects.get(pk=task_id)
+        ticket_id = task.ticket.id
+
+        if task.task_status == "Not Started":
+            context = {
+                "task": task,
+                "can_delete": True
+            }
+        else:
+            context={
+                "task": task,
+                "can_delete": False
+            }
+        return render(request, "task_delete.html", context)

@@ -49,6 +49,6 @@ class TaskForm(forms.ModelForm):
 
 class TaskStatusForm(forms.ModelForm):
 
-    class Meat:
+    class Meta:
         model = Task
         fields = ("task_status",)
