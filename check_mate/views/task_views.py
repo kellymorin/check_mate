@@ -48,6 +48,15 @@ def task_add(request):
                     new_task = Task(task_name= task_name, task_description = task_description, task_due = task_due, task_created = datetime.date.today(), task_status = "Not Started", ticket=ticket)
                     new_task.save()
 
+                if form_data["task_assigned_user"] != "":
+                    assigned_user = User.objects.get(pk=form_data["task_assigned_user"])
+
+                    __update_task_history(new_task, request.user, "Assignment", assigned_user)
+
+                    new_task.task_assigned_user = assigned_user
+
+                    new_task.save()
+
                     return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
             except KeyError:
                 return render(request, "task_add.html", {
@@ -79,9 +88,12 @@ def task_edit(request, task_id):
         }
         return render(request, template_name, context)
     elif request.method == "POST":
-        task = Task.objects.get(pk=task_id)
-        ticket_id = task.ticket.id
-        ticket = Ticket.objects.get(pk=ticket_id)
+        if form_data["task_assigned_user"] != "":
+            assigned_user = User.objects.get(pk=form_data["task_assigned_user"])
+            if task.task_assigned_user != form_data["task_assigned_user"]:
+                __update_task_history(task, request.user, "Assignment", assigned_user)
+
+            task.task_assigned_user = assigned_user
 
         if request.POST["task_due"]:
             task.task_name = request.POST["task_name"]
