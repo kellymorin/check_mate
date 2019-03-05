@@ -78,6 +78,14 @@ def ticket_add(request):
                     new_ticket = Ticket(ticket_name=ticket_name, ticket_description=ticket_description, ticket_due= ticket_due, ticket_created = datetime.date.today(), ticket_status="Not Started", project=project)
                     new_ticket.save()
 
+                if form_data["ticket_assigned_user"] != "":
+                    assigned_user = User.objects.get(pk=form_data["ticket_assigned_user"])
+
+                    __update_ticket_history(new_ticket, request.user, "Assignment", assigned_user)
+
+                    new_ticket.ticket_assigned_user = assigned_user
+
+                    new_ticket.save()
                     return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
             except KeyError:
                 return render(request, "ticket_add.html", {
@@ -143,9 +151,12 @@ def ticket_edit(request, ticket_id):
         }
         return render(request, template_name, context)
     elif request.method == "POST":
-        ticket = Ticket.objects.get(pk=ticket_id)
-        project_id = ticket.project.id
-        project = Project.objects.get(pk=project_id)
+        if form_data["ticket_assigned_user"] != "":
+            assigned_user = User.objects.get(pk=form_data["ticket_assigned_user"])
+            if ticket.ticket_assigned_user != form_data["ticket_assigned_user"]:
+                __update_ticket_history(ticket, request.user, "Assignment", assigned_user)
+
+            ticket.ticket_assigned_user = assigned_user
 
         if request.POST["ticket_due"]:
             ticket.ticket_name = request.POST["ticket_name"]

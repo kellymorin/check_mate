@@ -33,7 +33,7 @@ class TicketForm(forms.ModelForm):
 
     class Meta:
         model = Ticket
-        fields = ("ticket_name", "ticket_description", "ticket_due")
+        fields = ("ticket_name", "ticket_description", "ticket_due", "ticket_assigned_user")
         widgets = {
             "ticket_due": forms.DateInput(attrs={"type": "date"})
         }
