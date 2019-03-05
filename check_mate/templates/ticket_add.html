@@ -12,10 +12,6 @@
   <form action="{% url 'check_mate:ticket_add' %}" method="POST">
     {% csrf_token %}
     {{ticket_form|crispy}}
-    <div class="form-group">
-      <label for="ticket_due">Ticket Due Date</label>
-      <input type="date" class="form-control" name="ticket_due"/>
-    </div>
     <input type="hidden" value="{{project}}" name="project"/>
     <input class="btn btn-primary" type="submit" value="Add Ticket"/>
   </form>
