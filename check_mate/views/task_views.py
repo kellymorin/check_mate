@@ -15,7 +15,6 @@ from check_mate.forms import TaskForm, TaskStatusForm
 # -------------------------------------------
 
 
-
 @login_required
 def task_add(request):
     # Then they should be presented with a form, where they can provide information about the task such as assigned team member
