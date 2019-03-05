@@ -13,10 +13,6 @@
     {% csrf_token %}
     {{task_form|crispy}}
     {{task_status|crispy}}
-    <div class="form-group">
-      <label for="task_due">Task Due Date</label>
-      <input type="date" class="form-control" name="task_due" value="{{task.task_due | date:'Y-m-d'}}"/>
-    </div>
     <input class="btn btn-primary" type="submit" value="Save Changes"/>
   </form>
   <a class="btn btn-success" href="{% url 'check_mate:ticket_details' ticket.id %}">Go Back</a>
