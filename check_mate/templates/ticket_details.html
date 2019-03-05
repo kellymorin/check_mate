@@ -11,7 +11,13 @@
   <a href="{% url 'check_mate:ticket_delete' ticket_detail.id %}">Delete Ticket</a>
   <a href="{% url 'check_mate:ticket_edit' ticket_detail.id %}">Edit Ticket</a>
   <div class="text-center">
-    <h5>Related Tasks:</h5> <i class="fas fa-plus"></i>
+    <h5>Related Tasks:</h5>
+    <form action="{% url 'check_mate:task_add' %}" method="POST">
+      {% csrf_token %}
+      <input type="submit"><i class="fas fa-plus"></i></input>
+      <input type="hidden" name="ticket" value="{{ticket_detail.id}}"/>
+      <input type="hidden" name="first_request"/>
+    </form>
   </div>
   <div class="list-group">
       {% if  not tasks %}

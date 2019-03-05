@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h1>Add Task</h1>
+
+  {% if error_message %}
+    <p class="alert alert-danger">{{error_message}}</p>
+  {% endif %}
+
+  <form action="{% url 'check_mate:task_add' %}" method="POST">
+    {% csrf_token %}
+    {{task_form|crispy}}
+    <div class="form-group">
+      <label for="task_due">Task Due Date</label>
+      <input type="date" class="form-control" name="task_due"/>
+    </div>
+    <input type="hidden" value="{{ticket}}" name="ticket"/>
+    <input class="btn btn-primary" type="submit" value="Add Task"/>
+  </form>
+{% endblock content %}

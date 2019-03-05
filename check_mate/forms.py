@@ -40,3 +40,15 @@ class TicketStatusForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = ("ticket_status",)
+
+class TaskForm(forms.ModelForm):
+
+    class Meta:
+        model = Task
+        fields = ("task_name", "task_description")
+
+class TaskStatusForm(forms.ModelForm):
+
+    class Meat:
+        model = Task
+        fields = ("task_status",)
