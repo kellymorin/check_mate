@@ -9,20 +9,18 @@ from check_mate.models import *
 from check_mate.forms import TaskForm, TaskStatusForm
 from ..utils import __update_task_history, __update_ticket_history
 
-# Automation Notes --------------------
-# When task is added to a ticket keep status as not started, until a task is set to active, or the ticket settings are manually overwritten
-# While tasks are active in ticket, keep ticket status set to active
-# Once all tasks are marked as complete, update ticket status to complete
-# -------------------------------------------
-
+# TODO: Deploy the error messages functionality from django
 
 @login_required
 def task_add(request):
-    # Then they should be presented with a form, where they can provide information about the task such as assigned team member
+    """Handles the addition of new tasks from the ticket detail view
 
-    if request.method == "POST":
-        if "first_request" in request.POST:
-            task_form = TaskForm()
+    Returns:
+        [render] -- If the request is a GET, or there is an error with the form data, will return a render of task_form.html with an error message (when applicable)
+        [HttpResponseRedirect] -- when the request to POST a new task is successful, it will redirect to the ticket detail view with the new task added
+    """
+
+    task_form = TaskForm()
     form_data = request.POST
 
     if "first_request" not in form_data:
@@ -33,24 +31,24 @@ def task_add(request):
             task_description = form_data["task_description"]
             task_due = form_data["task_due"]
             ticket_id = form_data["ticket"]
-                ticket = Ticket.objects.filter(pk=ticket_id)[0]
+            ticket = Ticket.objects.filter(pk=ticket_id)[0]
             project_id = ticket.project.id
             project = Project.objects.filter(pk=project_id)[0]
 
-                if task_name == "" or task_description == "":
+            if task_name == "" or task_description == "":
                 # TODO: NEED TO UPDATE THIS SO IT AUTOPOPULATES FORM
                 context = {
-                        "error_message": "You must complete all fields in the form",
-                        "task_name": task_name,
-                        "task_description": task_description,
-                        "task_due": task_due,
+                    "error_message": "You must complete all fields in the form",
+                    "task_name": task_name,
+                    "task_description": task_description,
+                    "task_due": task_due,
                     "task_form": task_form,
                     "ticket": ticket_id
                 }
 
-                else:
+            else:
                 new_task = Task(task_name=task_name, task_description=task_description, task_due=task_due, task_created=datetime.date.today(), task_status="Not Started", ticket=ticket)
-                    new_task.save()
+                new_task.save()
 
                 __update_task_history(new_task, request.user, "Status", "Not Started")
 
@@ -73,7 +71,7 @@ def task_add(request):
                         project.project_status = "Active"
                         project.save()
 
-                    return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
+                return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
     else:
         ticket = form_data["ticket"]
         context = {
@@ -92,13 +90,13 @@ def task_edit(request, task_id):
         task_id {int} -- The id of the task we would like to edit
 
     Returns:
-        [render] -- if the request is a GET, will return a render of task_edit.html with pre-populated information in task form
+        [render] -- if the request is a GET, will return a render of task_form.html with pre-populated information in task form
         [HttpResponseRedirect] -- when the POST request to update a task is successful, it will redirect to the ticket detail view with the task details updated
     """
 
-        task = Task.objects.get(pk=task_id)
-        ticket_id = task.ticket.id
-        ticket = Ticket.objects.get(pk=ticket_id)
+    task = Task.objects.get(pk=task_id)
+    ticket_id = task.ticket.id
+    ticket = Ticket.objects.get(pk=ticket_id)
     project_id = ticket.project.id
     project = Project.objects.get(pk=project_id)
     form_data = request.POST
@@ -135,7 +133,7 @@ def task_edit(request, task_id):
 
             task.task_assigned_user = assigned_user
 
-            task.save()
+        task.save()
 
         if form_data["task_status"] == "Active" and ticket.ticket_status == "Not Started":
             ticket.ticket_status = "Active"
@@ -168,6 +166,16 @@ def task_edit(request, task_id):
 
 @login_required
 def task_delete(request, task_id):
+    """Handles checking if a task can be deleted and the deletion of appropriate tasks. Tasks can only be deleted if they have a status of Not Started
+
+    Arguments:
+        task_id {int} -- the id of the task we are trying to delete
+
+    Returns:
+        [render] -- if the request is a GET, will return a render of task_delete.html with permissions to delete a task
+        [HttpResponseRedirect] -- when the POST request to remove a task is successful, it will redirect to the ticket detail view with the requested task removed
+    """
+
 
     if request.method == "POST":
         task = Task.objects.get(pk=task_id)
