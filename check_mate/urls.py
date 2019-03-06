@@ -30,4 +30,10 @@ urlpatterns=[
     path("ticket/<int:ticket_id>/delete", views.ticket_delete, name="ticket_delete"),
     # ex. /ticket/1/edit
     path("ticket/<int:ticket_id>/edit", views.ticket_edit, name="ticket_edit"),
+    # ex. /task/add
+    path("task/add", views.task_add, name="task_add"),
+    # ex. /task/1/edit
+    path("task/<int:task_id>/edit", views.task_edit, name="task_edit"),
+    # ex. /task/1/delete
+    path("task/<int:task_id>/delete", views.task_delete, name="task_delete"),
 ]

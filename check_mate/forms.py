@@ -33,10 +33,28 @@ class TicketForm(forms.ModelForm):
 
     class Meta:
         model = Ticket
-        fields = ("ticket_name", "ticket_description")
+        fields = ("ticket_name", "ticket_description", "ticket_due", "ticket_assigned_user")
+        widgets = {
+            "ticket_due": forms.DateInput(attrs={"type": "date"})
+        }
 
 class TicketStatusForm(forms.ModelForm):
 
     class Meta:
         model = Ticket
         fields = ("ticket_status",)
+
+class TaskForm(forms.ModelForm):
+
+    class Meta:
+        model = Task
+        fields = ("task_name", "task_description", "task_due", "task_assigned_user")
+        widgets = {
+            "task_due": forms.DateInput(attrs={"type": "date"})
+        }
+
+class TaskStatusForm(forms.ModelForm):
+
+    class Meta:
+        model = Task
+        fields = ("task_status",)

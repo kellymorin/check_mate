@@ -1,0 +1,37 @@
+{% extends "index.html" %}
+
+{% block content %}
+  <div class="row">
+    <div class="col mb-4">
+      <h1>Delete</h1>
+    </div>
+  </div>
+
+  {% if can_delete == True %}
+    <div class="row">
+      <div class="col">
+        <p>Are you sure you want to delete <strong>{{task.task_name}}</strong></p>
+        <div class="my-4">
+          <form action="{% url 'check_mate:task_delete' task.id %}" method="POST">
+            {% csrf_token%}
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'check_mate:ticket_details' task.ticket.id %}"><button type="button" class="btn btn-primary">No, take me back</button></a>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% else %}
+      <div class="row">
+        <div class="col">
+          {% if task.task_status == "Complete" %}
+            <p>Sorry, <strong>{{task.task_name}}</strong> can't be deleted because it's already been completed</p>
+          {% elif task.task_status == "Active" %}
+            <p>Sorry, <strong>{{task.task_name}}</strong> can't be deleted because it is active.</p>
+          {% endif %}
+          <div class="my-4">
+            <a href="{% url 'check_mate:ticket_details' task.ticket.id%}"><button type="button" class="btn btn-primary">Go Back</button></a>
+          </div>
+        </div>
+      </div>
+  {% endif %}
+{% endblock content %}

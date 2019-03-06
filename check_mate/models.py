@@ -22,6 +22,16 @@ class Project(models.Model):
     project_due = models.DateField(default=None, null=True, blank=True)
     project_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
 
+    @property
+    def get_ticket_status(self):
+        all_tickets = Ticket.objects.filter(project = self.id)
+
+        ticket_status={"Not Started": 0, "Active": 0, "Ready for Review": 0, "Road Block": 0, "Complete": 0, "Total": len(all_tickets)}
+        for ticket in all_tickets:
+            ticket_status[ticket.ticket_status] += 1
+
+        return ticket_status
+
     def __str__(self):
         return self.project_name
 
@@ -47,15 +57,15 @@ class Ticket(models.Model):
     ticket_created = models.DateTimeField(default=None, null=True, blank=True)
     ticket_due = models.DateField(default=None, null=True, blank=True)
     ticket_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
+    ticket_assigned_user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, default=None)
 
     @property
     def get_task_status(self):
         all_tasks = Task.objects.filter(ticket = self.id)
 
-        task_status={"Not Started": 0, "Active": 0, "Ready for Review": 0, "Complete": 0, "Total": len(all_tasks)}
+        task_status={"Not Started": 0, "Active": 0, "Ready for Review": 0, "Road Block": 0, "Complete": 0, "Total": len(all_tasks)}
         for task in all_tasks:
             task_status[task.task_status] += 1
-        print(task_status)
 
         return task_status
 
@@ -84,7 +94,7 @@ class TicketHistory(models.Model):
     )
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
     ticket_active_user = models.ForeignKey(User, related_name="ticket_active_user", on_delete=models.CASCADE)
-    ticket_affected_user = models.ForeignKey(User, related_name="ticket_affected_user", on_delete=models.CASCADE, default=None, null=True, blank=True),
+    ticket_affected_user = models.ForeignKey(User, related_name="ticket_affected_user", on_delete=models.CASCADE, default=None, null=True, blank=True)
     activity_type = models.CharField(max_length=50, choices=ACTIVITY_TYPE_CHOICES, default=None)
     status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
     activity_description = models.TextField(blank=True, null=True)
@@ -115,6 +125,7 @@ class Task(models.Model):
     task_created = models.DateTimeField(default=None, null=True, blank=True)
     task_due = models.DateField(default=None, null=True, blank=True)
     task_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
+    task_assigned_user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, default=None, blank=True)
 
     def __str__(self):
         return self.task_name
