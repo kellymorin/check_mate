@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -11,11 +13,6 @@ from check_mate.forms import ProjectForm
 # TODO: Consider consolodiating add and edit to run through one view and one template
 # ---------------------------------------------------------------------------
 
-
-# TODO: Automation around project status:
-    # A project should be considered not started when is has been created but no tasks currently exist in it,
-    # a project should be considered in progress when it has tickets/tasks that are active,
-    # a project should only be considered completed when all tasks and tickets are completed
 
 @login_required
 def projects(request):
@@ -60,9 +57,7 @@ def project_add(request):
         [render] -- if the request is a GET, or there is an error with the form data, will return a render of project_add.html with an error message (when applicable)
         [HttpResponseRedirect] -- when the request to POST a new project is successful, it will redirect to the main projects view with the new project added
     """
-
-    if request.method == "GET":
-        project_form = ProjectForm()
+    project_form = ProjectForm()
     form_data = request.POST
 
     if request.method == "POST":
@@ -87,10 +82,6 @@ def project_add(request):
                 new_project.save()
 
                 return HttpResponseRedirect(reverse("check_mate:projects"))
-        except KeyError:
-            return render(request, "project_add.html", {
-                "error_message": "You must complete all fields in the form"
-            })
 
     else:
         context = {
@@ -143,26 +134,25 @@ def project_edit(request, project_id):
         [render] -- if the request is a GET, will return a render of project_edit.html with pre-populated information in project form
         [HttpResponseRedirect] -- when the POST request to update a project is successful, it will redirect to the project detail view with the project details updated
     """
+    project = Project.objects.get(pk=project_id)
+    form_data = request.POST
 
     if request.method == "GET":
-        project = Project.objects.get(pk=project_id)
         project_form = ProjectForm(instance=project)
-        template_name = "project_edit.html"
-        context = {"project": project, "project_form": project_form}
+        context = {
+            "project": project,
+            "project_form": project_form
+        }
 
-        return render(request, template_name, context)
+        return render(request, "project_edit.html", context)
+
     elif request.method == "POST":
-        project = Project.objects.get(pk=project_id)
+        project.project_name = form_data["project_name"]
+        project.project_description = form_data["project_description"]
 
-        if request.POST["project_due"]:
-            project.project_name = request.POST["project_name"]
-            project.project_description = request.POST["project_description"]
-            project.project_due = request.POST["project_due"]
-            project.save()
+        if form_data["project_due"]:
+            project.project_due = form_data["project_due"]
 
-        else:
-            project.project_name = request.POST["project_name"]
-            project.project_description = request.POST["project_description"]
-            project.save()
+        project.save()
 
         return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id, )))
