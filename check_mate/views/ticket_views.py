@@ -7,6 +7,7 @@ from django.urls import reverse
 
 from check_mate.models import *
 from check_mate.forms import TicketForm, TicketStatusForm
+from ..utils import __update_ticket_history
 
 # Automation Notes --------------------
 # when the first ticket is added to a project, set the project status to active, set ticket status to not started
@@ -78,6 +79,7 @@ def ticket_add(request):
                     new_ticket = Ticket(ticket_name=ticket_name, ticket_description=ticket_description, ticket_due= ticket_due, ticket_created = datetime.date.today(), ticket_status="Not Started", project=project)
                     new_ticket.save()
 
+                __update_ticket_history(new_ticket, request.user, "Status", "Not Started")
                 if form_data["ticket_assigned_user"] != "":
                     assigned_user = User.objects.get(pk=form_data["ticket_assigned_user"])
 
@@ -149,6 +151,8 @@ def ticket_edit(request, ticket_id):
         }
         return render(request, "ticket_form.html", context)
     elif request.method == "POST":
+        if ticket.ticket_status != form_data["ticket_status"]:
+            __update_ticket_history(ticket, request.user, "Status", form_data["ticket_status"])
         if form_data["ticket_assigned_user"] != "":
             assigned_user = User.objects.get(pk=form_data["ticket_assigned_user"])
             if ticket.ticket_assigned_user != form_data["ticket_assigned_user"]:
