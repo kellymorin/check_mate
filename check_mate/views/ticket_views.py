@@ -10,15 +10,14 @@ from check_mate.forms import TicketForm, TicketStatusForm
 from ..utils import __update_ticket_history
 
 # Automation Notes --------------------
-# when the first ticket is added to a project, set the project status to active, set ticket status to not started
+# when the first ticket is added to a project, set the project status to not started, set ticket status to not started
 # When task is added to a ticket keep status as not started, until a task is set to active, or the ticket settings are manually overwritten
-# While tasks are active in ticket, keep ticket status set to active
+# While tasks are active in ticket, keep ticket status set to active, and project status to active
 # Once all tasks are marked as complete, update ticket status to complete
+# Once all tickets are marked as complete, update project status to complete
 # -------------------------------------------
 
-# TODO: Have not added ability to update assigned team member
-# TODO: Update edit functionality to first post to the ticket history section, then to the ticket
-
+# TODO: update ticket detail to include history with
 
 @login_required
 def ticket_detail(request, ticket_id):
@@ -49,11 +48,8 @@ def ticket_add(request):
         [render] -- if the request is a GET, or there is an error with the form data, will return a render of ticket_add.html with an error message (when applicable)
         [HttpResponseRedirect] -- when the request to POST a new ticket is successful, it will redirect to the project detail view with the new ticket added
     """
-    # Then they should be presented with a form, where they can provide information about the task such as assigned team member
 
-    if request.method == "POST":
-        if "first_request" in request.POST:
-            ticket_form = TicketForm()
+    ticket_form = TicketForm()
     form_data = request.POST
 
     if "first_request" not in form_data:
@@ -65,21 +61,21 @@ def ticket_add(request):
             ticket_description = form_data["ticket_description"]
             ticket_due = form_data["ticket_due"]
             project_id = form_data["project"]
-                project = Project.objects.filter(pk=project_id)[0]
+            project = Project.objects.filter(pk=project_id)[0]
 
-                if ticket_name == "" or ticket_description == "":
+            if ticket_name == "" or ticket_description == "":
                 context={
-                        "error_message": "You must complete all fields in the form",
-                        "ticket_name": ticket_name,
-                        "ticket_description": ticket_description,
+                    "error_message": "You must complete all fields in the form",
+                    "ticket_name": ticket_name,
+                    "ticket_description": ticket_description,
                     "ticket_due": ticket_due,
                     "ticket_form": ticket_form,
                     "project": project_id
                 }
 
-                else:
-                    new_ticket = Ticket(ticket_name=ticket_name, ticket_description=ticket_description, ticket_due= ticket_due, ticket_created = datetime.date.today(), ticket_status="Not Started", project=project)
-                    new_ticket.save()
+            else:
+                new_ticket = Ticket(ticket_name=ticket_name, ticket_description=ticket_description, ticket_due= ticket_due, ticket_created = datetime.date.today(), ticket_status="Not Started", project=project)
+                new_ticket.save()
 
                 __update_ticket_history(new_ticket, request.user, "Status", "Not Started")
 
@@ -96,7 +92,7 @@ def ticket_add(request):
                     project.project_status = "Active"
                     project.save()
 
-                    return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
+                return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
 
     else:
         project = form_data["project"]
@@ -142,10 +138,9 @@ def ticket_delete(request, ticket_id):
         return render(request, "ticket_delete.html", context)
 
 
-# TODO: UPDATE TO INCLUDE SUMMARY
 @login_required
 def ticket_edit(request, ticket_id):
-    """[summary]
+    """Handles rendering a pre-populated edit form with existing ticket data and update of ticket details
 
     Arguments:
         ticket_id {int} -- The id of the ticket we would like to edit
@@ -154,21 +149,35 @@ def ticket_edit(request, ticket_id):
         [render] -- if the request is a GET, will return a render of ticket_edit.html with pre-populated information in ticket form
         [HttpResponseRedirect] -- when the POST request to update a ticket is successful, it will redirect to the ticket detail view with the ticket details updated
     """
+    ticket = Ticket.objects.get(pk=ticket_id)
+    project_id = ticket.project.id
+    project = Project.objects.get(pk=project_id)
+    form_data = request.POST
 
     if request.method == "GET":
-        ticket = Ticket.objects.get(pk=ticket_id)
         ticket_form = TicketForm(instance=ticket)
         ticket_status = TicketStatusForm(instance=ticket)
-        template_name = "ticket_edit.html"
         context = {
             "ticket": ticket,
             "ticket_form": ticket_form,
             "ticket_status": ticket_status,
+            "edit": True
         }
+
         return render(request, "ticket_form.html", context)
+
     elif request.method == "POST":
+
         if ticket.ticket_status != form_data["ticket_status"]:
             __update_ticket_history(ticket, request.user, "Status", form_data["ticket_status"])
+
+        ticket.ticket_name = form_data["ticket_name"]
+        ticket.ticket_description = form_data["ticket_description"]
+        ticket.ticket_status = form_data["ticket_status"]
+
+        if form_data["ticket_due"]:
+            ticket.ticket_due = form_data["ticket_due"]
+
         if form_data["ticket_assigned_user"] != "":
             assigned_user = User.objects.get(pk=form_data["ticket_assigned_user"])
             if ticket.ticket_assigned_user != form_data["ticket_assigned_user"]:
@@ -176,18 +185,18 @@ def ticket_edit(request, ticket_id):
 
             ticket.ticket_assigned_user = assigned_user
 
-        if request.POST["ticket_due"]:
-            ticket.ticket_name = request.POST["ticket_name"]
-            ticket.ticket_description = request.POST["ticket_description"]
-            ticket.ticket_status = request.POST["ticket_status"]
-            ticket.ticket_due = request.POST["ticket_due"]
-            ticket.save()
-        else:
-            ticket.ticket_name = request.POST["ticket_name"]
-            ticket.ticket_description = request.POST["ticket_description"]
-            ticket.ticket_status = request.POST["ticket_status"]
-            ticket.save()
-        if request.POST["ticket_status"] == "Active" and project.project_status == "Not Started":
+        ticket.save()
+
+        if form_data["ticket_status"] == "Active" and project.project_status == "Not Started":
             project.project_status = "Active"
             project.save()
+
+        if project.get_ticket_status['Complete'] == project.get_ticket_status['Total']:
+            project.project_status = "Complete"
+            project.save()
+
+        if ticket.ticket_status != "Complete" and project.project_status == "Complete":
+            project.project_status = "Active"
+            project.save()
+
         return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
