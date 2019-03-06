@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  {% if error_message %}
+  <p class="alert alert-danger">{{error_message}}</p>
+  {% endif %}
+
+  {% if edit == True %}
+    <h1>Edit Ticket</h1>
+    <form action="{% url 'check_mate:ticket_edit' ticket.id %}" method="POST">
+
+  {% elif add == True %}
+    <h1>Add Ticket</h1>
+    <form action="{% url 'check_mate:ticket_add' %}" method="POST">
+        <input type="hidden" value="{{project}}" name="project"/>
+  {% endif %}
+
+    {% csrf_token %}
+    {{ticket_form|crispy}}
+
+    {% if ticket_status %}
+      {{ticket_status|crispy}}
+    {% endif %}
+
+    <input class="btn btn-primary" type="submit" value="Save Ticket"/>
+  </form>
+    {% if edit == True %}
+      <a class="btn btn-success" href="{% url 'check_mate:ticket_details' ticket.id %}">Go Back</a>
+    {% elif add == True %}
+      <a class="btn btn-success" href="{% url 'check_mate:project_details' project %}">Go Back</a>
+    {% endif %}
+{% endblock content %}

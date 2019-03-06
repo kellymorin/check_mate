@@ -87,10 +87,8 @@ def ticket_add(request):
 
                     new_ticket.save()
                     return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
-            except KeyError:
-                return render(request, "ticket_add.html", {
-                    "error_message": "You must complete all fields in the form"
-                })
+            "add": True
+    return render(request, "ticket_form.html", context)
 
 @login_required
 def ticket_delete(request, ticket_id):
@@ -147,9 +145,9 @@ def ticket_edit(request, ticket_id):
         context = {
             "ticket": ticket,
             "ticket_form": ticket_form,
-            "ticket_status": ticket_status
+            "ticket_status": ticket_status,
         }
-        return render(request, template_name, context)
+        return render(request, "ticket_form.html", context)
     elif request.method == "POST":
         if form_data["ticket_assigned_user"] != "":
             assigned_user = User.objects.get(pk=form_data["ticket_assigned_user"])
