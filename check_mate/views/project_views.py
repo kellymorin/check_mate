@@ -63,27 +63,27 @@ def project_add(request):
 
     if request.method == "GET":
         project_form = ProjectForm()
-        template_name = "project_add.html"
-        context={
-            "project_form": project_form
-        }
-        return render(request, template_name, context)
+    form_data = request.POST
 
-    elif request.method == "POST":
-        try:
-            project_name = request.POST["project_name"]
-            project_description = request.POST["project_description"]
-            project_due = request.POST["project_due"]
+    if request.method == "POST":
+        completed_project_form = ProjectForm(form_data)
+
+        if completed_project_form.is_valid():
+            project_name = form_data["project_name"]
+            project_description = form_data["project_description"]
+            project_due = form_data["project_due"]
+
             if project_name == "" or project_description == "":
-                return render(request, "project_add.html", {
+                context = {
                     "error_message": "You must complete all fields in the form",
                     "project_name": project_name,
                     "project_description": project_description,
-                    "project_form": ProjectForm(),
+                    "project_form": project_form,
                     "project_due": project_due
-                })
+                }
+
             else:
-                new_project = Project(project_name=project_name, project_description= project_description, project_due=project_due, project_status = "Not Started")
+                new_project = Project(project_name=project_name, project_description= project_description, project_due=project_due, project_created=datetime.date.today(),project_status = "Not Started")
                 new_project.save()
 
                 return HttpResponseRedirect(reverse("check_mate:projects"))
@@ -91,6 +91,12 @@ def project_add(request):
             return render(request, "project_add.html", {
                 "error_message": "You must complete all fields in the form"
             })
+
+    else:
+        context = {
+            "project_form": project_form,
+        }
+    return render(request, "project_add.html", context)
 
 
 @login_required
