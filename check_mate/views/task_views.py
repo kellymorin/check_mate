@@ -7,6 +7,7 @@ from django.urls import reverse
 
 from check_mate.models import *
 from check_mate.forms import TaskForm, TaskStatusForm
+from ..utils import __update_task_history, __update_ticket_history
 
 # Automation Notes --------------------
 # When task is added to a ticket keep status as not started, until a task is set to active, or the ticket settings are manually overwritten
@@ -48,6 +49,8 @@ def task_add(request):
                     new_task = Task(task_name= task_name, task_description = task_description, task_due = task_due, task_created = datetime.date.today(), task_status = "Not Started", ticket=ticket)
                     new_task.save()
 
+                __update_task_history(new_task, request.user, "Status", "Not Started")
+
                 if form_data["task_assigned_user"] != "":
                     assigned_user = User.objects.get(pk=form_data["task_assigned_user"])
 
@@ -57,6 +60,7 @@ def task_add(request):
 
                     new_task.save()
 
+                    __update_ticket_history(ticket, request.user, "Status", "Active")
                     return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
             "add": True
     return render(request, "task_form.html", context)
@@ -86,6 +90,8 @@ def task_edit(request, task_id):
         }
         return render(request, "task_form.html", context)
     elif request.method == "POST":
+        if task.task_status != form_data["task_status"]:
+            __update_task_history(task, request.user, "Status", form_data["task_status"])
         if form_data["task_assigned_user"] != "":
             assigned_user = User.objects.get(pk=form_data["task_assigned_user"])
             if task.task_assigned_user != form_data["task_assigned_user"]:
@@ -104,9 +110,11 @@ def task_edit(request, task_id):
             task.task_description = request.POST["task_description"]
             task.task_status = request.POST["task_status"]
             task.save()
-        if request.POST["task_status"] == "Active" and ticket.ticket_status == "Not Started":
+            __update_ticket_history(ticket, request.user, "Status", "Active")
+            __update_ticket_history(ticket, request.user, "Status", "Complete")
             ticket.ticket_status = "Active"
             ticket.save()
+            __update_ticket_history(ticket, request.user, "Status", "Active")
         return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
 
 
