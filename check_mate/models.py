@@ -22,6 +22,16 @@ class Project(models.Model):
     project_due = models.DateField(default=None, null=True, blank=True)
     project_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
 
+    @property
+    def get_ticket_status(self):
+        all_tickets = Ticket.objects.filter(project = self.id)
+
+        ticket_status={"Not Started": 0, "Active": 0, "Ready for Review": 0, "Road Block": 0, "Complete": 0, "Total": len(all_tickets)}
+        for ticket in all_tickets:
+            ticket_status[ticket.ticket_status] += 1
+
+        return ticket_status
+
     def __str__(self):
         return self.project_name
 

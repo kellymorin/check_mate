@@ -112,6 +112,10 @@ def task_edit(request, task_id):
             task.save()
             __update_ticket_history(ticket, request.user, "Status", "Active")
             __update_ticket_history(ticket, request.user, "Status", "Complete")
+
+            if project.get_ticket_status['Complete'] == project.get_ticket_status['Total']:
+                project.project_status = "Complete"
+                project.save()
             ticket.ticket_status = "Active"
             ticket.save()
             __update_ticket_history(ticket, request.user, "Status", "Active")
