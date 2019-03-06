@@ -23,30 +23,33 @@ def task_add(request):
     if request.method == "POST":
         if "first_request" in request.POST:
             task_form = TaskForm()
-            ticket = request.POST["ticket"]
-            template_name = "task_add.html"
-            context = {
-                "task_form": task_form,
-                "ticket": ticket
-            }
-            return render(request, template_name, context)
-        else:
-            try:
-                task_name = request.POST["task_name"]
-                task_description = request.POST["task_description"]
-                task_due = request.POST["task_due"]
-                ticket_id = request.POST["ticket"]
+    form_data = request.POST
+
+    if "first_request" not in form_data:
+        completed_task_form = TaskForm(form_data)
+
+        if completed_task_form.is_valid():
+            task_name = form_data["task_name"]
+            task_description = form_data["task_description"]
+            task_due = form_data["task_due"]
+            ticket_id = form_data["ticket"]
                 ticket = Ticket.objects.filter(pk=ticket_id)[0]
+            project_id = ticket.project.id
+            project = Project.objects.filter(pk=project_id)[0]
+
                 if task_name == "" or task_description == "":
-                    return render(request, "task_add.html", {
+                # TODO: NEED TO UPDATE THIS SO IT AUTOPOPULATES FORM
+                context = {
                         "error_message": "You must complete all fields in the form",
                         "task_name": task_name,
                         "task_description": task_description,
                         "task_due": task_due,
-                        "task_form" : TaskForm()
-                    })
+                    "task_form": task_form,
+                    "ticket": ticket_id
+                }
+
                 else:
-                    new_task = Task(task_name= task_name, task_description = task_description, task_due = task_due, task_created = datetime.date.today(), task_status = "Not Started", ticket=ticket)
+                new_task = Task(task_name=task_name, task_description=task_description, task_due=task_due, task_created=datetime.date.today(), task_status="Not Started", ticket=ticket)
                     new_task.save()
 
                 __update_task_history(new_task, request.user, "Status", "Not Started")
@@ -60,9 +63,24 @@ def task_add(request):
 
                     new_task.save()
 
+                if ticket.ticket_status == "Complete":
+                    ticket.ticket_status = "Active"
+                    ticket.save()
+
                     __update_ticket_history(ticket, request.user, "Status", "Active")
+
+                    if project.project_status == "Complete":
+                        project.project_status = "Active"
+                        project.save()
+
                     return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
+    else:
+        ticket = form_data["ticket"]
+        context = {
+            "task_form": task_form,
+            "ticket": ticket,
             "add": True
+        }
     return render(request, "task_form.html", context)
 
 
