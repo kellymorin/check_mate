@@ -8,6 +8,11 @@
   <h6>Ticket Status: {{ticket_detail.ticket_status}}</h6>
   <p>Completed tasks: {{ticket_detail.get_task_status.Complete}}</p>
   <p>Total tasks: {{ticket_detail.get_task_status.Total}}</p>
+  {% if ticket_detail.ticket_assigned_user is not None %}
+    <p>Assigned Team Member: {{ticket_detail.ticket_assigned_user.first_name}} {{ticket_detail.ticket_assigned_user.last_name}}</p>
+  {% else %}
+    <p>Ticket currently unassigned </p>
+  {% endif %}
   <a href="{% url 'check_mate:ticket_delete' ticket_detail.id %}">Delete Ticket</a>
   <a href="{% url 'check_mate:ticket_edit' ticket_detail.id %}">Edit Ticket</a>
   <div class="text-center">
@@ -29,11 +34,26 @@
                   <h5 class="mb-1">{{task.task_name}}</h5>
                   <p>{{task.task_status}}</p>
                   <p>{{task.task_description}}</p>
+                  {% if task.task_assigned_user is not None %}
+                    <p>Assigned Team Member: {{task.task_assigned_user.first_name}} {{task.task_assigned_user.last_name}}</p>
+                  {% else %}
+                    <p>Task currently unassigned</p>
+                  {% endif %}
                   <a href="{% url 'check_mate:task_edit' task.id %}">Edit Task</a>
                   <a href="{% url 'check_mate:task_delete' task.id %}">Delete Task</a>
               </div>
           </a>
       {% endfor %}
+  </div>
+  <div>
+    {% if all_history %}
+      {% for history in all_history %}
+        <p>{{history.description}}</p>
+        <p>{{history.activity_date| date:"l, F d, Y"}}</p>
+      {% endfor %}
+    {% else %}
+      <p>No History available for this ticket</p>
+    {% endif %}
   </div>
 </div>
 {% endblock content %}

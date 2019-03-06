@@ -32,10 +32,67 @@ def ticket_detail(request, ticket_id):
     # Then they should be able to see the assigned team member, activity history
 
     ticket_detail = Ticket.objects.filter(pk=ticket_id)[0]
+    print(ticket_detail.ticket_assigned_user)
+    ticket_history = TicketHistory.objects.filter(ticket=ticket_id).order_by('activity_date')
     tasks = Task.objects.filter(ticket=ticket_id)
+    task_history = []
+
+    for task in tasks:
+        task_history.append(TaskHistory.objects.filter(task=task.id))
+
+    all_history = []
+
+    for item in ticket_history:
+        ticket = {}
+        ticket["activity_date"] = item.activity_date
+        if item.activity_type == "Status":
+            if item.ticket_active_user == request.user:
+                ticket["description"] = f"You updated the status of {item.ticket.ticket_name} to {item.status}"
+            else:
+                ticket["description"] = f"{item.ticket_active_user.first_name} {item.ticket_active_user.last_name} updated the status of {item.ticket.ticket_name} to {item.status}"
+        elif item.activity_type == "Assignment":
+            if item.ticket_active_user == request.user:
+                if item.ticket_affected_user == request.user:
+                    ticket["description"] = f"You self-assigned {item.ticket.ticket_name} ticket"
+                else:
+                    ticket["description"] = f"You assigned {item.ticket.ticket_name} ticket to {item.ticket_affected_user.first_name} {item.ticket_affected_user.last_name}"
+            else:
+                if item.ticket_affected_user == request.user:
+                    ticket["description"] = f"{item.ticket_active_user.first_name} {item.ticket_active_user.last_name} assigned {item.ticket.ticket_name} ticket to you"
+                elif item.ticket_affected_user == item.ticket_active_user:
+                    ticket["description"] = f"{item.ticket_active_user.first_name} {item.ticket_active_user.last_name}  self-assigned {item.ticket.ticket_name} ticket"
+                else:
+                    ticket["description"] = f"{item.ticket_active_user.first_name} {item.ticket_active_user.last_name}  assigned {item.ticket.ticket_name} ticket to {item.ticket_affected_user.first_name} {item.ticket_affected_user.last_name}"
+        all_history.append(ticket)
+
+    for query_set in task_history:
+        for item in query_set:
+            task = {}
+            task["activity_date"] = item.activity_date
+            if item.activity_type == "Status":
+                if item.task_active_user == request.user:
+                    task["description"] = f"You updated the status of {item.task.task_name} to {item.status}"
+                else:
+                    task["description"] = f"{item.task_active_user.first_name} {item.task_active_user.last_name} updated the status of {item.task.task_name} to {item.status}"
+            elif item.activity_type == "Assignment":
+                if item.task_active_user == request.user:
+                    if item.task_affected_user == request.user:
+                        task["description"] = f"You self-assigned {item.task.task_name} task"
+                    else:
+                        task["description"] = f"You assigned {item.task.task_name} task to {item.task_affected_user.first_name} {item.task_affected_user.last_name}"
+                else:
+                    if item.task_affected_user == request.user:
+                        task["description"] = f"{item.task_active_user.first_name} {item.task_active_user.last_name} assigned {item.task.task_name} task to you"
+                    elif item.task_affected_user == item.task_active_user:
+                        task["description"] = f"{item.task_active_user.first_name} {item.task_active_user.last_name} self-assigned {item.task.task_name} task"
+                    else:
+                        task["description"] = f"{item.task_active_user.first_name} {item.task_active_user.last_name} assigned {item.task.task_name} task to {item.task_affected_user.first_name} {item.task_affected_user.last_name}"
+            all_history.append(task)
+
     context={
         "ticket_detail": ticket_detail,
-        "tasks": tasks
+        "tasks": tasks,
+        "all_history": all_history
     }
     return render(request, "ticket_details.html", context)
 
