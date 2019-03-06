@@ -54,32 +54,35 @@ def ticket_add(request):
     if request.method == "POST":
         if "first_request" in request.POST:
             ticket_form = TicketForm()
-            project = request.POST["project"]
-            template_name = "ticket_add.html"
-            context = {
-                "ticket_form": ticket_form,
-                "project": project
-            }
-            return render(request, template_name, context)
-        else:
-            try:
-                ticket_name = request.POST["ticket_name"]
-                ticket_description = request.POST["ticket_description"]
-                ticket_due = request.POST["ticket_due"]
-                project_id = request.POST["project"]
+    form_data = request.POST
+
+    if "first_request" not in form_data:
+        completed_ticket_form = TicketForm(form_data)
+
+        if completed_ticket_form.is_valid():
+            print(form_data)
+            ticket_name = form_data["ticket_name"]
+            ticket_description = form_data["ticket_description"]
+            ticket_due = form_data["ticket_due"]
+            project_id = form_data["project"]
                 project = Project.objects.filter(pk=project_id)[0]
+
                 if ticket_name == "" or ticket_description == "":
-                    return render(request, "ticket_add.html", {
+                context={
                         "error_message": "You must complete all fields in the form",
                         "ticket_name": ticket_name,
                         "ticket_description": ticket_description,
-                        "ticket_due": ticket_due
-                    })
+                    "ticket_due": ticket_due,
+                    "ticket_form": ticket_form,
+                    "project": project_id
+                }
+
                 else:
                     new_ticket = Ticket(ticket_name=ticket_name, ticket_description=ticket_description, ticket_due= ticket_due, ticket_created = datetime.date.today(), ticket_status="Not Started", project=project)
                     new_ticket.save()
 
                 __update_ticket_history(new_ticket, request.user, "Status", "Not Started")
+
                 if form_data["ticket_assigned_user"] != "":
                     assigned_user = User.objects.get(pk=form_data["ticket_assigned_user"])
 
@@ -88,9 +91,22 @@ def ticket_add(request):
                     new_ticket.ticket_assigned_user = assigned_user
 
                     new_ticket.save()
+
+                if project.project_status == "Complete":
+                    project.project_status = "Active"
+                    project.save()
+
                     return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
+
+    else:
+        project = form_data["project"]
+        context = {
+            "ticket_form": ticket_form,
+            "project": project,
             "add": True
+        }
     return render(request, "ticket_form.html", context)
+
 
 @login_required
 def ticket_delete(request, ticket_id):
