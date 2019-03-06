@@ -58,10 +58,8 @@ def task_add(request):
                     new_task.save()
 
                     return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
-            except KeyError:
-                return render(request, "task_add.html", {
-                    "error_message": "You must complete all fields in the form"
-                })
+            "add": True
+    return render(request, "task_form.html", context)
 
 
 @login_required
@@ -84,9 +82,9 @@ def task_edit(request, task_id):
             "task": task,
             "task_form": task_form,
             "task_status": task_status,
-            "ticket": ticket
+            "edit": True
         }
-        return render(request, template_name, context)
+        return render(request, "task_form.html", context)
     elif request.method == "POST":
         if form_data["task_assigned_user"] != "":
             assigned_user = User.objects.get(pk=form_data["task_assigned_user"])
