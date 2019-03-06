@@ -45,7 +45,7 @@ def ticket_add(request):
     """Handles the addition of new tickets from the project detail view
 
     Returns:
-        [render] -- if the request is a GET, or there is an error with the form data, will return a render of ticket_add.html with an error message (when applicable)
+        [render] -- if the request is a GET, or there is an error with the form data, will return a render of ticket_form.html with an error message (when applicable)
         [HttpResponseRedirect] -- when the request to POST a new ticket is successful, it will redirect to the project detail view with the new ticket added
     """
 
@@ -146,7 +146,7 @@ def ticket_edit(request, ticket_id):
         ticket_id {int} -- The id of the ticket we would like to edit
 
     Returns:
-        [render] -- if the request is a GET, will return a render of ticket_edit.html with pre-populated information in ticket form
+        [render] -- if the request is a GET, will return a render of ticket_form.html with pre-populated information in ticket form
         [HttpResponseRedirect] -- when the POST request to update a ticket is successful, it will redirect to the ticket detail view with the ticket details updated
     """
     ticket = Ticket.objects.get(pk=ticket_id)
