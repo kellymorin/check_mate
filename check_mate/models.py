@@ -1,3 +1,4 @@
+import datetime
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -68,6 +69,18 @@ class Ticket(models.Model):
             task_status[task.task_status] += 1
 
         return task_status
+
+    @property
+    def get_due_date_status(self):
+        today = datetime.date.today()
+        due_date_status = ""
+
+        if self.ticket_due < today and self.ticket_status != "Complete":
+            due_date_status = "This ticket is past due"
+        elif self.ticket_due == today and self.ticket_status != "Complete":
+            due_date_status = "This ticket is due today"
+
+        return due_date_status
 
     def __str__(self):
         return self.ticket_name
@@ -141,6 +154,19 @@ class Task(models.Model):
     task_due = models.DateField(default=None, null=True, blank=True)
     task_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
     task_assigned_user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, default=None, blank=True)
+
+    @property
+    def get_due_date_status(self):
+        today = datetime.date.today()
+        due_date_status = ""
+
+        if self.task_due < today and self.task_status != "Complete":
+            due_date_status = "This task is past due"
+        elif self.task_due == today and self.task_status != "Complete":
+            due_date_status = "This task is due today"
+
+        return due_date_status
+
 
     def __str__(self):
         return self.task_name
