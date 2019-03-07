@@ -98,7 +98,22 @@ class TicketHistory(models.Model):
     activity_type = models.CharField(max_length=50, choices=ACTIVITY_TYPE_CHOICES, default=None)
     status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
     activity_description = models.TextField(blank=True, null=True)
-    activity_date = models.DateTimeField(default=None, null=True, blank=True)
+    activity_date = models.DateField(default=None, null=True, blank=True)
+
+    @property
+    def get_ticket_history_description(self):
+        ticket_description = ""
+
+        if self.activity_type == "Status":
+            ticket_description = f"You updated the status to {self.status}"
+
+        elif self.activity_type == "Assignment":
+            if self.ticket_active_user == self.ticket_affected_user:
+                ticket_description = f"You self assigned task"
+            else:
+                ticket_description = f"You assigned task to {self.ticket_affected_user.first_name} {self.ticket_affected_user.last_name}"
+
+        return ticket_description
 
     def __str__(self):
         return f"{self.ticket.ticket_name}:{self.activity_date} {self.activity_type}"
@@ -155,7 +170,22 @@ class TaskHistory(models.Model):
     activity_type = models.CharField(max_length=50, choices=ACTIVITY_TYPE_CHOICES, default=None)
     status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
     activity_description = models.TextField(blank=True, null=True)
-    activity_date = models.DateTimeField(default=None, null=True, blank=True)
+    activity_date = models.DateField(default=None, null=True, blank=True)
+
+    @property
+    def get_task_history_description(self):
+        task_description = ""
+
+        if self.activity_type == "Status":
+            task_description = f"You updated the status to {self.status}"
+
+        elif self.activity_type == "Assignment":
+            if self.task_active_user == self.task_affected_user:
+                task_description = f"You self assigned task"
+            else:
+                task_description = f"You assigned task to {self.task_affected_user.first_name} {self.task_affected_user.last_name}"
+
+        return task_description
 
     def __str__(self):
         return f"{self.task.task_name}: {self.activity_date} {self.activity_type}"
