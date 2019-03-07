@@ -1,0 +1,30 @@
+{% extends "index.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  {% if error_message %}
+    <p class="alert alert-danger">{{error_message}}</p>
+  {% endif %}
+
+  {% if edit == True %}
+    <h1>Edit Task</h1>
+    <form action="{% url 'check_mate:task_edit' task.id %}" method="POST">
+
+  {% elif add == True %}
+    <h1>Add Task</h1>
+    <form action="{% url 'check_mate:task_add' %}" method="POST">
+  {% endif %}
+
+    {% csrf_token %}
+    {{task_form|crispy}}
+
+    {% if task_status %}
+      {{task_status|crispy}}
+    {% endif %}
+    <input type="hidden" value="{{ticket}}" name="ticket"/>
+    <input class="btn btn-primary" type="submit" value="Save Task"/>
+  </form>
+    <a class="btn btn-success" href="{% url 'check_mate:ticket_details' ticket %}">Go Back</a>
+{% endblock content %}

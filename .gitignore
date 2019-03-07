@@ -41,6 +41,7 @@ bin
 obj
 *.db
 *.sqlite3
+*.pyc
 .vscode
 _codeLibrary
 .env.local
