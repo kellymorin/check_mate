@@ -86,8 +86,9 @@ def project_add(request):
     else:
         context = {
             "project_form": project_form,
+            "add": True
         }
-    return render(request, "project_add.html", context)
+    return render(request, "project_form.html", context)
 
 
 @login_required
@@ -141,10 +142,11 @@ def project_edit(request, project_id):
         project_form = ProjectForm(instance=project)
         context = {
             "project": project,
-            "project_form": project_form
+            "project_form": project_form,
+            "edit": True
         }
 
-        return render(request, "project_edit.html", context)
+        return render(request, "project_form.html", context)
 
     elif request.method == "POST":
         project.project_name = form_data["project_name"]

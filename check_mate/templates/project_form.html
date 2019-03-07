@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  {% if error_message %}
+    <p class="alert alert-danger">{{error_message}}</p>
+  {% endif %}
+
+  {% if edit == True %}
+    <h1>Edit Project</h1>
+    <form action="{% url 'check_mate:project_edit' project.id%}" method="POST">
+
+  {% elif add == True %}
+    <h1>Add Projects</h1>
+    <form action="{% url 'check_mate:project_add' %}" method="POST">
+  {% endif %}
+
+    {% csrf_token %}
+    {{ project_form|crispy}}
+
+    {% if add == True %}
+      <input class="btn btn-primary" type="submit" value="Add Project"/>
+    {% elif edit == True %}
+      <input class="btn btn-primary" type="submit" value="Save Changes"/>
+    {% endif %}
+  </form>
+{% endblock content %}

@@ -26,7 +26,10 @@ class ProjectForm(forms.ModelForm):
 
     class Meta:
         model = Project
-        fields = ("project_name", "project_description")
+        fields = ("project_name", "project_description", "project_due")
+        widgets = {
+            "project_due": forms.DateInput(attrs={"type": "date"})
+        }
 
 
 class TicketForm(forms.ModelForm):
