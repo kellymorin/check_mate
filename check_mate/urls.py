@@ -40,4 +40,6 @@ urlpatterns=[
     path("stand-up", views.stand_up_view, name="stand-up"),
     # ex /stand-up/claim
     path("stand-up/claim", views.claim_tickets_tasks, name="claim"),
+    # ex /stand-up/claim/edit
+    path("claim/edit", views.remove_claim, name="remove-claim")
 ]
