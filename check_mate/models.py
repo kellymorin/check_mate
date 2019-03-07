@@ -54,7 +54,7 @@ class Ticket(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     ticket_name=models.CharField(max_length=100)
     ticket_description = models.TextField(blank=True, null=True)
-    ticket_created = models.DateTimeField(default=None, null=True, blank=True)
+    ticket_created = models.DateField(default=None, null=True, blank=True)
     ticket_due = models.DateField(default=None, null=True, blank=True)
     ticket_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
     ticket_assigned_user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, default=None)
@@ -137,7 +137,7 @@ class Task(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
     task_name=models.CharField(max_length=100)
     task_description = models.TextField(blank=True, null=True)
-    task_created = models.DateTimeField(default=None, null=True, blank=True)
+    task_created = models.DateField(default=None, null=True, blank=True)
     task_due = models.DateField(default=None, null=True, blank=True)
     task_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
     task_assigned_user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, default=None, blank=True)
@@ -189,3 +189,19 @@ class TaskHistory(models.Model):
 
     def __str__(self):
         return f"{self.task.task_name}: {self.activity_date} {self.activity_type}"
+
+class StandUpTickets(models.Model):
+    ticket = models.ForeignKey(Ticket, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    date = models.DateField(default=None, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.first_name} claimed {self.ticket.ticket_name} for {self.date}"
+
+class StandUpTasks(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    date = models.DateField(default=None, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.first_name} claimed {self.task.task_name} for {self.date}"

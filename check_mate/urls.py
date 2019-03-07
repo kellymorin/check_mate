@@ -36,4 +36,6 @@ urlpatterns=[
     path("task/<int:task_id>/edit", views.task_edit, name="task_edit"),
     # ex. /task/1/delete
     path("task/<int:task_id>/delete", views.task_delete, name="task_delete"),
+    # ex. /stand-up
+    path("stand-up", views.stand_up_view, name="stand-up"),
 ]
