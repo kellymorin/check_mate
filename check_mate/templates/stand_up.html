@@ -1,0 +1,67 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div>
+  <h4>Things that happened yesterday</h4>
+  <h6>New Tickets:</h6>
+  {% if tickets %}
+    {% for ticket in tickets %}
+      <p>{{ticket.ticket_name}}</p>
+    {% endfor %}
+  {% else %}
+    <p>No tickets were created yesterday</p>
+  {% endif %}
+  <h6>New Tasks:</h6>
+  {% if tasks %}
+    {% for task in tasks %}
+      <p>{{task.task_name}}</p>
+    {% endfor %}
+  {% else %}
+    <p>No tasks were created yesterday</p>
+  {% endif %}
+  <h6>Things you did yesterday</h6>
+
+  {% for key, value in task_activity.items %}
+    <h6>{{key}}</h6>
+    {% for task in value %}
+      <p>{{task.get_task_history_description}}</p>
+    {% endfor %}
+  {% endfor %}
+
+  {% for key, value in ticket_activity.items %}
+    <h6>{{key}}</h6>
+    {% for ticket in value %}
+      <p>{{ticket.get_ticket_history_description}}</p>
+    {% endfor %}
+  {% endfor %}
+
+  <h4>Today I will...</h4>
+  <a href="{% url 'check_mate:claim' %}">Claim tickets for today</a>
+  <a href="{% url 'check_mate:remove-claim' %}">Edit claimed tickets</a>
+  {% for ticket in claimed_tickets %}
+    <p>{{ticket.ticket.ticket_name}}</p>
+  {% endfor %}
+
+  {% for task in claimed_tasks %}
+    <p>{{task.task.task_name}}</p>
+  {% endfor %}
+
+  <h4>Road Blocks</h4>
+  {% if road_blocked_tickets %}
+    {% for ticket in road_blocked_tickets %}
+      <p>{{ticket.ticket_name}}</p>
+    {% endfor %}
+  {% else %}
+    <p>No tickets are currently blocked</p>
+  {% endif %}
+
+  {% if road_blocked_tasks %}
+    {% for task in road_blocked_tasks %}
+      <p>{{task.task_name}}</p>
+    {% endfor %}
+  {% else %}
+    <p>No tasks are currently blocked</p>
+  {% endif %}
+
+</div>
+{% endblock content %}
