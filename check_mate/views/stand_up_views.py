@@ -17,6 +17,11 @@ from django.urls import reverse
 from check_mate.models import *
 from dateutil.relativedelta import relativedelta, FR
 
+# TODO: Style stand up view
+# TODO: Style claimed tickets view
+# TODO: Style edit claimed tickets view
+# TODO: Style add and edit forms
+
 @login_required
 def stand_up_view(request):
     # if no tickets have been claimed for today's stand up, show the option to select tickets

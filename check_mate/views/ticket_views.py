@@ -18,6 +18,8 @@ from ..utils import __update_ticket_history
 # -------------------------------------------
 
 # TODO: update ticket detail to include history with
+# TODO: Style view ticket details
+# TODO: Style add and edit forms
 
 @login_required
 def ticket_detail(request, ticket_id):

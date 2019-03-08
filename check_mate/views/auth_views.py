@@ -8,6 +8,13 @@ from django.contrib import messages
 
 from check_mate.forms import UserForm, LogInForm
 
+# TODO: Update styling log in
+# TODO: Update styling register page
+# TODO: Update styling nav bar
+# TODO: Add affordance to view which account you're logged into from nav bar and the ability to logout
+# TODO: Style home page
+
+
 def register(request):
     '''Handles the creation of a new user for authentication
 

@@ -10,6 +10,7 @@ from check_mate.forms import TaskForm, TaskStatusForm
 from ..utils import __update_task_history, __update_ticket_history
 
 # TODO: Deploy the error messages functionality from django
+# TODO: Style add and edit forms
 
 @login_required
 def task_add(request):

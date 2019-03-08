@@ -10,8 +10,10 @@ from check_mate.forms import ProjectForm
 
 # Non-MVP Notes--------------------------------------------------------------
 # TODO: Add the ability to filter from all projects, current projects, previous projects
-# TODO: Consider consolodiating add and edit to run through one view and one template
 # ---------------------------------------------------------------------------
+
+# TODO: Style view all projects
+# TODO: Style view project details
 
 
 @login_required
