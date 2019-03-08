@@ -32,7 +32,6 @@ def ticket_detail(request, ticket_id):
     # Then they should be able to see the assigned team member, activity history
 
     ticket_detail = Ticket.objects.filter(pk=ticket_id)[0]
-    print(ticket_detail.ticket_assigned_user)
     ticket_history = TicketHistory.objects.filter(ticket=ticket_id).order_by('activity_date')
     tasks = Task.objects.filter(ticket=ticket_id)
     task_history = []
@@ -113,7 +112,6 @@ def ticket_add(request):
         completed_ticket_form = TicketForm(form_data)
 
         if completed_ticket_form.is_valid():
-            print(form_data)
             ticket_name = form_data["ticket_name"]
             ticket_description = form_data["ticket_description"]
             ticket_due = form_data["ticket_due"]

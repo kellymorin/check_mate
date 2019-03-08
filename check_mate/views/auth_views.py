@@ -25,7 +25,6 @@ def register(request):
         user_form = UserForm(data=request.POST)
 
         if user_form.is_valid():
-            print("user form is valid")
             # Save the user's form data to the database.
             user = user_form.save()
 
