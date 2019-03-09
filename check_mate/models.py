@@ -33,6 +33,16 @@ class Project(models.Model):
 
         return ticket_status
 
+    @property
+    def delete_status(self):
+        can_delete = False
+        all_tickets = Ticket.objects.filter(project = self.id)
+
+        if len(all_tickets) == 0:
+            can_delete = True
+
+        return can_delete
+
     def __str__(self):
         return self.project_name
 
