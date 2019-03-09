@@ -187,6 +187,15 @@ class Task(models.Model):
 
         return due_date_status
 
+    @property
+    def delete_status(self):
+        can_delete = False
+
+        if self.task_status == "Not Started":
+            can_delete = True
+
+        return can_delete
+
 
     def __str__(self):
         return self.task_name

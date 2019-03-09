@@ -42,7 +42,9 @@
                     <p>Task currently unassigned</p>
                   {% endif %}
                   <a href="{% url 'check_mate:task_edit' task.id %}">Edit Task</a>
-                  <a href="{% url 'check_mate:task_delete' task.id %}">Delete Task</a>
+                  {% if task.delete_status == True %}
+                    <a href="{% url 'check_mate:task_delete' task.id %}">Delete Task</a>
+                  {% endif %}
               </div>
           </a>
       {% endfor %}

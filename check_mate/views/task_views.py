@@ -185,16 +185,8 @@ def task_delete(request, task_id):
         return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
     else:
         task = Task.objects.get(pk=task_id)
-        ticket_id = task.ticket.id
 
-        if task.task_status == "Not Started":
-            context = {
-                "task": task,
-                "can_delete": True
-            }
-        else:
-            context={
-                "task": task,
-                "can_delete": False
-            }
+        context = {
+            "task": task,
+        }
         return render(request, "task_delete.html", context)
