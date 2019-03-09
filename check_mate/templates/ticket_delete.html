@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  {% if can_delete == True %}
+  {% if ticket.delete_status == True %}
     <div class="row">
       <div class="col">
         <p>Are you sure you want to delete <strong>{{ticket.ticket_name}}</strong></p>

@@ -13,7 +13,9 @@
   {% else %}
     <p>Ticket currently unassigned </p>
   {% endif %}
-  <a href="{% url 'check_mate:ticket_delete' ticket_detail.id %}">Delete Ticket</a>
+  {% if ticket_detail.delete_status == True %}
+    <a href="{% url 'check_mate:ticket_delete' ticket_detail.id %}">Delete Ticket</a>
+  {% endif %}
   <a href="{% url 'check_mate:ticket_edit' ticket_detail.id %}">Edit Ticket</a>
   <div class="text-center">
     <h5>Related Tasks:</h5>

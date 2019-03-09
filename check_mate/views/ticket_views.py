@@ -182,17 +182,9 @@ def ticket_delete(request, ticket_id):
         return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
     else:
         ticket = Ticket.objects.get(pk=ticket_id)
-        tasks = Task.objects.filter(ticket=ticket_id)
 
-        if len(tasks) == 0:
             context = {
                 "ticket": ticket,
-                "can_delete": True
-            }
-        else:
-            context={
-                "ticket": ticket,
-                "can_delete": False
             }
         return render(request, "ticket_delete.html", context)
 

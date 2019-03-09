@@ -61,7 +61,9 @@
             </div>
           </a>
           <div class="card-footer bg-transparent">
+            {% if ticket.delete_status == True %}
               <a class="text-dark" href="{% url 'check_mate:ticket_delete' ticket.id %}"><i class="far fa-trash-alt"></i></a>
+            {% endif %}
               <a class="text-dark" href="{% url 'check_mate:ticket_edit' ticket.id %}"><i class="fas fa-pencil-alt"></i></a>
             </div>
           </div>
@@ -89,7 +91,9 @@
             </div>
           </a>
           <div class="card-footer bg-transparent">
+            {% if ticket.delete_status == True %}
               <a class="text-dark" href="{% url 'check_mate:ticket_delete' ticket.id %}"><i class="far fa-trash-alt"></i></a>
+            {% endif %}
               <a class="text-dark" href="{% url 'check_mate:ticket_edit' ticket.id %}"><i class="fas fa-pencil-alt"></i></a>
             </div>
           </div>
@@ -111,7 +115,9 @@
             </div>
           </a>
           <div class="card-footer bg-transparent">
+            {% if ticket.delete_status == True %}
               <a class="text-dark" href="{% url 'check_mate:ticket_delete' ticket.id %}"><i class="far fa-trash-alt"></i></a>
+            {% endif %}
               <a class="text-dark" href="{% url 'check_mate:ticket_edit' ticket.id %}"><i class="fas fa-pencil-alt"></i></a>
             </div>
           </div>
@@ -133,7 +139,9 @@
             </div>
           </a>
           <div class="card-footer bg-transparent">
-            <a class="text-dark" href="{% url 'check_mate:ticket_delete' ticket.id %}"><i class="far fa-trash-alt"></i></a>
+            {% if ticket.delete_status == True %}
+              <a class="text-dark" href="{% url 'check_mate:ticket_delete' ticket.id %}"><i class="far fa-trash-alt"></i></a>
+            {% endif %}
             <a class="text-dark" href="{% url 'check_mate:ticket_edit' ticket.id %}"><i class="fas fa-pencil-alt"></i></a>
           </div>
         </div>

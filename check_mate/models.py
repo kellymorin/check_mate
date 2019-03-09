@@ -92,6 +92,16 @@ class Ticket(models.Model):
 
         return due_date_status
 
+    @property
+    def delete_status(self):
+        can_delete = False
+        all_tasks = Task.objects.filter(ticket = self.id)
+
+        if len(all_tasks) == 0:
+            can_delete = True
+
+        return can_delete
+
     def __str__(self):
         return self.ticket_name
 
