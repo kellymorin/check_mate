@@ -13,6 +13,10 @@
   </div>
   <div class="col">
     <h6>Project Due: {{project_detail.project_due|date:'l, F d, Y'}}</h6>
+    {% if project_detail.delete_status == True %}
+      <a  href="{% url 'check_mate:project_delete' project_detail.id %}"><i class="far fa-trash-alt"></i></a>
+    {% endif %}
+    <a href="{% url 'check_mate:project_edit' project_detail.id %}"><i class="fas fa-pencil-alt"></i></a>
   </div>
 </div>
 <form action="{% url 'check_mate:ticket_add'%}" method="POST">

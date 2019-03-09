@@ -17,6 +17,7 @@
     <a href="{% url 'check_mate:ticket_delete' ticket_detail.id %}">Delete Ticket</a>
   {% endif %}
   <a href="{% url 'check_mate:ticket_edit' ticket_detail.id %}">Edit Ticket</a>
+  <a href="{% url 'check_mate:project_details' ticket_detail.project.id %}">Go back to project</a>
   <div class="text-center">
     <h5>Related Tasks:</h5>
     <form action="{% url 'check_mate:task_add' %}" method="POST">
@@ -27,10 +28,10 @@
     </form>
   </div>
   <div class="list-group">
-      {% if  not tasks %}
+      {% if  not ticket_detail.task_set.all %}
           <p class="mb-1">No tasks currently available for this ticket</p>
       {% endif %}
-      {% for task in tasks %}
+      {% for task in ticket_detail.task_set.all %}
           <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
               <div class="d-flex w-100 justify-content-between">
                   <h5 class="mb-1">{{task.task_name}}</h5>

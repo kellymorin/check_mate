@@ -17,9 +17,15 @@ from ..utils import __update_ticket_history
 # Once all tickets are marked as complete, update project status to complete
 # -------------------------------------------
 
-# TODO: update ticket detail to include history with
+# Style Notes ----------------------------------------------------------
 # TODO: Style view ticket details
+    # TODO: Update status items to badges in bootstrap
+
 # TODO: Style add and edit forms
+    # TODO: Update layout of submit/go back buttons on ticket edit form
+    # TODO: On ticket edit form, see if I can set limitations on when a due date can be set for, based on when the parent items due date is
+# -----------------------------------------------------------------------
+
 
 @login_required
 def ticket_detail(request, ticket_id):
@@ -33,10 +39,8 @@ def ticket_detail(request, ticket_id):
     """
     # Then they should be able to see the assigned team member, activity history
 
-    ticket_detail = Ticket.objects.filter(pk=ticket_id)[0]
-    print(ticket_detail.ticket_assigned_user)
+    ticket_detail = Ticket.objects.get(pk=ticket_id)
     ticket_history = TicketHistory.objects.filter(ticket=ticket_id).order_by('activity_date')
-    tasks = Task.objects.filter(ticket=ticket_id)
     task_history = []
 
     for task in tasks:
@@ -93,7 +97,6 @@ def ticket_detail(request, ticket_id):
 
     context={
         "ticket_detail": ticket_detail,
-        "tasks": tasks,
         "all_history": all_history
     }
     return render(request, "ticket_details.html", context)
@@ -120,7 +123,7 @@ def ticket_add(request):
             ticket_description = form_data["ticket_description"]
             ticket_due = form_data["ticket_due"]
             project_id = form_data["project"]
-            project = Project.objects.filter(pk=project_id)[0]
+            project = Project.objects.get(pk=project_id)
 
             if ticket_name == "" or ticket_description == "":
                 context={
@@ -183,9 +186,9 @@ def ticket_delete(request, ticket_id):
     else:
         ticket = Ticket.objects.get(pk=ticket_id)
 
-            context = {
-                "ticket": ticket,
-            }
+        context = {
+            "ticket": ticket,
+        }
         return render(request, "ticket_delete.html", context)
 
 
