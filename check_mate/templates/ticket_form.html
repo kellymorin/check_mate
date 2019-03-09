@@ -8,11 +8,11 @@
   <p class="alert alert-danger">{{error_message}}</p>
   {% endif %}
 
-  {% if edit == True %}
+  {% if ticket %}
     <h1>Edit Ticket</h1>
     <form action="{% url 'check_mate:ticket_edit' ticket.id %}" method="POST">
 
-  {% elif add == True %}
+  {% else %}
     <h1>Add Ticket</h1>
     <form action="{% url 'check_mate:ticket_add' %}" method="POST">
         <input type="hidden" value="{{project}}" name="project"/>
@@ -27,9 +27,9 @@
 
     <input class="btn btn-primary" type="submit" value="Save Ticket"/>
   </form>
-    {% if edit == True %}
+    {% if ticket %}
       <a class="btn btn-success" href="{% url 'check_mate:ticket_details' ticket.id %}">Go Back</a>
-    {% elif add == True %}
+    {% else %}
       <a class="btn btn-success" href="{% url 'check_mate:project_details' project %}">Go Back</a>
     {% endif %}
 {% endblock content %}

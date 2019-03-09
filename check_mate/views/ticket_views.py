@@ -41,6 +41,7 @@ def ticket_detail(request, ticket_id):
 
     ticket_detail = Ticket.objects.get(pk=ticket_id)
     ticket_history = TicketHistory.objects.filter(ticket=ticket_id).order_by('activity_date')
+    tasks = Task.objects.filter(ticket=ticket_id)
     task_history = []
 
     for task in tasks:
@@ -160,8 +161,7 @@ def ticket_add(request):
         project = form_data["project"]
         context = {
             "ticket_form": ticket_form,
-            "project": project,
-            "add": True
+            "project": project
         }
     return render(request, "ticket_form.html", context)
 
@@ -214,8 +214,7 @@ def ticket_edit(request, ticket_id):
         context = {
             "ticket": ticket,
             "ticket_form": ticket_form,
-            "ticket_status": ticket_status,
-            "edit": True
+            "ticket_status": ticket_status
         }
 
         return render(request, "ticket_form.html", context)
