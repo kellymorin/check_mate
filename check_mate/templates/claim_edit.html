@@ -1,58 +1,47 @@
 {% extends 'index.html' %}
 
+{% load ticket_card_claim %}
+{% load task_card_claim %}
+
 {% block content %}
-<form method="POST" action="{% url 'check_mate:remove-claim' %}">
+<div class="container">
   <div class="row">
+    <form method="POST" action="{% url 'check_mate:remove-claim' %}">
       {% csrf_token%}
-      <button type="submit" value="Save Changes">Save Changes</button>
-    <div class="col">
+      <div class="d-flex justify-content-center">
+        <h4>Edit Claimed Tasks and Tickets for Today</h4>
+        <button class="mx-2" type="submit" value="Save Changes">Save Changes</button>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col flex-column text-center space-around">
+      <h6>Your Claimed Tickets</h6>
+    </div>
+    <div class="col flex-column text-center space-around">
+      <h6>Your Claimed Tasks</h6>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col border shadow-sm">
       {% if claimed_tickets %}
-        <h4>Your Claimed Tickets</h4>
         {% for ticket in claimed_tickets %}
-          <div class="card" style="width:18rem;">
-            <div class="card-body">
-              <input type="checkbox" name="ticket-{{ticket.ticket.id}}"><h5 class="card-title">{{ticket.ticket.ticket_name}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{ticket.ticket.ticket_description}}</h6>
-              <div class="card-text">
-                {% if ticket.ticket.get_due_date_status == "This ticket is past due" %}
-                  <div class="alert alert-danger" role="alert">
-                    {{ticket.ticket.get_due_date_status}}
-                  </div>
-                {% elif ticket.ticket.get_due_date_status == "This ticket is due today" %}
-                  <div class="alert alert-warning" role="alert">
-                    {{ticket.ticket.get_due_date_status}}
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-          </div>
+          {% ticket_card_claim ticket.ticket_id %}
         {% endfor %}
+      {% else %}
+      {% endif %}
+
+    </div>
+    <div class="col border shadow-sm">
+      {% if claimed_tasks %}
+        {% for task in claimed_tasks %}
+          {% task_card_claim task.task_id %}
+        {% endfor %}
+      {% else %}
       {% endif %}
     </div>
-    <div class="col">
-      {% if claimed_tasks %}
-        <h4>Your Claimed Tasks</h4>
-          {% for task in claimed_tasks %}
-            <div class="card" style="width:18rem;">
-              <div class="card-body">
-                <input type="checkbox" name="task-{{task.task.id}}"><h5 class="card-title">{{task.task.task_name}}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{task.task.task_description}}</h6>
-                <div class="card-text">
-                  {% if task.task.get_due_date_status == "This task is past due" %}
-                    <div class="alert alert-danger" role="alert">
-                      {{task.task.get_due_date_status}}
-                    </div>
-                  {% elif task.task.get_due_date_status == "This task is due today" %}
-                    <div class="alert alert-warning" role="alert">
-                      {{task.task.get_due_date_status}}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        {% endif %}
-      </div>
-    </div>
-  </form>
+  </div>
+
+</form>
+</div>
 {% endblock %}
