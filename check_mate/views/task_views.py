@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.contrib import messages
 
 from check_mate.models import *
 from check_mate.forms import TaskForm, TaskStatusForm
@@ -46,6 +47,7 @@ def task_add(request):
                     "task_form": task_form,
                     "ticket": ticket_id
                 }
+                messages.error(request, "You must complete all fields in the form")
 
             else:
                 new_task = Task(task_name=task_name, task_description=task_description, task_due=task_due, task_created=datetime.date.today(), task_status="Not Started", ticket=ticket)
@@ -72,6 +74,7 @@ def task_add(request):
                         project.project_status = "Active"
                         project.save()
 
+                messages.success(request, "Task successfully saved")
                 return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
     else:
         ticket = form_data["ticket"]
@@ -162,6 +165,7 @@ def task_edit(request, task_id):
                 project.project_status = "Active"
                 project.save()
 
+        messages.success(request, "Changes successfully saved")
         return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
 
 
@@ -182,6 +186,7 @@ def task_delete(request, task_id):
         task = Task.objects.get(pk=task_id)
         ticket_id = task.ticket.id
         task.delete()
+        messages.success(request, "Task successfully deleted")
         return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
     else:
         task = Task.objects.get(pk=task_id)

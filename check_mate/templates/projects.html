@@ -1,6 +1,10 @@
 {% extends 'index.html' %}
 
 {% block content %}
+
+  {% for message in messages %}
+    <div class="{{message.tags}} alert" role="alert">{{message}}</div>
+  {% endfor %}
 <div class="d-flex align-content-stretch row flex-wrap">
   <div class="p-2 m-2 project_layout bg-info text-white bd-highlight">
     <a href="{% url 'check_mate:project_add' %}">

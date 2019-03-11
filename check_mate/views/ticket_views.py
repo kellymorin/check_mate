@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.contrib import messages
 
 from check_mate.models import *
 from check_mate.forms import TicketForm, TicketStatusForm
@@ -136,6 +137,8 @@ def ticket_add(request):
                     "project": project_id
                 }
 
+                messages.error(request, "You must complete all fields in the form")
+
             else:
                 new_ticket = Ticket(ticket_name=ticket_name, ticket_description=ticket_description, ticket_due= ticket_due, ticket_created = datetime.date.today(), ticket_status="Not Started", project=project)
                 new_ticket.save()
@@ -154,6 +157,8 @@ def ticket_add(request):
                 if project.project_status == "Complete":
                     project.project_status = "Active"
                     project.save()
+
+                messages.success(request, "Ticket successfully saved")
 
                 return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
 
@@ -182,6 +187,7 @@ def ticket_delete(request, ticket_id):
         ticket = Ticket.objects.get(pk=ticket_id)
         project_id = ticket.project.id
         ticket.delete()
+        messages.success(request, "Ticket successfully deleted")
         return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
     else:
         ticket = Ticket.objects.get(pk=ticket_id)
@@ -252,4 +258,5 @@ def ticket_edit(request, ticket_id):
             project.project_status = "Active"
             project.save()
 
+        messages.success(request, "Ticket updates successfully saved")
         return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))

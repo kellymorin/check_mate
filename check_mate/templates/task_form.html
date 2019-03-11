@@ -4,9 +4,9 @@
 
 {% block content %}
 
-  {% if error_message %}
-    <p class="alert alert-danger">{{error_message}}</p>
-  {% endif %}
+  {% for message in messages %}
+    <div class="{{messages.tags}} alert alert-danger" role="alert">{{message}}</div>
+  {% endfor %}
 
   {% if edit == True %}
     <h1>Edit Task</h1>

@@ -1,6 +1,10 @@
 {% extends "index.html" %}
 
 {% block content %}
+{% for message in messages %}
+<div class="{{messages.tags}} alert alert-danger" role="alert">{{message}}</div>
+{% endfor%}
+
 <div>
   <h6>{{ticket_detail.ticket_name}}</h6>
   <p>{{ticket_detail.ticket_description}}</p>
@@ -55,6 +59,7 @@
       {% for history in all_history %}
         <p>{{history.description}}</p>
         <p>{{history.activity_date| date:"l, F d, Y"}}</p>
+        <p>{{history.activity_date | timesince }}</p>
       {% endfor %}
     {% else %}
       <p>No History available for this ticket</p>

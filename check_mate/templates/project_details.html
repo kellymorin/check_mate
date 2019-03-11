@@ -3,6 +3,9 @@
 {% load ticket_card %}
 
 {% block content %}
+{% for message in messages %}
+  <div class="{{message.tags}} alert" role="alert">{{message}}</div>
+{% endfor %}
 <div class="row">
   <div class="col">
     <h6>{{project_detail.project_name}}</h6>

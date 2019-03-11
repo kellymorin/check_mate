@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.contrib import messages
 
 from check_mate.models import *
 from check_mate.forms import ProjectForm
@@ -79,9 +80,13 @@ def project_add(request):
                     "project_due": project_due
                 }
 
+                messages.error(request, "You must complete all fields in the form")
+
             else:
                 new_project = Project(project_name=project_name, project_description= project_description, project_due=project_due, project_created=datetime.date.today(),project_status = "Not Started")
                 new_project.save()
+
+                messages.success(request, "Project successfully saved")
 
                 return HttpResponseRedirect(reverse("check_mate:projects"))
 
@@ -108,6 +113,7 @@ def project_delete(request, project_id):
     if request.method == "POST":
         project= Project.objects.get(pk=project_id)
         project.delete()
+        messages.success(request, "Project successfully deleted")
         return HttpResponseRedirect(reverse("check_mate:projects"))
     else:
         project = Project.objects.get(pk=project_id)
@@ -150,5 +156,7 @@ def project_edit(request, project_id):
             project.project_due = form_data["project_due"]
 
         project.save()
+
+        messages.success(request, "Changes successfully saved")
 
         return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id, )))
