@@ -1,0 +1,24 @@
+<a href="{% url 'check_mate:ticket_details' ticket.id %}">
+    {% if ticket.get_due_date_status == "This ticket is past due" %}
+      <div class="card border-bottom-danger" style="width: 18rem;">
+    {% elif ticket.get_due_date_status == "This ticket is due today" %}
+      <div class="card border-bottom-warning" style="width: 18rem;">
+    {% else %}
+      <div class="card" style="width: 18rem;">
+    {% endif%}
+      <div class="card-body">
+        <div class="card-title text-dark">{{ticket.ticket_name}}</div>
+        <p class="card-text ticket-description mb-2 text-muted">{{ticket.ticket_description}}</p>
+        <div class="progress">
+          <div class="progress-bar bd-success" role="progressbar" style="width: calc({{ticket.get_task_status.Complete}}/{{ticket.get_task_status.Total}}*100%)" aria-valuenow="{{ticket.get_task_status.Complete}}" aria-valuemin="0" aria-valuemax="{{ticket.get_task_status.Total}}"></div>
+          <div class="progress-bar bg-info" role="progressbar" style="width: calc({{ticket.get_task_status.Active}}/{{ticket.get_task_status.Total}}*100%)" aria-valuenow="{{ticket.get_task_status.Active}}" aria-valuemin="0" aria-valuemax="{{ticket.get_task_status.Total}}"></div>
+        </div>
+      </div>
+    </a>
+      <div class="card-footer bg-transparent">
+        {% if ticket.delete_status == True %}
+          <a class="text-dark" href="{% url 'check_mate:ticket_delete' ticket.id %}"><i class="far fa-trash-alt"></i></a>
+        {% endif %}
+        <a class="text-dark" href="{% url 'check_mate:ticket_edit' ticket.id %}"><i class="fas fa-pencil-alt"></i></a>
+      </div>
+    </div>

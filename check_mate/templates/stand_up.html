@@ -43,7 +43,7 @@
   {% endfor %}
 
   {% for task in claimed_tasks %}
-    <p>{{task.task.task_name}}</p>
+    <p>{{task.task_id}}{{task.task.task_name}}</p>
   {% endfor %}
 
   <h4>Road Blocks</h4>
