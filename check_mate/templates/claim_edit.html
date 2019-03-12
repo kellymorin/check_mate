@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 
-{% load ticket_card_claim %}
-{% load task_card_claim %}
+{% load task_card %}
+{% load ticket_card %}
 
 {% block content %}
 <div class="container">
@@ -26,7 +26,7 @@
     <div class="col border shadow-sm">
       {% if claimed_tickets %}
         {% for ticket in claimed_tickets %}
-          {% ticket_card_claim ticket.ticket_id %}
+          {% ticket_card ticket.ticket_id True %}
         {% endfor %}
       {% else %}
       {% endif %}
@@ -35,7 +35,7 @@
     <div class="col border shadow-sm">
       {% if claimed_tasks %}
         {% for task in claimed_tasks %}
-          {% task_card_claim task.task_id %}
+          {% task_card task.task_id True %}
         {% endfor %}
       {% else %}
       {% endif %}

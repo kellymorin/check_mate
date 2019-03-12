@@ -10,7 +10,7 @@
   <div class="col">
     <h6>{{project_detail.project_name}}</h6>
     <p>{{project_detail.project_description}}</p>
-    <h6>Project Status: {{project_detail.project_status}}</h6>
+    <h6>Project Status: {% status_badge project_detail.project_status %}</h6>
     <div class="progress">
         <div class="progress-bar bg-success" role="progressbar" style="width: calc({{project_detail.get_ticket_status.Complete}}/{{project_detail.get_ticket_status.Total}}*100%)" aria-valuenow="{{project_detail.get_ticket_status.Complete}}" aria-valuemin="0" aria-valuemax="{{project_detail.get_ticket_status.Total}}"></div>
         <div class="progress-bar bg-info" role="progressbar" style="width: calc({{project_detail.get_ticket_status.Active}}/{{project_detail.get_ticket_status.Total}}*100%)" aria-valuenow="{{project_detail.get_ticket_status.Active}}" aria-valuemin="0" aria-valuemax="{{project_detail.get_ticket_status.Total}}"></div>
@@ -52,28 +52,28 @@
   <div class="col border shadow-sm">
     {% for ticket in tickets %}
       {% if ticket.ticket_status == "Not Started" %}
-        {% ticket_card ticket.id %}
+          {% ticket_card ticket.id False %}
       {% endif %}
     {% endfor %}
   </div>
   <div class="col border shadow-sm">
     {% for ticket in tickets %}
       {% if ticket.ticket_status == "Active" %}
-        {% ticket_card ticket.id %}
+          {% ticket_card ticket.id False %}
       {% endif %}
     {% endfor %}
   </div>
   <div class="col border shadow-sm">
     {% for ticket in tickets %}
       {% if ticket.ticket_status == "Ready for Review" %}
-        {% ticket_card ticket.id %}
+          {% ticket_card ticket.id False %}
       {% endif %}
     {% endfor %}
   </div>
   <div class="col border shadow-sm">
     {% for ticket in tickets %}
       {% if ticket.ticket_status == "Complete" %}
-        {% ticket_card ticket.id %}
+          {% ticket_card ticket.id False %}
       {% endif %}
     {% endfor %}
     </div>

@@ -1,12 +1,14 @@
 {% extends 'index.html' %}
 
+{% load ticket_card %}
+{% load task_card %}
 {% block content %}
 <div>
   <h4>Things that happened yesterday</h4>
   <h6>New Tickets:</h6>
   {% if tickets %}
     {% for ticket in tickets %}
-      <p>{{ticket.ticket_name}}</p>
+          {% ticket_card ticket.id False%}
     {% endfor %}
   {% else %}
     <p>No tickets were created yesterday</p>
@@ -14,7 +16,7 @@
   <h6>New Tasks:</h6>
   {% if tasks %}
     {% for task in tasks %}
-      <p>{{task.task_name}}</p>
+          {% task_card task.id False%}
     {% endfor %}
   {% else %}
     <p>No tasks were created yesterday</p>
@@ -39,11 +41,11 @@
   <a href="{% url 'check_mate:claim' %}">Claim tickets for today</a>
   <a href="{% url 'check_mate:remove-claim' %}">Edit claimed tickets</a>
   {% for ticket in claimed_tickets %}
-    <p>{{ticket.ticket.ticket_name}}</p>
+          {% ticket_card ticket.ticket_id False %}
   {% endfor %}
 
   {% for task in claimed_tasks %}
-    <p>{{task.task_id}}{{task.task.task_name}}</p>
+          {% task_card task.task_id False %}
   {% endfor %}
 
   <h4>Road Blocks</h4>

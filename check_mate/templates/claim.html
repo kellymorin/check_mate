@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 
-{% load ticket_card_claim %}
-{% load task_card_claim %}
+{% load ticket_card %}
+{% load task_card %}
 
 {% block content %}
 <div class="container">
@@ -31,14 +31,14 @@
       {% if assigned_tickets %}
         <h6 class="text-center">Tickets</h6>
         {% for ticket in assigned_tickets %}
-          {% ticket_card_claim ticket.id %}
+          {% ticket_card ticket.id True %}
         {% endfor %}
       {% endif %}
 
       {% if assigned_tasks %}
         <h6 class="text-center">Tasks</h6>
         {% for task in assigned_tasks %}
-          {% task_card_claim task.id %}
+          {% task_card task.id True %}
         {% endfor %}
       {% endif %}
     </div>
@@ -46,14 +46,14 @@
       {% if past_due_tickets %}
         <h6 class="text-center">Tickets</h6>
         {% for ticket in past_due_tickets %}
-          {% ticket_card_claim ticket.id %}
+          {% ticket_card ticket.id True %}
         {% endfor %}
       {% endif %}
 
       {% if past_due_tasks %}
         <h6 class="text-center">Tasks</h6>
         {% for task in past_due_tasks %}
-          {% task_card_claim task.id %}
+          {% task_card task.id True %}
         {% endfor %}
       {% endif %}
     </div>
@@ -61,17 +61,34 @@
       {% if review_tickets %}
         <h6 class="text-center">Tickets</h6>
         {% for ticket in review_tickets %}
-          {% ticket_card_claim ticket.id %}
+          {% ticket_card ticket.id True %}
         {% endfor %}
       {% endif %}
 
       {% if review_tasks %}
         <h6 class="text-center">Tasks</h6>
         {% for task in review_tasks %}
-          {% task_card_claim task.id %}
+          {% task_card task.id True %}
         {% endfor %}
       {% endif %}
     </div>
+    {% if other_tickets or other_tasks %}
+    <div class="col border shadow-sm">
+      {% if other_tickets %}
+      <h6 class="text-center">Tickets</h6>
+      {% for ticket in other_tickets %}
+        {% ticket_card ticket.id True %}
+      {% endfor %}
+      {% endif %}
+
+      {% if other_tasks %}
+      <h6 class="text-center">Tasks</h6>
+      {% for task in other_tasks %}
+      {% task_card task.id True %}
+        {% endfor %}
+      {% endif %}
+    </div>
+    {% endif %}
   </div>
     </form>
 </div>

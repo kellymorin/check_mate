@@ -1,5 +1,6 @@
 {% extends "index.html" %}
 
+{% load status_badge %}
 {% block content %}
 {% for message in messages %}
 <div class="{{messages.tags}} alert alert-danger" role="alert">{{message}}</div>
@@ -8,6 +9,7 @@
 <div>
   <h6>{{ticket_detail.ticket_name}}</h6>
   <p>{{ticket_detail.ticket_description}}</p>
+    <h6>Ticket Status: {% status_badge ticket_detail.ticket_status %}</h6>
   <h6>Ticket Due: {{ticket_detail.ticket_due|date:'l, F d, Y'}}</h6>
   <h6>Ticket Status: {{ticket_detail.ticket_status}}</h6>
   <p>Completed tasks: {{ticket_detail.get_task_status.Complete}}</p>
@@ -39,7 +41,7 @@
           <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
               <div class="d-flex w-100 justify-content-between">
                   <h5 class="mb-1">{{task.task_name}}</h5>
-                  <p>{{task.task_status}}</p>
+            <p>Task Status: {% status_badge task.task_status %}</p>
                   <p>{{task.task_description}}</p>
                   {% if task.task_assigned_user is not None %}
                     <p>Assigned Team Member: {{task.task_assigned_user.first_name}} {{task.task_assigned_user.last_name}}</p>
