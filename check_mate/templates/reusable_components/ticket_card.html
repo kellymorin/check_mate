@@ -1,12 +1,11 @@
+{% load progress_bar %}
+
 <div class="card mb-2" style="width: 16rem;">
   <a href="{% url 'check_mate:ticket_details' ticket.id %}">
     <div class="card-body">
       <div class="card-title text-dark">{{ticket.ticket_name}}</div>
       <p class="card-text ticket-description mb-2 text-muted">{{ticket.ticket_description}}</p>
-      <div class="progress">
-        <div class="progress-bar bg-success" role="progressbar" style="width: calc({{ticket.get_task_status.Complete}}/{{ticket.get_task_status.Total}}*100%)" aria-valuenow="{{ticket.get_task_status.Complete}}" aria-valuemin="0" aria-valuemax="{{ticket.get_task_status.Total}}"></div>
-        <div class="progress-bar bg-info" role="progressbar" style="width: calc({{ticket.get_task_status.Active}}/{{ticket.get_task_status.Total}}*100%)" aria-valuenow="{{ticket.get_task_status.Active}}" aria-valuemin="0" aria-valuemax="{{ticket.get_task_status.Total}}"></div>
-      </div>
+      {% progress_bar ticket.get_task_status.Total ticket.get_task_status.Complete ticket.get_task_status.Active %}
     </div>
     {% if ticket.get_due_date_status == "This ticket is past due" %}
       <div class="card-text text-center text-danger ticket-description">{{ticket.get_due_date_status}}</div>
