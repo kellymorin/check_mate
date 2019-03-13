@@ -6,6 +6,7 @@
 {% block content %}
 <div class="container">
   <div class="row">
+    <a class="btn" href="{% url 'check_mate:claim-all' %}">View all Tickets</a>
     <form method="POST" action="{% url 'check_mate:claim' %}">
       {% csrf_token %}
       <div class="d-flex justify-content-center">
@@ -24,6 +25,11 @@
     <div class="col flex-column text-center space-around">
       <h6>Ready for Review</h6>
     </div>
+    {% if other_tickets or other_tasks %}
+      <div class="col flex-column text-center space-around">
+        <h6>Other</h6>
+      </div>
+    {% endif %}
   </div>
 
   <div class="row">

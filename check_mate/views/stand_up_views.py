@@ -94,6 +94,33 @@ def claim_tickets_tasks(request):
 
         return HttpResponseRedirect(reverse("check_mate:stand-up"))
 
+    elif request.path == "/stand-up/claim/view-all":
+        # Find tickets and tasks assigned to user that are not closed
+        assigned_tickets = Ticket.objects.filter(ticket_assigned_user = request.user.id).exclude(ticket_status = "Complete")
+        assigned_tasks = Task.objects.filter(task_assigned_user = request.user.id).exclude(task_status = "Complete")
+
+        # Find all tickets or tasks that are past due and not assigned to the user
+        past_due_tickets = Ticket.objects.filter(ticket_due__lte=today).exclude(ticket_status = "Complete").exclude(ticket_assigned_user = request.user.id)
+        past_due_tasks = Task.objects.filter(task_due__lte=today).exclude(task_status = "Complete").exclude(task_assigned_user = request.user.id)
+
+        # Find tickets or tasks currently ready for review that are not assigned to user
+        review_tickets = Ticket.objects.filter(ticket_status = "Ready for Review").exclude(ticket_assigned_user = request.user.id)
+        review_tasks = Task.objects.filter(task_status = "Ready for Review").exclude(task_assigned_user = request.user.id)
+
+        other_tickets = Ticket.objects.all().exclude(ticket_assigned_user = request.user.id).exclude(ticket_status = "Ready for Review").exclude(ticket_status = "Complete").exclude(ticket_due__lte=today)
+        other_tasks = Task.objects.all().exclude(task_assigned_user = request.user.id).exclude(task_status = "Ready for Review").exclude(task_status = "Complete").exclude(task_due__lte=today)
+
+        context = {
+            "assigned_tickets": assigned_tickets,
+            "assigned_tasks": assigned_tasks,
+            "past_due_tickets": past_due_tickets,
+            "past_due_tasks": past_due_tasks,
+            "review_tickets": review_tickets,
+            "review_tasks": review_tasks,
+            "other_tickets": other_tickets,
+            "other_tasks":other_tasks
+        }
+
     else:
         # Find tickets and tasks assigned to user that are not closed
         assigned_tickets = Ticket.objects.filter(ticket_assigned_user = request.user.id).exclude(ticket_status = "Complete")
