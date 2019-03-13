@@ -73,11 +73,7 @@ def project_add(request):
 
             if project_name == "" or project_description == "":
                 context = {
-                    "error_message": "You must complete all fields in the form",
-                    "project_name": project_name,
-                    "project_description": project_description,
-                    "project_form": project_form,
-                    "project_due": project_due
+                    "project_form": completed_project_form
                 }
 
                 messages.error(request, "You must complete all fields in the form")

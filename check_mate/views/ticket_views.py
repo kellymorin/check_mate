@@ -129,11 +129,7 @@ def ticket_add(request):
 
             if ticket_name == "" or ticket_description == "":
                 context={
-                    "error_message": "You must complete all fields in the form",
-                    "ticket_name": ticket_name,
-                    "ticket_description": ticket_description,
-                    "ticket_due": ticket_due,
-                    "ticket_form": ticket_form,
+                    "ticket_form": completed_ticket_form,
                     "project": project_id
                 }
 

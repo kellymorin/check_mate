@@ -26,10 +26,10 @@
     {% endif %}
 
     <input class="btn btn-primary" type="submit" value="Save Ticket"/>
-  </form>
     {% if ticket %}
       <a class="btn btn-success" href="{% url 'check_mate:ticket_details' ticket.id %}">Go Back</a>
     {% else %}
       <a class="btn btn-success" href="{% url 'check_mate:project_details' project %}">Go Back</a>
     {% endif %}
+  </form>
 {% endblock content %}

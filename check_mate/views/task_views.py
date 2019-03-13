@@ -38,14 +38,10 @@ def task_add(request):
             project = Project.objects.filter(pk=project_id)[0]
 
             if task_name == "" or task_description == "":
-                # TODO: NEED TO UPDATE THIS SO IT AUTOPOPULATES FORM
                 context = {
-                    "error_message": "You must complete all fields in the form",
-                    "task_name": task_name,
-                    "task_description": task_description,
-                    "task_due": task_due,
-                    "task_form": task_form,
-                    "ticket": ticket_id
+                    "task_form": completed_task_form,
+                    "ticket": ticket_id,
+                    "add": True
                 }
                 messages.error(request, "You must complete all fields in the form")
 
@@ -100,9 +96,8 @@ def task_edit(request, task_id):
 
     task = Task.objects.get(pk=task_id)
     ticket_id = task.ticket.id
-    ticket = Ticket.objects.get(pk=ticket_id)
-    project_id = ticket.project.id
-    project = Project.objects.get(pk=project_id)
+    ticket = Ticket.objects.get(pk=task.ticket.id)
+    project = Project.objects.get(pk=ticket.project.id)
     form_data = request.POST
 
     if request.method == "GET":

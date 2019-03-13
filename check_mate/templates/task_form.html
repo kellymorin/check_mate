@@ -25,6 +25,6 @@
     {% endif %}
     <input type="hidden" value="{{ticket}}" name="ticket"/>
     <input class="btn btn-primary" type="submit" value="Save Task"/>
-  </form>
     <a class="btn btn-success" href="{% url 'check_mate:ticket_details' ticket %}">Go Back</a>
+  </form>
 {% endblock content %}
