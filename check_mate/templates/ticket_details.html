@@ -1,5 +1,6 @@
 {% extends "index.html" %}
 
+{% load task_card %}
 {% load section_header %}
 {% block content %}
 {% for message in messages %}
@@ -13,16 +14,27 @@
   <div class="col">
   <div class="text-center">
     <h5>Related Tasks:</h5>
+      {% if ticket_detail.task_set.all %}
     <form action="{% url 'check_mate:task_add' %}" method="POST">
       {% csrf_token %}
       <input type="submit"><i class="fas fa-plus"></i></input>
       <input type="hidden" name="ticket" value="{{ticket_detail.id}}"/>
       <input type="hidden" name="first_request"/>
     </form>
+      {% endif %}
   </div>
   <div class="list-group">
-      {% if  not ticket_detail.task_set.all %}
-          <p class="mb-1">No tasks currently available for this ticket</p>
+    {% if not ticket_detail.task_set.all %}
+      <div class="jumbotron">
+        <h6 class="display-4">No Tasks for {{ticket_detail.ticket_name}}</h6>
+        <p class="lead">Add new tasks for this project</p>
+        <form action="{% url 'check_mate:task_add' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit"><i class="fas fa-plus"></i></input>
+            <input type="hidden" name="ticket" value="{{ticket_detail.id}}"/>
+            <input type="hidden" name="first_request"/>
+          </form>
+      </div>
       {% endif %}
       {% for task in ticket_detail.task_set.all %}
           <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
