@@ -1,7 +1,10 @@
+{% load status_badge %}
+
 <div class="card mb-2" style="width: 16rem;">
   <div class="card-body">
     <div class="card-title text-dark">{{task.task_name}}</div>
     <p class="card-text ticket-description mb-2 text-muted">{{task.task_description}}</p>
+    {% status_badge task.task_status%}
   </div>
 
   {% if task.get_due_date_status == "This task is past due" %}
