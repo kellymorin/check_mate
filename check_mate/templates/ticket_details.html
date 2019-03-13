@@ -7,13 +7,17 @@
 <div class="{{message.tags}} alert" role="alert">{{message}}</div>
 {% endfor%}
 
+<div class="row">
+  <div class="col-9">
 {% section_header "Ticket" ticket_detail %}
 
 
 <div class="row">
   <div class="col">
-  <div class="text-center">
-    <h5>Related Tasks:</h5>
+        <div class="card mt-3">
+          <div class="card-header bg-info">
+            <div class="row justify-content-center">
+              <h5 class="text-white">Related Tasks:</h5>
       {% if ticket_detail.task_set.all %}
     <form action="{% url 'check_mate:task_add' %}" method="POST">
       {% csrf_token %}
@@ -23,7 +27,8 @@
     </form>
       {% endif %}
   </div>
-  <div class="list-group">
+          </div>
+          <div class="card-body">
     {% if not ticket_detail.task_set.all %}
       <div class="jumbotron">
         <h6 class="display-4">No Tasks for {{ticket_detail.ticket_name}}</h6>
@@ -35,36 +40,26 @@
             <input type="hidden" name="first_request"/>
           </form>
       </div>
-      {% endif %}
+          {% else %}
+            <div class="card-columns">
       {% for task in ticket_detail.task_set.all %}
-          <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
-              <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">{{task.task_name}}</h5>
-            <p>Task Status: {% status_badge task.task_status %}</p>
-                  <p>{{task.task_description}}</p>
-                  {% if task.task_assigned_user is not None %}
-                    <p>Assigned Team Member: {{task.task_assigned_user.first_name}} {{task.task_assigned_user.last_name}}</p>
-                  {% else %}
-                    <p>Task currently unassigned</p>
-                  {% endif %}
-                  <a href="{% url 'check_mate:task_edit' task.id %}">Edit Task</a>
-                  {% if task.delete_status == True %}
-                    <a href="{% url 'check_mate:task_delete' task.id %}">Delete Task</a>
+                {% task_card task.id False %}
+              {% endfor%}
+            </div>
                   {% endif %}
               </div>
-          </a>
-      {% endfor %}
+        </div>
+      </div>
+    </div>
   </div>
-  <div>
-    {% if all_history %}
+  <div class="col-3 position-sticky">
+      <h4 class="text-center mb-3">Ticket History</h4>
+      <div class="ticket-history-description">
       {% for history in all_history %}
-        <p>{{history.description}}</p>
-        <p>{{history.activity_date| date:"l, F d, Y"}}</p>
-        <p>{{history.activity_date | timesince }}</p>
+          <p class="mb-0 ticket-description">{{history.description}}</p>
+          <p class="ticket-description text-muted">{{history.activity_date| date:"l, F d, Y"}}</p>
       {% endfor %}
-    {% else %}
-      <p>No History available for this ticket</p>
-    {% endif %}
+      </div>
   </div>
 </div>
 {% endblock content %}

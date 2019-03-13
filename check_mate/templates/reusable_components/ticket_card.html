@@ -14,10 +14,6 @@
     {% endif %}
   </a>
 
-  {% comment %}
-  TODO: Ask sebastion to help with alignment here
-  {% endcomment %}
-
   <div class="card-footer bg-transparent">
     <div class="row">
       <div class="col">
@@ -28,7 +24,7 @@
         <div class="text-white initials-circle bg-info">{{user_initials}}</div>
       {% endif %}
       </div>
-      <div class="col text-right">
+      <div class="col text-right mt-0">
         <a class="text-dark icon" href="{% url 'check_mate:ticket_edit' ticket.id %}"><i class="fas fa-pencil-alt"></i></a>
         {% if ticket.delete_status == True %}
           <a class="text-dark icon" href="{% url 'check_mate:ticket_delete' ticket.id %}"><i class="far fa-trash-alt"></i></a>
