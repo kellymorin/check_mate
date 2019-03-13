@@ -5,7 +5,7 @@
 {% block content %}
 
   {% for message in messages %}
-    <div class="{{messages.tags}} alert alert-danger" role="alert">{{message}}</div>
+    <div class="{{message.tags}} alert" role="alert">{{message}}</div>
   {% endfor %}
 
   {% if edit == True %}
