@@ -41,5 +41,7 @@ urlpatterns=[
     # ex /stand-up/claim
     path("stand-up/claim", views.claim_tickets_tasks, name="claim"),
     # ex /stand-up/claim/edit
-    path("claim/edit", views.remove_claim, name="remove-claim")
+    path("claim/edit", views.remove_claim, name="remove-claim"),
+    # ex /stand-up/claim/view-all
+    path("stand-up/claim/view-all", views.claim_tickets_tasks, name="claim-all"),
 ]
