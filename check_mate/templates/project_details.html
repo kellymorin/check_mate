@@ -21,51 +21,64 @@
 {% endif %}
 
 <div class="container">
-<div class="row">
-  <div class="col flex-column text-center space-around">
+  {% if tickets %}
+  <div class="row bg-info pt-3">
+    <div class="col text-white flex-column text-center space-around">
     <h6 >Backlog</h6>
   </div>
-  <div class="col flex-column text-center">
+    <div class="col text-white flex-column text-center">
     <h6>In Process</h6>
   </div>
-  <div class="col text-center flex-column">
+    <div class="col text-white text-center flex-column">
     <h6>Review</h6>
   </div>
-  <div class="col text-center flex-column">
+    <div class="col text-white text-center flex-column">
     <h6>Complete</h6>
   </div>
 </div>
 
 <div class="row">
-  <div class="col border shadow-sm">
+    <div class="col border shadow-sm pt-2">
     {% for ticket in tickets %}
       {% if ticket.ticket_status == "Not Started" %}
           {% ticket_card ticket.id False %}
       {% endif %}
     {% endfor %}
   </div>
-  <div class="col border shadow-sm">
+    <div class="col border shadow-sm pt-2">
     {% for ticket in tickets %}
       {% if ticket.ticket_status == "Active" %}
           {% ticket_card ticket.id False %}
       {% endif %}
     {% endfor %}
   </div>
-  <div class="col border shadow-sm">
+    <div class="col border shadow-sm pt-2">
     {% for ticket in tickets %}
       {% if ticket.ticket_status == "Ready for Review" %}
           {% ticket_card ticket.id False %}
       {% endif %}
     {% endfor %}
   </div>
-  <div class="col border shadow-sm">
+    <div class="col border shadow-sm pt-2">
     {% for ticket in tickets %}
       {% if ticket.ticket_status == "Complete" %}
           {% ticket_card ticket.id False %}
       {% endif %}
     {% endfor %}
     </div>
-
   </div>
+  {% else %}
+    <div class="jumbotron">
+      <h1 class="display-4">No Tickets for {{project_detail.project_name}}</h1>
+      <p class="lead">Add new tickets for this project</p>
+      <form action="{% url 'check_mate:ticket_add'%}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-lg"> Add Tickets</button>
+          <input type="hidden" name="project" value="{{project_detail.id}}"/>
+          <input type="hidden" name="first_request"/>
+        </form>
+    </div>
+
+  {% endif %}
 </div>
 {% endblock content %}

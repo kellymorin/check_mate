@@ -13,14 +13,16 @@
   </div>
     {% if projects %}
       {% for project in projects %}
-        <div class="p-2 align-items-start m-2 project_layout bg-info bd-highlight">
+        <div class="p-2 d-flex justify-content-between flex-column m-2 project_layout bg-info bd-highlight">
           <a href="{% url 'check_mate:project_details' project.id %}">
             <h5 class="text-white">{{project.project_name}}</h5>
             <p class="text-white">{{project.project_description}}</p>
           </a>
-            <div class="align-self-end align-items-end">
+            <div class="text-right">
               {% if project.delete_status == True %}
-                <a class="text-white" href="{% url 'check_mate:project_delete' project.id %}"><i class="far fa-trash-alt"></i></a>
+                <a class="text-white mx-3" href="{% url 'check_mate:project_delete' project.id %}"><i class="far fa-trash-alt"></i></a>
+              {% else %}
+                <i class="far fa-trash-alt text-secondary mx-3"></i>
               {% endif %}
               <a class="text-white" href="{% url 'check_mate:project_edit' project.id %}"><i class="fas fa-pencil-alt"></i></a>
             </div>
