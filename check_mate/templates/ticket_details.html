@@ -1,29 +1,16 @@
 {% extends "index.html" %}
 
-{% load status_badge %}
+{% load section_header %}
 {% block content %}
 {% for message in messages %}
 <div class="{{messages.tags}} alert alert-danger" role="alert">{{message}}</div>
 {% endfor%}
 
-<div>
-  <h6>{{ticket_detail.ticket_name}}</h6>
-  <p>{{ticket_detail.ticket_description}}</p>
-    <h6>Ticket Status: {% status_badge ticket_detail.ticket_status %}</h6>
-  <h6>Ticket Due: {{ticket_detail.ticket_due|date:'l, F d, Y'}}</h6>
-  <h6>Ticket Status: {{ticket_detail.ticket_status}}</h6>
-  <p>Completed tasks: {{ticket_detail.get_task_status.Complete}}</p>
-  <p>Total tasks: {{ticket_detail.get_task_status.Total}}</p>
-  {% if ticket_detail.ticket_assigned_user is not None %}
-    <p>Assigned Team Member: {{ticket_detail.ticket_assigned_user.first_name}} {{ticket_detail.ticket_assigned_user.last_name}}</p>
-  {% else %}
-    <p>Ticket currently unassigned </p>
-  {% endif %}
-  {% if ticket_detail.delete_status == True %}
-    <a href="{% url 'check_mate:ticket_delete' ticket_detail.id %}">Delete Ticket</a>
-  {% endif %}
-  <a href="{% url 'check_mate:ticket_edit' ticket_detail.id %}">Edit Ticket</a>
-  <a href="{% url 'check_mate:project_details' ticket_detail.project.id %}">Go back to project</a>
+{% section_header "Ticket" ticket_detail %}
+
+
+<div class="row">
+  <div class="col">
   <div class="text-center">
     <h5>Related Tasks:</h5>
     <form action="{% url 'check_mate:task_add' %}" method="POST">

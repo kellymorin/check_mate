@@ -1,29 +1,16 @@
 {% extends 'index.html' %}
 
 {% load ticket_card %}
+{% load section_header %}
 
 {% block content %}
 {% for message in messages %}
   <div class="{{message.tags}} alert" role="alert">{{message}}</div>
 {% endfor %}
-<div class="row">
-  <div class="col">
-    <h6>{{project_detail.project_name}}</h6>
-    <p>{{project_detail.project_description}}</p>
-    <h6>Project Status: {% status_badge project_detail.project_status %}</h6>
-    <div class="progress">
-        <div class="progress-bar bg-success" role="progressbar" style="width: calc({{project_detail.get_ticket_status.Complete}}/{{project_detail.get_ticket_status.Total}}*100%)" aria-valuenow="{{project_detail.get_ticket_status.Complete}}" aria-valuemin="0" aria-valuemax="{{project_detail.get_ticket_status.Total}}"></div>
-        <div class="progress-bar bg-info" role="progressbar" style="width: calc({{project_detail.get_ticket_status.Active}}/{{project_detail.get_ticket_status.Total}}*100%)" aria-valuenow="{{project_detail.get_ticket_status.Active}}" aria-valuemin="0" aria-valuemax="{{project_detail.get_ticket_status.Total}}"></div>
-      </div>
-  </div>
-  <div class="col">
-    <h6>Project Due: {{project_detail.project_due|date:'l, F d, Y'}}</h6>
-    {% if project_detail.delete_status == True %}
-      <a  href="{% url 'check_mate:project_delete' project_detail.id %}"><i class="far fa-trash-alt"></i></a>
-    {% endif %}
-    <a href="{% url 'check_mate:project_edit' project_detail.id %}"><i class="fas fa-pencil-alt"></i></a>
-  </div>
-</div>
+{% section_header "Project" project_detail %}
+
+
+{% if tickets %}
 <form action="{% url 'check_mate:ticket_add'%}" method="POST">
   {% csrf_token %}
   <button type="submit" class="btn btn-primary btn-circle"><i class="fa fa-plus"></i>
@@ -31,6 +18,7 @@
   <input type="hidden" name="project" value="{{project_detail.id}}"/>
   <input type="hidden" name="first_request"/>
 </form>
+{% endif %}
 
 <div class="container">
 <div class="row">
