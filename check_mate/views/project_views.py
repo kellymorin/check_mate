@@ -4,14 +4,16 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.contrib import messages
 
 from check_mate.models import *
 from check_mate.forms import ProjectForm
 
-# Non-MVP Notes--------------------------------------------------------------
-# TODO: Add the ability to filter from all projects, current projects, previous projects
-# TODO: Consider consolodiating add and edit to run through one view and one template
-# ---------------------------------------------------------------------------
+# Non-MVP Notes--------------------------------------------
+# V2: Add the ability to filter from all projects, current projects, previous projects
+# V2: Make sure every project has a status in fixtures
+# ----------------------------------------------------------
+
 
 
 @login_required
@@ -70,24 +72,24 @@ def project_add(request):
 
             if project_name == "" or project_description == "":
                 context = {
-                    "error_message": "You must complete all fields in the form",
-                    "project_name": project_name,
-                    "project_description": project_description,
-                    "project_form": project_form,
-                    "project_due": project_due
+                    "project_form": completed_project_form
                 }
+
+                messages.error(request, "You must complete all fields in the form")
 
             else:
                 new_project = Project(project_name=project_name, project_description= project_description, project_due=project_due, project_created=datetime.date.today(),project_status = "Not Started")
                 new_project.save()
 
+                messages.success(request, "Project successfully saved")
+
                 return HttpResponseRedirect(reverse("check_mate:projects"))
 
     else:
         context = {
-            "project_form": project_form,
+            "project_form": project_form
         }
-    return render(request, "project_add.html", context)
+    return render(request, "project_form.html", context)
 
 
 @login_required
@@ -105,21 +107,14 @@ def project_delete(request, project_id):
     if request.method == "POST":
         project= Project.objects.get(pk=project_id)
         project.delete()
+        messages.success(request, "Project successfully deleted")
         return HttpResponseRedirect(reverse("check_mate:projects"))
     else:
         project = Project.objects.get(pk=project_id)
-        tickets = Ticket.objects.filter(project=project_id)
 
-        if len(tickets) == 0:
-            context = {
-                "project": project,
-                "can_delete": True
-            }
-        else:
-            context = {
-                "project": project,
-                "can_delete": False
-            }
+        context = {
+            "project": project,
+        }
         return render(request, "project_delete.html", context)
 
 
@@ -144,7 +139,7 @@ def project_edit(request, project_id):
             "project_form": project_form
         }
 
-        return render(request, "project_edit.html", context)
+        return render(request, "project_form.html", context)
 
     elif request.method == "POST":
         project.project_name = form_data["project_name"]
@@ -154,5 +149,7 @@ def project_edit(request, project_id):
             project.project_due = form_data["project_due"]
 
         project.save()
+
+        messages.success(request, "Changes successfully saved")
 
         return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id, )))

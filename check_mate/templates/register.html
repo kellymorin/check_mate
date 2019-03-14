@@ -1,27 +1,23 @@
-<!-- {% extends 'index.html' %} -->
+{% extends 'index.html' %}
 
-<!-- {% block content %} -->
-    <h1>Register with Bangazon</h1>
+{% block content %}
+  <h1>Register with Bangazon</h1>
 
-    {% if registered %}
+  <!-- Completed Registration Section -->
+  {% if registered %}
     <strong>Thank you for registering!</strong>
     <a href="{% url 'check_mate:index' %}">Return to the homepage.</a><br />
-    {% else %}
+  <!-- End Completed Registration Section -->
+  <!-- Registration Form Section -->
+  {% else %}
     <strong>Register here!</strong><br />
+    <form id="user_form" method="post" action="{% url 'check_mate:register' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ user_form.as_p }}
 
-    <form id="user_form" method="post" action="{% url 'check_mate:register' %}"
-            enctype="multipart/form-data">
-
-        {% csrf_token %}
-
-        <!-- Display each form. The as_p method wraps each element in a paragraph
-                (<p>) element. This ensures each element appears on a new line,
-                making everything look neater. -->
-        {{ user_form.as_p }}
-
-        <input type="hidden" value="{{next}}" name="next"/>
-        <!-- Provide a button to click to submit the form. -->
-        <input class="btn btn-primary" type="submit" name="submit" value="Register" />
+      <input type="hidden" value="{{next}}" name="next"/>
+      <input class="btn btn-info" type="submit" name="submit" value="Register" />
     </form>
-    {% endif %}
-<!-- {% endblock content %} -->
+  {% endif %}
+  <!-- End Registration Form Section -->
+{% endblock content %}

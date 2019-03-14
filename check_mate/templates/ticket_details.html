@@ -1,59 +1,85 @@
 {% extends "index.html" %}
 
+{% load task_card %}
+{% load section_header %}
+
 {% block content %}
-<div>
-  <h6>{{ticket_detail.ticket_name}}</h6>
-  <p>{{ticket_detail.ticket_description}}</p>
-  <h6>Ticket Due: {{ticket_detail.ticket_due|date:'l, F d, Y'}}</h6>
-  <h6>Ticket Status: {{ticket_detail.ticket_status}}</h6>
-  <p>Completed tasks: {{ticket_detail.get_task_status.Complete}}</p>
-  <p>Total tasks: {{ticket_detail.get_task_status.Total}}</p>
-  {% if ticket_detail.ticket_assigned_user is not None %}
-    <p>Assigned Team Member: {{ticket_detail.ticket_assigned_user.first_name}} {{ticket_detail.ticket_assigned_user.last_name}}</p>
+{% for message in messages %}
+  {% if message.tags == "error" %}
+    <div class="alert-danger alert" role="alert">{{message}}</div>
   {% else %}
-    <p>Ticket currently unassigned </p>
+    <div class="alert-{{message.tags}} alert" role="alert">{{message}}</div>
   {% endif %}
-  <a href="{% url 'check_mate:ticket_delete' ticket_detail.id %}">Delete Ticket</a>
-  <a href="{% url 'check_mate:ticket_edit' ticket_detail.id %}">Edit Ticket</a>
-  <div class="text-center">
-    <h5>Related Tasks:</h5>
-    <form action="{% url 'check_mate:task_add' %}" method="POST">
-      {% csrf_token %}
-      <input type="submit"><i class="fas fa-plus"></i></input>
-      <input type="hidden" name="ticket" value="{{ticket_detail.id}}"/>
-      <input type="hidden" name="first_request"/>
-    </form>
-  </div>
-  <div class="list-group">
-      {% if  not tasks %}
-          <p class="mb-1">No tasks currently available for this ticket</p>
-      {% endif %}
-      {% for task in tasks %}
-          <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
-              <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">{{task.task_name}}</h5>
-                  <p>{{task.task_status}}</p>
-                  <p>{{task.task_description}}</p>
-                  {% if task.task_assigned_user is not None %}
-                    <p>Assigned Team Member: {{task.task_assigned_user.first_name}} {{task.task_assigned_user.last_name}}</p>
-                  {% else %}
-                    <p>Task currently unassigned</p>
-                  {% endif %}
-                  <a href="{% url 'check_mate:task_edit' task.id %}">Edit Task</a>
-                  <a href="{% url 'check_mate:task_delete' task.id %}">Delete Task</a>
+{% endfor%}
+
+<div class="row">
+  <div class="col-9">
+    <!-- Header Section -->
+    {% section_header "Ticket" ticket_detail %}
+    <!-- End Header Section -->
+    <div class="row">
+      <div class="col">
+        <!-- Related Tasks Section -->
+        <div class="card mt-3">
+          <div class="card-header bg-info">
+            <div class="row justify-content-center">
+              <h5 class="text-white">Related Tasks:</h5>
+            </div>
+          </div>
+          <div class="card-body task-container">
+          <!-- Prompt to add tasks section -->
+          {% if not ticket_detail.task_set.all %}
+            <div class="jumbotron">
+              <h6 class="display-4">No Tasks for {{ticket_detail.ticket_name}}</h6>
+              <p class="lead">Add new tasks for this project</p>
+              <form action="{% url 'check_mate:task_add' %}" method="POST">
+                {% csrf_token %}
+                <input type="submit"><i class="fas fa-plus"></i></input>
+                <input type="hidden" name="ticket" value="{{ticket_detail.id}}"/>
+                <input type="hidden" name="first_request"/>
+              </form>
+            </div>
+            <!-- End Prompt to add tasks section -->
+          <!-- Related Tasks Display -->
+          {% else %}
+            <div class="card-columns">
+              <!-- Add Task Card -->
+              <div class="card mb-2 border-info" style="width: 16rem;">
+                <div class="card-body text-center">
+                  <form action="{% url 'check_mate:task_add' %}" method="POST">
+                    {% csrf_token %}
+                    <i class="fas fa-plus text-info"></i>
+                    <div class="card-title text-center">
+                      <button class="btn text-info add-ticket-card" type="submit">Add Task</button>
+                      <input type="hidden" name="ticket" value="{{ticket_detail.id}}"/>
+                      <input type="hidden" name="first_request"/>
+                    </div>
+                  </form>
+                </div>
               </div>
-          </a>
-      {% endfor %}
+              <!-- End Add Task Card -->
+              {% for task in ticket_detail.task_set.all %}
+                {% task_card task.id False %}
+              {% endfor%}
+            </div>
+          {% endif %}
+          <!-- End Related Tasks Display -->
+          </div>
+        </div>
+        <!-- End Related Tasks Section -->
+      </div>
+    </div>
   </div>
-  <div>
-    {% if all_history %}
-      {% for history in all_history %}
-        <p>{{history.description}}</p>
-        <p>{{history.activity_date| date:"l, F d, Y"}}</p>
-      {% endfor %}
-    {% else %}
-      <p>No History available for this ticket</p>
-    {% endif %}
+  <!-- Ticket History Section -->
+  <div class="col-3 position-sticky">
+    <h4 class="text-center mb-3">Ticket History</h4>
+      <div class="ticket-history-description">
+        {% for history in all_history %}
+          <p class="mb-0 ticket-description">{{history.description}}</p>
+          <p class="ticket-description text-muted">{{history.activity_date| date:"l, F d, Y"}}</p>
+        {% endfor %}
+      </div>
   </div>
+  <!-- End Ticket History Section -->
 </div>
 {% endblock content %}

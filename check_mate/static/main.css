@@ -1,0 +1,66 @@
+.project_layout{
+  height: 275px;
+  width: 260px;
+}
+
+.ticket-description{
+  font-size: .75em;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.42857;
+}
+
+.border-bottom-danger{
+  border-bottom: 1px solid red;
+}
+
+.border-bottom-warning{
+  border-bottom: 1px solid yellow;
+}
+
+.initials-circle {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.icon{
+  vertical-align: middle;
+}
+
+.ticket-history-description{
+  height:80vh;
+  overflow: scroll;
+  position: sticky;
+  top: 15px;
+}
+
+.ticket-container{
+  height: 65vh;
+  overflow:scroll;
+}
+
+.task-container{
+  height: 60vh;
+  overflow:scroll;
+}
+
+.horizontal-container{
+  width: 70vw;
+  overflow:scroll;
+}
+
+.add-ticket-card{
+  -webkit-appearance: none;
+  appearance: none;
+}

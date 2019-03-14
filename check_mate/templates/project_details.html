@@ -1,53 +1,142 @@
 {% extends 'index.html' %}
 
+{% load ticket_card %}
+{% load section_header %}
+
 {% block content %}
-<div>
-  <h6>{{project_detail.project_name}}</h6>
-  <p>{{project_detail.project_description}}</p>
-  <h6>Project Due: {{project_detail.project_due|date:'l, F d, Y'}}</h6>
-  <h6>Project Status: {{project_detail.project_status}}</h6>
-  <div class="row">
-    <div class="col">Backlog
-      <form action="{% url 'check_mate:ticket_add'%}" method="POST">
-        {% csrf_token %}
-        <input type="submit"><i class="fas fa-plus"></i></input>
-        <input type="hidden" name="project" value="{{project_detail.id}}"/>
-        <input type="hidden" name="first_request"/>
-      </form>
+
+{% for message in messages %}
+  {% if message.tags == "error" %}
+    <div class="alert-danger alert" role="alert">{{message}}</div>
+  {% else %}
+    <div class="alert-{{message.tags}} alert" role="alert">{{message}}</div>
+  {% endif %}
+{% endfor%}
+
+<!-- Header Section -->
+{% section_header "Project" project_detail %}
+<!-- Header Section -->
+<!-- Ticket Display Section -->
+<div class="row mt-3 horizontal-container flex-nowrap">
+  <!-- Backlogged Tickets Section -->
+  <div class="col-3">
+    <div class="row bg-info pt-3">
+      <div class="col text-white flex-column text-center">
+        <h6 >Backlog</h6>
+      </div>
     </div>
-    <div class="col">In Process</div>
-    <div class="col">Review</div>
-    <div class="col">Complete</div>
-  </div>
-  <div class="row">
-    <div class="col">
-      {% for ticket in tickets %}
-        {% if ticket.ticket_status == "Not Started" %}
-          <a href="{% url 'check_mate:ticket_details' ticket.id %}"><h2>{{ticket.ticket_name}}</h2></a>
-        {% endif %}
-      {% endfor %}
-    </div>
-    <div class="col">
-      {% for ticket in tickets %}
-        {% if ticket.ticket_status == "Active" %}
-          <a href="{% url 'check_mate:ticket_details' ticket.id %}"><h2>{{ticket.ticket_name}}</h2></a>
-        {% endif %}
-      {% endfor %}
-    </div>
-    <div class="col">
-      {% for ticket in tickets %}
-        {% if ticket.ticket_status == "Ready for Review" %}
-          <a href="{% url 'check_mate:ticket_details' ticket.id %}"><h2>{{ticket.ticket_name}}</h2></a>
-        {% endif %}
-      {% endfor %}
-    </div>
-    <div class="col">
-      {% for ticket in tickets %}
-        {% if ticket.ticket_status == "Complete" %}
-          <a href="{% url 'check_mate:ticket_details' ticket.id %}"><h2>{{ticket.ticket_name}}</h2></a>
-        {% endif %}
-      {% endfor %}
+    <div class="row">
+      <div class="col border shadow-sm pt-2 ticket-container">
+        <!-- Add Ticket Card -->
+        <div class="card mb-2 border-info" style="width: 16rem;">
+          <div class="card-body text-center">
+            <form action="{% url 'check_mate:ticket_add' %}" method="POST">
+              {% csrf_token %}
+              <i class="fa fa-plus text-info"></i>
+              <div class="card-title text-center">
+                <button class="btn text-info add-ticket-card" type="submit">Add Ticket</button>
+                <input type="hidden" name="project" value="{{project_detail.id}}"/>
+                <input type="hidden" name="first_request"/>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- End Add Ticket Card  -->
+        {% for ticket in tickets %}
+          {% if ticket.ticket_status == "Not Started" %}
+            {% ticket_card ticket.id False %}
+          {% endif %}
+        {% endfor %}
+      </div>
     </div>
   </div>
+  <!-- End Backlogged Tickets Section -->
+  <!-- Active Tickets Section -->
+  <div class="col-3">
+    <div class="row bg-info pt-3">
+      <div class="col text-white flex-column text-center">
+        <h6 >In Process</h6>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col border shadow-sm pt-2 ticket-container">
+        {% for ticket in tickets %}
+          {% if ticket.ticket_status == "Active" %}
+            {% ticket_card ticket.id False %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <!-- End Active Tickets Section -->
+  <!-- Ready for Review Tickets Section -->
+  <div class="col-3">
+    <div class="row bg-info pt-3">
+      <div class="col text-white flex-column text-center">
+        <h6 >Review</h6>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col border shadow-sm ticket-container pt-2">
+        {% for ticket in tickets %}
+          {% if ticket.ticket_status == "Ready for Review" %}
+            {% ticket_card ticket.id False %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <!-- End Ready for Review Tickets Section -->
+  <!-- Road Block Tickets Section -->
+  <div class="col-3">
+    <div class="row bg-info pt-3">
+      <div class="col text-white flex-column text-center">
+        <h6 >Road Block</h6>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col border shadow-sm pt-2 ticket-container">
+        {% for ticket in tickets %}
+          {% if ticket.ticket_status == "Road Block" %}
+            {% ticket_card ticket.id False %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <!-- End Road Block Tickets Section -->
+  <!-- Completed Tickets Section -->
+  <div class="col-3">
+    <div class="row bg-info pt-3">
+      <div class="col text-white flex-column text-center">
+        <h6 >Complete</h6>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col ticket-container border shadow-sm pt-2">
+        {% for ticket in tickets %}
+          {% if ticket.ticket_status == "Complete" %}
+            {% ticket_card ticket.id False %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <!-- End Completed Tickets Section -->
 </div>
+<!-- End Tickets Display Section -->
+
+  {% if not tickets %}
+    <div class="jumbotron">
+      <h1 class="display-4">No Tickets for {{project_detail.project_name}}</h1>
+      <p class="lead">Add new tickets for this project</p>
+      <form action="{% url 'check_mate:ticket_add'%}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-lg"> Add Tickets</button>
+          <input type="hidden" name="project" value="{{project_detail.id}}"/>
+          <input type="hidden" name="first_request"/>
+        </form>
+    </div>
+
+  {% endif %}
 {% endblock content %}

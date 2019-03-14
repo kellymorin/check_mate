@@ -1,0 +1,34 @@
+{% extends "index.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+{% for message in messages %}
+  {% if message.tags == "error" %}
+    <div class="alert-danger alert" role="alert">{{message}}</div>
+  {% else %}
+    <div class="alert-{{message.tags}} alert" role="alert">{{message}}</div>
+  {% endif %}
+{% endfor%}
+
+{% if project %}
+  <h1>Edit Project</h1>
+  <form action="{% url 'check_mate:project_edit' project.id%}" method="POST">
+{% else %}
+  <h1>Add Projects</h1>
+  <form action="{% url 'check_mate:project_add' %}" method="POST">
+{% endif %}
+
+    {% csrf_token %}
+    {{ project_form|crispy}}
+
+    {% if project %}
+      <input class="btn btn-info" type="submit" value="Save Changes"/>
+      <a class="btn btn-success" href="{% url 'check_mate:project_details' project.id %}">Go Back</a>
+    {% else %}
+      <input class="btn btn-info" type="submit" value="Add Project"/>
+      <a class="btn btn-success" href="{% url 'check_mate:projects' %}">Go Back</a>
+    {% endif %}
+  </form>
+{% endblock content %}
