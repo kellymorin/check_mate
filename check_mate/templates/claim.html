@@ -3,100 +3,131 @@
 {% load ticket_card %}
 {% load task_card %}
 
+<!-- TODO: Add ability to view all items -->
+<!-- <a class="btn" href="{% url 'check_mate:claim-all' %}">View all Tickets</a> -->
+
 {% block content %}
-<div class="container">
+<form method="POST" action="{% url 'check_mate:claim' %}">
+  {% csrf_token %}
+  <!-- Header Section -->
   <div class="row">
-    <a class="btn" href="{% url 'check_mate:claim-all' %}">View all Tickets</a>
-    <form method="POST" action="{% url 'check_mate:claim' %}">
-      {% csrf_token %}
-      <div class="d-flex justify-content-center">
-        <h4>Claim Tasks and Tickets for Today</h4>
-        <button class="mx-2" type="submit" value="claim">Claim</button>
-      </div>
+    <div class="col">
+      <h2>Claim Tasks and Tickets for Today</h2>
+    </div>
+    <div class="col text-right">
+      <button class="mx-2 btn btn-info" type="submit" value="claim">Claim</button>
+    </div>
   </div>
-
-  <div class="row">
-    <div class="col flex-column text-center space-around">
-      <h6>Your Assigned Items</h6>
-    </div>
-    <div class="col flex-column text-center space-around">
-      <h6>Past Due Items</h6>
-    </div>
-    <div class="col flex-column text-center space-around">
-      <h6>Ready for Review</h6>
-    </div>
-    {% if other_tickets or other_tasks %}
-      <div class="col flex-column text-center space-around">
-        <h6>Other</h6>
+  <!-- End Header Section -->
+  <!-- Ticket Display Section -->
+  <div class="row mt-3">
+    <!-- Assigned Items Section -->
+    <div class="col">
+      <div class="row bg-info pt-3">
+        <div class="col text-white flex-column text-center">
+          <h6>Your Assigned Items</h6>
+        </div>
       </div>
+      <div class="row">
+        <div class="col border shadow-sm pt-2 ticket-container">
+        {% if assigned_tickets %}
+          <h6 class="text-center">Tickets</h6>
+            {% for ticket in assigned_tickets %}
+              {% ticket_card ticket.id True %}
+            {% endfor %}
+        {% endif %}
+
+        {% if assigned_tasks %}
+          <h6 class="text-center">Tasks</h6>
+            {% for task in assigned_tasks %}
+              {% task_card task.id True %}
+            {% endfor %}
+        {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- End Assigned Items Section -->
+    <!-- Past Due Items Section -->
+    <div class="col">
+      <div class="row bg-info pt-3">
+        <div class="col text-white flex-column text-center">
+          <h6>Past Due Items</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border shadow-sm pt-2 ticket-container">
+        {% if past_due_tickets %}
+          <h6 class="text-center">Tickets</h6>
+            {% for ticket in past_due_tickets %}
+              {% ticket_card ticket.id True %}
+            {% endfor %}
+        {% endif %}
+
+        {% if past_due_tasks %}
+          <h6 class="text-center">Tasks</h6>
+            {% for task in past_due_tasks %}
+              {% task_card task.id True %}
+            {% endfor %}
+        {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- End Past Due Items Section -->
+    <!-- Ready for Review Items Section -->
+    <div class="col">
+      <div class="row bg-info pt-3">
+        <div class="col text-white flex-column text-center">
+          <h6>Ready for Review</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border shadow-sm pt-2 ticket-container">
+        {% if review_tickets %}
+          <h6 class="text-center">Tickets</h6>
+            {% for ticket in review_tickets %}
+              {% ticket_card ticket.id True %}
+            {% endfor %}
+        {% endif %}
+
+        {% if review_tasks %}
+          <h6 class="text-center">Tasks</h6>
+            {% for task in review_tasks %}
+              {% task_card task.id True %}
+            {% endfor %}
+        {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- End Ready for Review Items Section -->
+    <!-- All Other Open Tickets Section -->
+    {% if other_tickets or other_tasks %}
+    <div class="col">
+      <div class="row bg-info pt-3">
+        <div class="col text-white flex-column text-center">
+          <h6>Other</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border shadow-sm pt-2 ticket-container">
+        {% if other_tickets %}
+          <h6 class="text-center">Tickets</h6>
+            {% for ticket in other_tickets %}
+              {% ticket_card ticket.id True %}
+            {% endfor %}
+        {% endif %}
+
+        {% if other_tasks %}
+          <h6 class="text-center">Tasks</h6>
+            {% for task in other_tasks %}
+              {% task_card task.id True %}
+            {% endfor %}
+        {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- End All Other Items Section -->
     {% endif %}
   </div>
-
-  <div class="row">
-    <div class="col border shadow-sm">
-      {% if assigned_tickets %}
-        <h6 class="text-center">Tickets</h6>
-        {% for ticket in assigned_tickets %}
-          {% ticket_card ticket.id True %}
-        {% endfor %}
-      {% endif %}
-
-      {% if assigned_tasks %}
-        <h6 class="text-center">Tasks</h6>
-        {% for task in assigned_tasks %}
-          {% task_card task.id True %}
-        {% endfor %}
-      {% endif %}
-    </div>
-    <div class="col border shadow-sm">
-      {% if past_due_tickets %}
-        <h6 class="text-center">Tickets</h6>
-        {% for ticket in past_due_tickets %}
-          {% ticket_card ticket.id True %}
-        {% endfor %}
-      {% endif %}
-
-      {% if past_due_tasks %}
-        <h6 class="text-center">Tasks</h6>
-        {% for task in past_due_tasks %}
-          {% task_card task.id True %}
-        {% endfor %}
-      {% endif %}
-    </div>
-    <div class="col border shadow-sm">
-      {% if review_tickets %}
-        <h6 class="text-center">Tickets</h6>
-        {% for ticket in review_tickets %}
-          {% ticket_card ticket.id True %}
-        {% endfor %}
-      {% endif %}
-
-      {% if review_tasks %}
-        <h6 class="text-center">Tasks</h6>
-        {% for task in review_tasks %}
-          {% task_card task.id True %}
-        {% endfor %}
-      {% endif %}
-    </div>
-    {% if other_tickets or other_tasks %}
-    <div class="col border shadow-sm">
-      {% if other_tickets %}
-      <h6 class="text-center">Tickets</h6>
-      {% for ticket in other_tickets %}
-        {% ticket_card ticket.id True %}
-      {% endfor %}
-      {% endif %}
-
-      {% if other_tasks %}
-      <h6 class="text-center">Tasks</h6>
-      {% for task in other_tasks %}
-      {% task_card task.id True %}
-        {% endfor %}
-      {% endif %}
-    </div>
-    {% endif %}
-  </div>
-    </form>
-</div>
-
+  <!-- End Ticket Display Section -->
+</form>
 {% endblock content %}
