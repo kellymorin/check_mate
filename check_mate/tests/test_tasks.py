@@ -144,7 +144,7 @@ class TaskTest(TestCase):
         self.assertEqual(get_delete.status_code, 200)
 
         # Confirm that the context has "can delete" set to False
-        self.assertEqual(get_delete.context["can_delete"], False)
+        self.assertEqual(get_delete.context["task"].delete_status, False)
 
         # Issue another GET request for a task that can be deleted
         get_delete_true = self.client.get(reverse("check_mate:task_delete", args=(1,)))
@@ -153,7 +153,7 @@ class TaskTest(TestCase):
         self.assertEqual(get_delete_true.status_code, 200)
 
         # Confirm that the context has "can_delete" set to True
-        self.assertEqual(get_delete_true.context["can_delete"], True)
+        self.assertEqual(get_delete_true.context["task"].delete_status, True)
 
         # TODO: Write tests for content that displays on the page
         # TODO: Writee tests for post functionality of delete

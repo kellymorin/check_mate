@@ -108,9 +108,6 @@ class TicketTest(TestCase):
         # Confirm that the response is 200
         self.assertEqual(response.status_code, 200)
 
-        # Confirm that the ticket detail has 3 associated tasks
-        self.assertEqual(len(response.context['tasks']), 3)
-
         # Issue GET request for tickets with no tasks
         other_ticket = self.client.get(reverse('check_mate:ticket_details', args=(2,)))
 
@@ -211,7 +208,7 @@ class TicketTest(TestCase):
         self.assertEqual(get_delete.status_code, 200)
 
         # Confirm that the context has "can delete" set to False
-        self.assertEqual(get_delete.context['can_delete'], False)
+        self.assertEqual(get_delete.context['ticket'].delete_status, False)
 
         # Issue another GET request for a ticket that can be deleted
         get_delete_true = self.client.get(reverse("check_mate:ticket_delete", args=(2,)))
@@ -220,7 +217,7 @@ class TicketTest(TestCase):
         self.assertEqual(get_delete_true.status_code, 200)
 
         # Confirm that the context has "can delete" set to True
-        self.assertEqual(get_delete_true.context["can_delete"], True)
+        self.assertEqual(get_delete_true.context["ticket"].delete_status, True)
 
         # TODO: Write tests for content that displays on the page
         # TODO: Write tests for post functionality of delete
