@@ -10,8 +10,7 @@ from check_mate.models import *
 from check_mate.forms import TaskForm, TaskStatusForm
 from ..utils import __update_task_history, __update_ticket_history
 
-# TODO: Deploy the error messages functionality from django
-# TODO: Style add and edit forms
+# V2: On task edit form, see if I can set limitations on when a due date can be set for, based on when the parent items due date is
 
 @login_required
 def task_add(request):
@@ -40,8 +39,7 @@ def task_add(request):
             if task_name == "" or task_description == "":
                 context = {
                     "task_form": completed_task_form,
-                    "ticket": ticket_id,
-                    "add": True
+                    "ticket": ticket_id
                 }
                 messages.error(request, "You must complete all fields in the form")
 
@@ -76,8 +74,7 @@ def task_add(request):
         ticket = form_data["ticket"]
         context = {
             "task_form": task_form,
-            "ticket": ticket,
-            "add": True
+            "ticket": ticket
         }
     return render(request, "task_form.html", context)
 
@@ -107,8 +104,7 @@ def task_edit(request, task_id):
             "task": task,
             "task_form": task_form,
             "task_status": task_status,
-            "ticket": ticket_id,
-            "edit": True
+            "ticket": ticket_id
         }
 
         return render(request, "task_form.html", context)

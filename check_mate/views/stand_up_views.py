@@ -1,14 +1,3 @@
-
-# Then they will be presented with a detailed view of their activity from yesterday, the option to select their priorities for today, and a place to note any road blocks they're facing
-
-# When reviewing the activity from yesterday
-# Then the user will be shown all tasks they commented on, edited, added, completed, etc
-# And any other activity they had on the project board from the last 24 hours
-# If the stand-up view is being accessed on a Monday, then the yesterday tab will refer to all activity from the previous friday
-
-# When reviewing the priorities for today
-# Then the user will be able to select any tasks they have been assigned, comments they have been mentioned in, or incomplete tasks/tickets that were started the previous day as their priorities for the day
-
 import datetime
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
@@ -17,10 +6,12 @@ from django.urls import reverse
 from check_mate.models import *
 from dateutil.relativedelta import relativedelta, FR
 
-# TODO: Style stand up view
-# TODO: Style claimed tickets view
-# TODO: Style edit claimed tickets view
-# TODO: Style add and edit forms
+# Non-MVP Notes -----------------------------------------
+# V2: Allow users to customize stand up view by a specific project
+# V2: Update stand up view so that if someone else has already claimed a ticket for the day, that displays on everyone else's view
+# -------------------------------------------------------
+
+
 
 @login_required
 def stand_up_view(request):
@@ -149,7 +140,7 @@ def claim_tickets_tasks(request):
 
     # IDEAL FEATURE: Once a ticket has been claimed for the day, it will not display in other users options to claim (unless it's a review)
 
-        return render(request, "claim.html", context)
+    return render(request, "claim.html", context)
 
 def remove_claim(request):
     # Create affordance to delete claimed tasks
@@ -162,9 +153,8 @@ def remove_claim(request):
                 if "task" in item:
                     task_id = item.split('-')[1]
                     task = Task.objects.get(pk=task_id)
-                    claimed_task = StandUpTasks.objects.filter(task=task).filter(user = request.user).filter(date=today)
+                    claimed_task = StandUpTasks.objects.filter(task=task).filter(date=today)
                     claimed_task.delete()
-                    # print("task", claimed_task)
                 else:
                     ticket_id = item.split("-")[1]
                     ticket = Ticket.objects.get(pk=ticket_id)

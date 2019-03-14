@@ -5,10 +5,14 @@
 {% block content %}
 
 {% for message in messages %}
-  <div class="{{message.tags}} alert" role="alert">{{message}}</div>
-{% endfor %}
+  {% if message.tags == "error" %}
+    <div class="alert-danger alert" role="alert">{{message}}</div>
+  {% else %}
+    <div class="alert-{{message.tags}} alert" role="alert">{{message}}</div>
+  {% endif %}
+{% endfor%}
 
-{% if edit == True %}
+{% if task %}
   <h1>Edit Task</h1>
   <form action="{% url 'check_mate:task_edit' task.id %}" method="POST">
 {% else %}

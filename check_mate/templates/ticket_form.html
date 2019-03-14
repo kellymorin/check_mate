@@ -2,13 +2,15 @@
 
 {% load crispy_forms_tags %}
 
-<!-- TODO: Implement messages framework -->
-
 {% block content %}
 
-{% if error_message %}
-<p class="alert alert-danger">{{error_message}}</p>
-{% endif %}
+{% for message in messages %}
+  {% if message.tags == "error" %}
+    <div class="alert-danger alert" role="alert">{{message}}</div>
+  {% else %}
+    <div class="alert-{{message.tags}} alert" role="alert">{{message}}</div>
+  {% endif %}
+{% endfor%}
 
 {% if ticket %}
   <h1>Edit Ticket</h1>

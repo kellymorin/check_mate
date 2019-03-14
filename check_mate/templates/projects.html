@@ -1,39 +1,48 @@
 {% extends 'index.html' %}
 
-{% block content %}
+{%comment%}
+<!-- V2: intro hint where you explain functionality -->
+{% endcomment%}
 
 {% block content %}
-  {% for message in messages %}
-    <div class="{{message.tags}} alert" role="alert">{{message}}</div>
-  {% endfor %}
+{% for message in messages %}
+  {% if message.tags == "error" %}
+    <div class="alert-danger alert" role="alert">{{message}}</div>
+  {% else %}
+    <div class="alert-{{message.tags}} alert" role="alert">{{message}}</div>
+  {% endif %}
+{% endfor%}
 
 <div class="d-flex align-content-stretch row flex-wrap">
   <!-- Add Project Section -->
-  <div class="p-2 m-2 project_layout bg-info text-white bd-highlight">
-    <a href="{% url 'check_mate:project_add' %}">
-      <h5 class="text-white">Add Project</h5>
+  <div class="p-3 m-2 d-flex flex-column justify-content-center project_layout border border-info text-info bd-highlight">
+    <a class="text-center" href="{% url 'check_mate:project_add' %}">
+      <div>
+        <i class="fa fa-plus text-info text-center"></i>
+        <h5 class="text-info">Add Project</h5>
+      </div>
     </a>
   </div>
   <!-- End Add Project Section -->
-    {% if projects %}
-      {% for project in projects %}
+  {% if projects %}
+    {% for project in projects %}
       <!-- Project Display Section -->
-        <div class="p-2 d-flex justify-content-between flex-column m-2 project_layout bg-info bd-highlight">
-          <a href="{% url 'check_mate:project_details' project.id %}">
-            <h5 class="text-white">{{project.project_name}}</h5>
-            <p class="text-white">{{project.project_description}}</p>
-          </a>
-            <div class="text-right">
-              {% if project.delete_status == True %}
-                <a class="text-white mx-3" href="{% url 'check_mate:project_delete' project.id %}"><i class="far fa-trash-alt"></i></a>
-              {% else %}
+      <div class="p-3 d-flex justify-content-between flex-column m-2 project_layout bg-info bd-highlight">
+        <a href="{% url 'check_mate:project_details' project.id %}">
+          <h5 class="text-white">{{project.project_name}}</h5>
+          <p class="text-white">{{project.project_description}}</p>
+        </a>
+        <div class="text-right">
+          {% if project.delete_status == True %}
+            <a class="text-white mx-3" href="{% url 'check_mate:project_delete' project.id %}"><i class="far fa-trash-alt"></i></a>
+          {% else %}
             <i class="far fa-trash-alt text-muted mx-3"></i>
-              {% endif %}
-              <a class="text-white" href="{% url 'check_mate:project_edit' project.id %}"><i class="fas fa-pencil-alt"></i></a>
-            </div>
+          {% endif %}
+            <a class="text-white" href="{% url 'check_mate:project_edit' project.id %}"><i class="fas fa-pencil-alt"></i></a>
         </div>
+      </div>
       <!-- End Project Display Section -->
-      {% endfor %}
-    {% endif %}
+    {% endfor %}
+  {% endif %}
 </div>
 {% endblock content %}

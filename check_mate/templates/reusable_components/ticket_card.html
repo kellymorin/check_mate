@@ -1,7 +1,17 @@
 {% load progress_bar %}
 
+<style>
+  input:checked+label{
+    border: 2px solid #5bc0de;
+  }
+</style>
+
+{% if claim == True %}
+  <input type="checkbox" class="d-none" id="claimed-ticket-{{ticket.id}}" name="ticket-{{ticket.id}}"/>
+{% endif %}
+
 <!-- Card Wrapper -->
-<div class="card mb-2" style="width: 16rem;">
+<label class="card mb-2" style="width: 16rem;" for="claimed-ticket-{{ticket.id}}">
   <a href="{% url 'check_mate:ticket_details' ticket.id %}">
     <!-- Card Body -->
     <div class="card-body">
@@ -20,9 +30,6 @@
   <div class="card-footer bg-transparent">
     <div class="row">
       <div class="col">
-      {% if claim == True %}
-        <input type="checkbox" name="ticket-{{ticket.id}}"/>
-      {% endif %}
       {% if user_initials %}
         <div class="text-white initials-circle bg-info">{{user_initials}}</div>
       {% endif %}
@@ -38,5 +45,5 @@
     </div>
   </div>
   <!-- End Card Footer -->
-</div>
+</label>
 <!-- End Card Body -->

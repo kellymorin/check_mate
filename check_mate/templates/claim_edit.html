@@ -3,45 +3,62 @@
 {% load task_card %}
 {% load ticket_card %}
 
+{% comment %}
+<!-- V2: Update default to checked and allow user to uncheck item -->
+{% endcomment %}
+
 {% block content %}
-<div class="container">
-  <div class="row">
-    <form method="POST" action="{% url 'check_mate:remove-claim' %}">
-      {% csrf_token%}
-      <div class="d-flex justify-content-center">
-        <h4>Edit Claimed Tasks and Tickets for Today</h4>
-        <button class="mx-2" type="submit" value="Save Changes">Save Changes</button>
+  <form method="POST" action="{% url 'check_mate:remove-claim' %}">
+    {% csrf_token%}
+    <!-- Header Section -->
+    <div class="row">
+      <div class="col">
+        <h2>Edit Claimed Tasks and Tickets for Today</h2>
       </div>
-  </div>
-  <div class="row">
-    <div class="col flex-column text-center space-around">
-      <h6>Your Claimed Tickets</h6>
+      <div class="col text-right">
+        <button class="mx-2 btn btn-info" type="submit" value="Save Changes">Save Changes</button>
+      </div>
     </div>
-    <div class="col flex-column text-center space-around">
-      <h6>Your Claimed Tasks</h6>
+    <!-- End Header Section -->
+    <!-- Ticket Display Section -->
+    <div class="row mt-3">
+      <!-- Claimed Tickets Section -->
+      <div class="col">
+        <div class="row bg-info pt-3">
+          <div class="col text-white flex-column text-center">
+            <h6>Your Claimed Tickets</h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col border shadow-sm pt-2 ticket-container">
+            {% if claimed_tickets %}
+              {% for ticket in claimed_tickets %}
+                {% ticket_card ticket.ticket_id True %}
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <!-- End Claimed Tickets Section -->
+      <!-- Claimed Tasks Section -->
+      <div class="col">
+        <div class="row bg-info pt-3">
+          <div class="col text-white flex-column text-center">
+            <h6>Your Claimed Tasks</h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col border shadow-sm pt-2 ticket-container">
+            {% if claimed_tasks %}
+              {% for task in claimed_tasks %}
+                {% task_card task.task_id True %}
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <!-- End Claimed Tasks Section -->
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col border shadow-sm">
-      {% if claimed_tickets %}
-        {% for ticket in claimed_tickets %}
-          {% ticket_card ticket.ticket_id True %}
-        {% endfor %}
-      {% else %}
-      {% endif %}
-
-    </div>
-    <div class="col border shadow-sm">
-      {% if claimed_tasks %}
-        {% for task in claimed_tasks %}
-          {% task_card task.task_id True %}
-        {% endfor %}
-      {% else %}
-      {% endif %}
-    </div>
-  </div>
-
+    <!-- End Ticket Display Section -->
 </form>
-</div>
 {% endblock %}

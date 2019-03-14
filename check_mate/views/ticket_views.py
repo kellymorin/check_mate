@@ -19,13 +19,9 @@ from ..utils import __update_ticket_history
 # -------------------------------------------
 
 # Style Notes ----------------------------------------------------------
-# TODO: Style view ticket details
-    # TODO: Update status items to badges in bootstrap
-
-# TODO: Style add and edit forms
-    # TODO: Update layout of submit/go back buttons on ticket edit form
-    # TODO: On ticket edit form, see if I can set limitations on when a due date can be set for, based on when the parent items due date is
+# V2: On ticket edit form, see if I can set limitations on when a due date can be set for, based on when the parent items due date is
 # -----------------------------------------------------------------------
+
 
 
 @login_required
@@ -41,6 +37,7 @@ def ticket_detail(request, ticket_id):
     # Then they should be able to see the assigned team member, activity history
 
     ticket_detail = Ticket.objects.get(pk=ticket_id)
+
     ticket_history = TicketHistory.objects.filter(ticket=ticket_id).order_by('activity_date')
     tasks = Task.objects.filter(ticket=ticket_id)
     task_history = []
@@ -120,7 +117,6 @@ def ticket_add(request):
         completed_ticket_form = TicketForm(form_data)
 
         if completed_ticket_form.is_valid():
-            print(form_data)
             ticket_name = form_data["ticket_name"]
             ticket_description = form_data["ticket_description"]
             ticket_due = form_data["ticket_due"]

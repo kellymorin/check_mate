@@ -2,6 +2,12 @@
 
 {% load ticket_card %}
 {% load task_card %}
+
+{% comment %}
+<!-- V2: put user's name in stand up -->
+<!-- TODO: Conditional render of edit vs claim makes it impossible to claim new tickets -->
+{% endcomment %}
+
 {% block content %}
   <div class="row">
     <div class="col">
@@ -16,7 +22,7 @@
     </div>
   </div>
 
-  <div class="row mt-3">
+  <div class="row mt-3 horizontal-container flex-nowrap">
     <div class="col-6">
       <div class="row bg-info pt-3">
         <div class="col text-white flex-column text-center">
@@ -26,29 +32,29 @@
       <div class="row">
         <div class="col border shadow-sm pt-2 ticket-container">
           <h6 class="text-center">New Tickets</h6>
-  {% if tickets %}
-    {% for ticket in tickets %}
-          {% ticket_card ticket.id False%}
-    {% endfor %}
-  {% else %}
+          {% if tickets %}
+            {% for ticket in tickets %}
+              {% ticket_card ticket.id False%}
+            {% endfor %}
+          {% else %}
           <div class="card" style="width:16rem;">
             <div class="card-body">
               <div class="card-title text-dark">No New Tickets Created Yesterday</div>
             </div>
           </div>
-  {% endif %}
+          {% endif %}
           <h6 class="text-center pt-2">New Tasks</h6>
-  {% if tasks %}
-    {% for task in tasks %}
-          {% task_card task.id False%}
-    {% endfor %}
-  {% else %}
+          {% if tasks %}
+            {% for task in tasks %}
+              {% task_card task.id False%}
+            {% endfor %}
+          {% else %}
           <div class="card" style="width:16rem;">
             <div class="card-body">
               <div class="card-title text-dark">No New Tasks Created Yesterday</div>
             </div>
           </div>
-  {% endif %}
+          {% endif %}
         </div>
         <div class="col border shadow-sm pt-2 ticket-container">
           <h6 class="text-center">Your Activity Yesterday</h6>
@@ -66,24 +72,24 @@
                 </div>
               </div>
             {% endfor %}
-  {% for key, value in task_activity.items %}
+            {% for key, value in task_activity.items %}
             <div class="card" style="width:16rem;">
               <div class="card-header">
                 <div class="card-title text-dark">{{key}}</div>
               </div>
               <div class="card-body">
-    {% for task in value %}
+                {% for task in value %}
                   <p class="mb-0 ticket-description">{{task.get_task_history_description}}</p>
                   <p class="ticket-description text-muted">{{task.activity_date | date:"l, F d, Y"}}</p>
-    {% endfor %}
+                {% endfor %}
               </div>
             </div>
-  {% endfor %}
+            {% endfor %}
           {% endif %}
         </div>
       </div>
     </div>
-    <div class="col">
+    <div class="col-3">
       <div class="row bg-info pt-3">
         <div class="col text-white flex-column text-center">
           <h6>Today</h6>
@@ -93,20 +99,20 @@
         <div class="col border shadow-sm pt-2 ticket-container">
           {% if claimed_tickets %}
           <h6 class="text-center">Tickets</h6>
-  {% for ticket in claimed_tickets %}
-          {% ticket_card ticket.ticket_id False %}
-  {% endfor %}
+            {% for ticket in claimed_tickets %}
+              {% ticket_card ticket.ticket_id False %}
+            {% endfor %}
           {% endif %}
           {% if claimed_tasks%}
           <h6 class="text-center pt-2">Tasks</h6>
-  {% for task in claimed_tasks %}
-          {% task_card task.task_id False %}
-  {% endfor %}
+            {% for task in claimed_tasks %}
+              {% task_card task.task_id False %}
+            {% endfor %}
           {% endif %}
         </div>
       </div>
     </div>
-    <div class="col">
+    <div class="col-3">
       <div class="row bg-info pt-3">
         <div class="col text-white flex-column text-center">
           <h6>Road Blocks</h6>
@@ -114,18 +120,18 @@
       </div>
       <div class="row">
         <div class="col border shadow-sm pt-2 ticket-container">
-  {% if road_blocked_tickets %}
-    {% for ticket in road_blocked_tickets %}
+          {% if road_blocked_tickets %}
+            {% for ticket in road_blocked_tickets %}
               {% ticket_card ticket.id False%}
-    {% endfor %}
-  {% endif %}
-  {% if road_blocked_tasks %}
-    {% for task in road_blocked_tasks %}
+            {% endfor %}
+          {% endif %}
+          {% if road_blocked_tasks %}
+            {% for task in road_blocked_tasks %}
               {% task_card task.id False %}
-    {% endfor %}
-  {% endif %}
+            {% endfor %}
+          {% endif %}
         </div>
       </div>
     </div>
-</div>
+  </div>
 {% endblock content %}

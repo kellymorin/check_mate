@@ -5,55 +5,66 @@
 
 {% block content %}
 {% for message in messages %}
-<div class="{{message.tags}} alert" role="alert">{{message}}</div>
+  {% if message.tags == "error" %}
+    <div class="alert-danger alert" role="alert">{{message}}</div>
+  {% else %}
+    <div class="alert-{{message.tags}} alert" role="alert">{{message}}</div>
+  {% endif %}
 {% endfor%}
 
 <div class="row">
   <div class="col-9">
     <!-- Header Section -->
-{% section_header "Ticket" ticket_detail %}
+    {% section_header "Ticket" ticket_detail %}
     <!-- End Header Section -->
-<div class="row">
-  <div class="col">
+    <div class="row">
+      <div class="col">
         <!-- Related Tasks Section -->
         <div class="card mt-3">
           <div class="card-header bg-info">
             <div class="row justify-content-center">
               <h5 class="text-white">Related Tasks:</h5>
-      {% if ticket_detail.task_set.all %}
-    <form action="{% url 'check_mate:task_add' %}" method="POST">
-      {% csrf_token %}
-      <input type="submit"><i class="fas fa-plus"></i></input>
-      <input type="hidden" name="ticket" value="{{ticket_detail.id}}"/>
-      <input type="hidden" name="first_request"/>
-    </form>
-      {% endif %}
-  </div>
+            </div>
           </div>
-          <div class="card-body">
+          <div class="card-body task-container">
           <!-- Prompt to add tasks section -->
-    {% if not ticket_detail.task_set.all %}
-      <div class="jumbotron">
-        <h6 class="display-4">No Tasks for {{ticket_detail.ticket_name}}</h6>
-        <p class="lead">Add new tasks for this project</p>
-        <form action="{% url 'check_mate:task_add' %}" method="POST">
-            {% csrf_token %}
-            <input type="submit"><i class="fas fa-plus"></i></input>
-            <input type="hidden" name="ticket" value="{{ticket_detail.id}}"/>
-            <input type="hidden" name="first_request"/>
-          </form>
-      </div>
+          {% if not ticket_detail.task_set.all %}
+            <div class="jumbotron">
+              <h6 class="display-4">No Tasks for {{ticket_detail.ticket_name}}</h6>
+              <p class="lead">Add new tasks for this project</p>
+              <form action="{% url 'check_mate:task_add' %}" method="POST">
+                {% csrf_token %}
+                <input type="submit"><i class="fas fa-plus"></i></input>
+                <input type="hidden" name="ticket" value="{{ticket_detail.id}}"/>
+                <input type="hidden" name="first_request"/>
+              </form>
+            </div>
             <!-- End Prompt to add tasks section -->
-            <!-- Related Tasks Display -->
+          <!-- Related Tasks Display -->
           {% else %}
             <div class="card-columns">
-      {% for task in ticket_detail.task_set.all %}
+              <!-- Add Task Card -->
+              <div class="card mb-2 border-info" style="width: 16rem;">
+                <div class="card-body text-center">
+                  <form action="{% url 'check_mate:task_add' %}" method="POST">
+                    {% csrf_token %}
+                    <i class="fas fa-plus text-info"></i>
+                    <div class="card-title text-center">
+                      <button class="btn text-info add-ticket-card" type="submit">Add Task</button>
+                      <input type="hidden" name="ticket" value="{{ticket_detail.id}}"/>
+                      <input type="hidden" name="first_request"/>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- End Add Task Card -->
+              {% for task in ticket_detail.task_set.all %}
                 {% task_card task.id False %}
               {% endfor%}
             </div>
-                  {% endif %}
+          {% endif %}
           <!-- End Related Tasks Display -->
-              </div>
+          </div>
         </div>
         <!-- End Related Tasks Section -->
       </div>
@@ -61,12 +72,12 @@
   </div>
   <!-- Ticket History Section -->
   <div class="col-3 position-sticky">
-      <h4 class="text-center mb-3">Ticket History</h4>
+    <h4 class="text-center mb-3">Ticket History</h4>
       <div class="ticket-history-description">
-      {% for history in all_history %}
+        {% for history in all_history %}
           <p class="mb-0 ticket-description">{{history.description}}</p>
           <p class="ticket-description text-muted">{{history.activity_date| date:"l, F d, Y"}}</p>
-      {% endfor %}
+        {% endfor %}
       </div>
   </div>
   <!-- End Ticket History Section -->

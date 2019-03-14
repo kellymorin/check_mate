@@ -9,12 +9,11 @@ from django.contrib import messages
 from check_mate.models import *
 from check_mate.forms import ProjectForm
 
-# Non-MVP Notes--------------------------------------------------------------
-# TODO: Add the ability to filter from all projects, current projects, previous projects
-# ---------------------------------------------------------------------------
+# Non-MVP Notes--------------------------------------------
+# V2: Add the ability to filter from all projects, current projects, previous projects
+# V2: Make sure every project has a status in fixtures
+# ----------------------------------------------------------
 
-# TODO: Style view all projects
-# TODO: Style view project details
 
 
 @login_required
@@ -88,8 +87,7 @@ def project_add(request):
 
     else:
         context = {
-            "project_form": project_form,
-            "add": True
+            "project_form": project_form
         }
     return render(request, "project_form.html", context)
 
@@ -138,8 +136,7 @@ def project_edit(request, project_id):
         project_form = ProjectForm(instance=project)
         context = {
             "project": project,
-            "project_form": project_form,
-            "edit": True
+            "project_form": project_form
         }
 
         return render(request, "project_form.html", context)
