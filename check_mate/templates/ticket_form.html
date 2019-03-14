@@ -2,21 +2,22 @@
 
 {% load crispy_forms_tags %}
 
+<!-- TODO: Implement messages framework -->
+
 {% block content %}
 
-  {% if error_message %}
-  <p class="alert alert-danger">{{error_message}}</p>
-  {% endif %}
+{% if error_message %}
+<p class="alert alert-danger">{{error_message}}</p>
+{% endif %}
 
-  {% if ticket %}
-    <h1>Edit Ticket</h1>
-    <form action="{% url 'check_mate:ticket_edit' ticket.id %}" method="POST">
-
-  {% else %}
-    <h1>Add Ticket</h1>
-    <form action="{% url 'check_mate:ticket_add' %}" method="POST">
-        <input type="hidden" value="{{project}}" name="project"/>
-  {% endif %}
+{% if ticket %}
+  <h1>Edit Ticket</h1>
+  <form action="{% url 'check_mate:ticket_edit' ticket.id %}" method="POST">
+{% else %}
+  <h1>Add Ticket</h1>
+  <form action="{% url 'check_mate:ticket_add' %}" method="POST">
+    <input type="hidden" value="{{project}}" name="project"/>
+{% endif %}
 
     {% csrf_token %}
     {{ticket_form|crispy}}
@@ -25,7 +26,7 @@
       {{ticket_status|crispy}}
     {% endif %}
 
-    <input class="btn btn-primary" type="submit" value="Save Ticket"/>
+    <input class="btn btn-info" type="submit" value="Save Ticket"/>
     {% if ticket %}
       <a class="btn btn-success" href="{% url 'check_mate:ticket_details' ticket.id %}">Go Back</a>
     {% else %}

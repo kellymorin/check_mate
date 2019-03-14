@@ -3,67 +3,129 @@
 {% load ticket_card %}
 {% load task_card %}
 {% block content %}
-<div>
-  <h4>Things that happened yesterday</h4>
-  <h6>New Tickets:</h6>
+  <div class="row">
+    <div class="col">
+      <h2>Stand Up</h2>
+    </div>
+    <div class="col text-right">
+      {% if claimed_tickets or claimed_tasks %}
+      <a class="btn btn-info" href="{% url 'check_mate:remove-claim' %}">Edit claimed tickets</a>
+      {% else %}
+      <a class="btn btn-info" href="{% url 'check_mate:claim' %}">Claim tickets for today</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-6">
+      <div class="row bg-info pt-3">
+        <div class="col text-white flex-column text-center">
+          <h6>Yesterday</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border shadow-sm pt-2 ticket-container">
+          <h6 class="text-center">New Tickets</h6>
   {% if tickets %}
     {% for ticket in tickets %}
           {% ticket_card ticket.id False%}
     {% endfor %}
   {% else %}
-    <p>No tickets were created yesterday</p>
+          <div class="card" style="width:16rem;">
+            <div class="card-body">
+              <div class="card-title text-dark">No New Tickets Created Yesterday</div>
+            </div>
+          </div>
   {% endif %}
-  <h6>New Tasks:</h6>
+          <h6 class="text-center pt-2">New Tasks</h6>
   {% if tasks %}
     {% for task in tasks %}
           {% task_card task.id False%}
     {% endfor %}
   {% else %}
-    <p>No tasks were created yesterday</p>
+          <div class="card" style="width:16rem;">
+            <div class="card-body">
+              <div class="card-title text-dark">No New Tasks Created Yesterday</div>
+            </div>
+          </div>
   {% endif %}
-  <h6>Things you did yesterday</h6>
-
+        </div>
+        <div class="col border shadow-sm pt-2 ticket-container">
+          <h6 class="text-center">Your Activity Yesterday</h6>
+          {% if ticket_activity or task_activity %}
+            {% for key, value in ticket_activity.items %}
+              <div class="card" style="width:16rem;">
+                <div class="card-header">
+                  <div class="card-title text-dark">{{key}}</div>
+                </div>
+                <div class="card-body">
+                  {% for ticket in value %}
+                    <p class="mb-0 ticket-description">{{ticket.get_ticket_history_description}}</p>
+                    <p class="ticket-description text-muted">{{ticket.activity_date | date:"l, F d, Y"}}</p>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
   {% for key, value in task_activity.items %}
-    <h6>{{key}}</h6>
+            <div class="card" style="width:16rem;">
+              <div class="card-header">
+                <div class="card-title text-dark">{{key}}</div>
+              </div>
+              <div class="card-body">
     {% for task in value %}
-      <p>{{task.get_task_history_description}}</p>
+                  <p class="mb-0 ticket-description">{{task.get_task_history_description}}</p>
+                  <p class="ticket-description text-muted">{{task.activity_date | date:"l, F d, Y"}}</p>
     {% endfor %}
+              </div>
+            </div>
   {% endfor %}
-
-  {% for key, value in ticket_activity.items %}
-    <h6>{{key}}</h6>
-    {% for ticket in value %}
-      <p>{{ticket.get_ticket_history_description}}</p>
-    {% endfor %}
-  {% endfor %}
-
-  <h4>Today I will...</h4>
-  <a href="{% url 'check_mate:claim' %}">Claim tickets for today</a>
-  <a href="{% url 'check_mate:remove-claim' %}">Edit claimed tickets</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="row bg-info pt-3">
+        <div class="col text-white flex-column text-center">
+          <h6>Today</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border shadow-sm pt-2 ticket-container">
+          {% if claimed_tickets %}
+          <h6 class="text-center">Tickets</h6>
   {% for ticket in claimed_tickets %}
           {% ticket_card ticket.ticket_id False %}
   {% endfor %}
-
+          {% endif %}
+          {% if claimed_tasks%}
+          <h6 class="text-center pt-2">Tasks</h6>
   {% for task in claimed_tasks %}
           {% task_card task.task_id False %}
   {% endfor %}
-
-  <h4>Road Blocks</h4>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="row bg-info pt-3">
+        <div class="col text-white flex-column text-center">
+          <h6>Road Blocks</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border shadow-sm pt-2 ticket-container">
   {% if road_blocked_tickets %}
     {% for ticket in road_blocked_tickets %}
-      <p>{{ticket.ticket_name}}</p>
+              {% ticket_card ticket.id False%}
     {% endfor %}
-  {% else %}
-    <p>No tickets are currently blocked</p>
   {% endif %}
-
   {% if road_blocked_tasks %}
     {% for task in road_blocked_tasks %}
-      <p>{{task.task_name}}</p>
+              {% task_card task.id False %}
     {% endfor %}
-  {% else %}
-    <p>No tasks are currently blocked</p>
   {% endif %}
-
+        </div>
+      </div>
+    </div>
 </div>
 {% endblock content %}

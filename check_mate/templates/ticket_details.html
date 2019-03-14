@@ -2,6 +2,7 @@
 
 {% load task_card %}
 {% load section_header %}
+
 {% block content %}
 {% for message in messages %}
 <div class="{{message.tags}} alert" role="alert">{{message}}</div>
@@ -9,11 +10,12 @@
 
 <div class="row">
   <div class="col-9">
+    <!-- Header Section -->
 {% section_header "Ticket" ticket_detail %}
-
-
+    <!-- End Header Section -->
 <div class="row">
   <div class="col">
+        <!-- Related Tasks Section -->
         <div class="card mt-3">
           <div class="card-header bg-info">
             <div class="row justify-content-center">
@@ -29,6 +31,7 @@
   </div>
           </div>
           <div class="card-body">
+          <!-- Prompt to add tasks section -->
     {% if not ticket_detail.task_set.all %}
       <div class="jumbotron">
         <h6 class="display-4">No Tasks for {{ticket_detail.ticket_name}}</h6>
@@ -40,6 +43,8 @@
             <input type="hidden" name="first_request"/>
           </form>
       </div>
+            <!-- End Prompt to add tasks section -->
+            <!-- Related Tasks Display -->
           {% else %}
             <div class="card-columns">
       {% for task in ticket_detail.task_set.all %}
@@ -47,11 +52,14 @@
               {% endfor%}
             </div>
                   {% endif %}
+          <!-- End Related Tasks Display -->
               </div>
         </div>
+        <!-- End Related Tasks Section -->
       </div>
     </div>
   </div>
+  <!-- Ticket History Section -->
   <div class="col-3 position-sticky">
       <h4 class="text-center mb-3">Ticket History</h4>
       <div class="ticket-history-description">
@@ -61,5 +69,6 @@
       {% endfor %}
       </div>
   </div>
+  <!-- End Ticket History Section -->
 </div>
 {% endblock content %}

@@ -1,22 +1,21 @@
 {% load status_badge %}
 
+<!-- Card Wrapper -->
 <div class="card mb-2" style="width: 16rem;">
+  <!-- Card Body -->
   <div class="card-body">
     <div class="card-title text-dark">{{task.task_name}}</div>
     <p class="card-text ticket-description mb-2 text-muted">{{task.task_description}}</p>
     {% status_badge task.task_status%}
-  </div>
 
   {% if task.get_due_date_status == "This task is past due" %}
     <div class="card-text text-center text-danger ticket-description">{{task.get_due_date_status}}</div>
   {% elif task.get_due_date_status == "This task is due today" %}
     <div class="card-text text-center text-warning ticket-description">{{task.get_due_date_status}}</div>
   {% endif %}
-
-  {% comment %}
-  TODO: Ask sebastion to help with alignment here
-  {% endcomment %}
-
+  </div>
+  <!-- End Card Body -->
+  <!-- Card Footer -->
   <div class="card-footer bg-transparent">
     <div class="row">
       <div class="col">
@@ -32,9 +31,11 @@
         {% if task.delete_status == True %}
         <a class="text-dark" href="{% url 'check_mate:task_delete' task.id %}"><i class="far fa-trash-alt"></i></a>
         {% else %}
-        <i class="far fa-trash-alt text-secondary"></i>
+          <i class="far fa-trash-alt text-muted"></i>
         {% endif %}
       </div>
     </div>
   </div>
+  <!-- End Card Footer -->
 </div>
+<!-- End Card Wrapper -->

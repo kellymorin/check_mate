@@ -1,37 +1,42 @@
 {% extends "index.html" %}
 
 {% block content %}
+<!-- Header Section -->
+<div class="row">
+  <div class="col mb-4">
+    <h1>Delete</h1>
+  </div>
+</div>
+<!-- End Header Section -->
+<!-- Delete Prompt Section -->
+{% if ticket.delete_status == True %}
   <div class="row">
-    <div class="col mb-4">
-      <h1>Delete</h1>
+    <div class="col">
+      <p>Are you sure you want to delete <strong>{{ticket.ticket_name}}</strong></p>
+      <div class="my-4">
+        <form action="{% url 'check_mate:ticket_delete' ticket.id %}" method="POST">
+          {% csrf_token%}
+          <button type="submit" class="btn btn-danger">Yes, Delete</button>
+          <a href="{% url 'check_mate:ticket_details' ticket.id %}"><button type="button" class="btn btn-info">No, take me back</button></a>
+        </form>
+      </div>
     </div>
   </div>
-
-  {% if ticket.delete_status == True %}
-    <div class="row">
-      <div class="col">
-        <p>Are you sure you want to delete <strong>{{ticket.ticket_name}}</strong></p>
-        <div class="my-4">
-          <form action="{% url 'check_mate:ticket_delete' ticket.id %}" method="POST">
-            {% csrf_token%}
-            <button type="submit" class="btn btn-danger">Yes, Delete</button>
-            <a href="{% url 'check_mate:ticket_details' ticket.id %}"><button type="button" class="btn btn-primary">No, take me back</button></a>
-          </form>
-        </div>
+<!-- End Delete Prompt Section -->
+<!-- Delete Error Section -->
+{% else %}
+  <div class="row">
+    <div class="col">
+      {% if ticket.ticket_status == "Complete" %}
+        <p>Sorry, <strong>{{ticket.ticket_name}}</strong> can't be deleted because it's already been completed</p>
+      {% elif ticket.ticket_status == "Active" %}
+        <p>Sorry, <strong>{{ticket.ticket_name}}</strong> can't be deleted because it is active.</p>
+      {% endif %}
+      <div class="my-4">
+        <a href="{% url 'check_mate:ticket_details' ticket.id%}"><button type="button" class="btn btn-info">Go Back</button></a>
       </div>
     </div>
-  {% else %}
-      <div class="row">
-        <div class="col">
-          {% if ticket.ticket_status == "Complete" %}
-            <p>Sorry, <strong>{{ticket.ticket_name}}</strong> can't be deleted because it's already been completed</p>
-          {% elif ticket.ticket_status == "Active" %}
-            <p>Sorry, <strong>{{ticket.ticket_name}}</strong> can't be deleted because it is active.</p>
-          {% endif %}
-          <div class="my-4">
-            <a href="{% url 'check_mate:ticket_details' ticket.id%}"><button type="button" class="btn btn-primary">Go Back</button></a>
-          </div>
-        </div>
-      </div>
-  {% endif %}
+  </div>
+{% endif %}
+<!-- End Delete Error Section -->
 {% endblock content %}

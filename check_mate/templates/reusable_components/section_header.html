@@ -2,33 +2,31 @@
 {% load progress_bar %}
 
 {% comment %}
-<!-- TODO: ask sebastion to help with formatting here. update alignment of icons. update spacing of icons-->
 <!-- TODO: project name in badge -->
-<!-- TODO: update alignment of initials -->
 {% endcomment %}
 
 <div class="row">
   <div class="col">
     <div class="row px-3">
       <div class="col d-flex align-items-center">
-      {% if user_initials %}
+        {% if user_initials %}
           <div class="text-white initials-circle bg-info mr-2">{{user_initials}}</div>
-      {% endif %}
-      <h2 class="mr-2 mb-0">{{title}}</h2>
+        {% endif %}
+        <h2 class="mr-2 mb-0">{{title}}</h2>
         <a class="text-dark mr-2 mt-1 icon" href="{% url edit_link item_id %}"><i class="fas fa-pencil-alt"></i></a>
-      {% if delete_status %}
+        {% if delete_status %}
           <a  class="mr-2 text-dark  mt-1 icon" href="{% url delete_link item_id %}"><i class="far fa-trash-alt"></i></a>
-      {% else %}
-          <i class="far fa-trash-alt mr-2 mt-1 icon text-secondary"></i>
-      {% endif %}
-    </div>
+        {% else %}
+          <i class="far fa-trash-alt mr-2 mt-1 icon text-muted"></i>
+        {% endif %}
+      </div>
     </div>
     <div class="col">
-    {% if parent_item %}
-      <a class="text-muted ticket-description" href="{% url parent_item_link parent_item_id %}">{{parent_item}}</a>
-    {% endif %}
-    <p>{{description}}</p>
-  </div>
+      {% if parent_item %}
+        <a class="text-muted ticket-description" href="{% url parent_item_link parent_item_id %}">{{parent_item}}</a>
+      {% endif %}
+      <p>{{description}}</p>
+    </div>
   </div>
   <div class="col">
     <h6>{{date_description}}: {{due_date|date:'l, F d, Y'}}</h6>

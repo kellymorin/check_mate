@@ -4,30 +4,27 @@
 
 {% block content %}
 
-  {% for message in messages %}
-    <div class="{{message.tags}} alert" role="alert">{{message}}</div>
-  {% endfor %}
+{% for message in messages %}
+  <div class="{{message.tags}} alert" role="alert">{{message}}</div>
+{% endfor %}
 
-  {% if error_message %}
-    <p class="alert alert-danger">{{error_message}}</p>
-  {% endif %}
-
-  {% if edit == True %}
-    <h1>Edit Project</h1>
-    <form action="{% url 'check_mate:project_edit' project.id%}" method="POST">
-
-  {% elif add == True %}
-    <h1>Add Projects</h1>
-    <form action="{% url 'check_mate:project_add' %}" method="POST">
-  {% endif %}
+{% if edit == True %}
+  <h1>Edit Project</h1>
+  <form action="{% url 'check_mate:project_edit' project.id%}" method="POST">
+{% else %}
+  <h1>Add Projects</h1>
+  <form action="{% url 'check_mate:project_add' %}" method="POST">
+{% endif %}
 
     {% csrf_token %}
     {{ project_form|crispy}}
 
     {% if add == True %}
-      <input class="btn btn-primary" type="submit" value="Add Project"/>
+      <input class="btn btn-info" type="submit" value="Add Project"/>
+      <a class="btn btn-success" href="{% url 'check_mate:projects' %}">Go Back</a>
     {% elif edit == True %}
-      <input class="btn btn-primary" type="submit" value="Save Changes"/>
+      <input class="btn btn-info" type="submit" value="Save Changes"/>
+      <a class="btn btn-success" href="{% url 'check_mate:project_details' project.id %}">Go Back</a>
     {% endif %}
   </form>
 {% endblock content %}

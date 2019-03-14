@@ -4,19 +4,19 @@
 
 {% load crispy_forms_tags %}
 
-  {% for message in messages %}
+{% for message in messages %}
   <div class="{{messages.tags}} alert alert-danger" role="alert">{{message}}</div>
-  {% endfor %}
+{% endfor %}
 
-    <h1>Login to Check Mate</h1>
+  <h1>Login to Check Mate</h1>
 
-    <form id="login_form" method="post" action="{% url 'check_mate:login' %}">
-      {% csrf_token %}
-      {{login_form|crispy}}
-      <input type="hidden" value="{{next}}" name="next" />
-      <input class="btn btn-primary" type="Submit" value="Submit" />
-    </form>
+  <form id="login_form" method="post" action="{% url 'check_mate:login' %}">
+    {% csrf_token %}
+    {{login_form|crispy}}
+    <input type="hidden" value="{{next}}" name="next" />
+    <input class="btn btn-info" type="Submit" value="Submit" />
     {% if next != "/" %}
-      <a class ="btn btn-primary" href="/register?next={{next}}">Register</a>
+      <a class ="btn btn-info" href="/register?next={{next}}">Register</a>
     {% endif %}
+  </form>
 {% endblock content %}

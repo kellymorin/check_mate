@@ -7,9 +7,10 @@
 {% for message in messages %}
   <div class="{{message.tags}} alert" role="alert">{{message}}</div>
 {% endfor %}
+<!-- Header Section -->
 {% section_header "Project" project_detail %}
-
-
+<!-- Header Section -->
+<!-- Add Tickets Section -->
 {% if tickets %}
 <form action="{% url 'check_mate:ticket_add'%}" method="POST">
   {% csrf_token %}
@@ -19,8 +20,10 @@
   <input type="hidden" name="first_request"/>
 </form>
 {% endif %}
-
+<!-- End Add Tickets Section -->
+<!-- Ticket Display Section -->
 <div class="row mt-3">
+  <!-- Backlogged Tickets Section -->
   <div class="col">
   <div class="row bg-info pt-3">
       <div class="col text-white flex-column text-center">
@@ -37,6 +40,8 @@
   </div>
     </div>
   </div>
+  <!-- End Backlogged Tickets Section -->
+  <!-- Active Tickets Section -->
   <div class="col">
     <div class="row bg-info pt-3">
       <div class="col text-white flex-column text-center">
@@ -53,6 +58,8 @@
   </div>
     </div>
   </div>
+  <!-- End Active Tickets Section -->
+  <!-- Review Tickets Section -->
   <div class="col">
     <div class="row bg-info pt-3">
       <div class="col text-white flex-column text-center">
@@ -69,6 +76,8 @@
   </div>
     </div>
   </div>
+  <!-- End Review Tickets Section -->
+  <!-- Completed Tickets Section -->
   <div class="col">
     <div class="row bg-info pt-3">
       <div class="col text-white flex-column text-center">
@@ -84,7 +93,12 @@
     {% endfor %}
     </div>
   </div>
-  {% else %}
+  </div>
+  <!-- End Completed Tickets Section -->
+</div>
+<!-- End Tickets Display Section -->
+
+  {% if not tickets %}
     <div class="jumbotron">
       <h1 class="display-4">No Tickets for {{project_detail.project_name}}</h1>
       <p class="lead">Add new tickets for this project</p>
@@ -97,5 +111,4 @@
     </div>
 
   {% endif %}
-</div>
 {% endblock content %}
