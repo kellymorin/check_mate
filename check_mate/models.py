@@ -33,6 +33,16 @@ class Project(models.Model):
 
         return ticket_status
 
+    @property
+    def delete_status(self):
+        can_delete = False
+        all_tickets = Ticket.objects.filter(project = self.id)
+
+        if len(all_tickets) == 0:
+            can_delete = True
+
+        return can_delete
+
     def __str__(self):
         return self.project_name
 
@@ -81,6 +91,16 @@ class Ticket(models.Model):
             due_date_status = "This ticket is due today"
 
         return due_date_status
+
+    @property
+    def delete_status(self):
+        can_delete = False
+        all_tasks = Task.objects.filter(ticket = self.id)
+
+        if len(all_tasks) == 0:
+            can_delete = True
+
+        return can_delete
 
     def __str__(self):
         return self.ticket_name
@@ -166,6 +186,15 @@ class Task(models.Model):
             due_date_status = "This task is due today"
 
         return due_date_status
+
+    @property
+    def delete_status(self):
+        can_delete = False
+
+        if self.task_status == "Not Started":
+            can_delete = True
+
+        return can_delete
 
 
     def __str__(self):

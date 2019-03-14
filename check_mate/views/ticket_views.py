@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.contrib import messages
 
 from check_mate.models import *
 from check_mate.forms import TicketForm, TicketStatusForm
@@ -17,7 +18,11 @@ from ..utils import __update_ticket_history
 # Once all tickets are marked as complete, update project status to complete
 # -------------------------------------------
 
-# TODO: update ticket detail to include history with
+# Style Notes ----------------------------------------------------------
+# V2: On ticket edit form, see if I can set limitations on when a due date can be set for, based on when the parent items due date is
+# -----------------------------------------------------------------------
+
+
 
 @login_required
 def ticket_detail(request, ticket_id):
@@ -31,7 +36,8 @@ def ticket_detail(request, ticket_id):
     """
     # Then they should be able to see the assigned team member, activity history
 
-    ticket_detail = Ticket.objects.filter(pk=ticket_id)[0]
+    ticket_detail = Ticket.objects.get(pk=ticket_id)
+
     ticket_history = TicketHistory.objects.filter(ticket=ticket_id).order_by('activity_date')
     tasks = Task.objects.filter(ticket=ticket_id)
     task_history = []
@@ -90,7 +96,6 @@ def ticket_detail(request, ticket_id):
 
     context={
         "ticket_detail": ticket_detail,
-        "tasks": tasks,
         "all_history": all_history
     }
     return render(request, "ticket_details.html", context)
@@ -116,17 +121,15 @@ def ticket_add(request):
             ticket_description = form_data["ticket_description"]
             ticket_due = form_data["ticket_due"]
             project_id = form_data["project"]
-            project = Project.objects.filter(pk=project_id)[0]
+            project = Project.objects.get(pk=project_id)
 
             if ticket_name == "" or ticket_description == "":
                 context={
-                    "error_message": "You must complete all fields in the form",
-                    "ticket_name": ticket_name,
-                    "ticket_description": ticket_description,
-                    "ticket_due": ticket_due,
-                    "ticket_form": ticket_form,
+                    "ticket_form": completed_ticket_form,
                     "project": project_id
                 }
+
+                messages.error(request, "You must complete all fields in the form")
 
             else:
                 new_ticket = Ticket(ticket_name=ticket_name, ticket_description=ticket_description, ticket_due= ticket_due, ticket_created = datetime.date.today(), ticket_status="Not Started", project=project)
@@ -147,14 +150,15 @@ def ticket_add(request):
                     project.project_status = "Active"
                     project.save()
 
+                messages.success(request, "Ticket successfully saved")
+
                 return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
 
     else:
         project = form_data["project"]
         context = {
             "ticket_form": ticket_form,
-            "project": project,
-            "add": True
+            "project": project
         }
     return render(request, "ticket_form.html", context)
 
@@ -175,21 +179,14 @@ def ticket_delete(request, ticket_id):
         ticket = Ticket.objects.get(pk=ticket_id)
         project_id = ticket.project.id
         ticket.delete()
+        messages.success(request, "Ticket successfully deleted")
         return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
     else:
         ticket = Ticket.objects.get(pk=ticket_id)
-        tasks = Task.objects.filter(ticket=ticket_id)
 
-        if len(tasks) == 0:
-            context = {
-                "ticket": ticket,
-                "can_delete": True
-            }
-        else:
-            context={
-                "ticket": ticket,
-                "can_delete": False
-            }
+        context = {
+            "ticket": ticket,
+        }
         return render(request, "ticket_delete.html", context)
 
 
@@ -215,8 +212,7 @@ def ticket_edit(request, ticket_id):
         context = {
             "ticket": ticket,
             "ticket_form": ticket_form,
-            "ticket_status": ticket_status,
-            "edit": True
+            "ticket_status": ticket_status
         }
 
         return render(request, "ticket_form.html", context)
@@ -254,4 +250,5 @@ def ticket_edit(request, ticket_id):
             project.project_status = "Active"
             project.save()
 
+        messages.success(request, "Ticket updates successfully saved")
         return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))

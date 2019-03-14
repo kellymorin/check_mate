@@ -1,0 +1,49 @@
+{% load progress_bar %}
+
+<style>
+  input:checked+label{
+    border: 2px solid #5bc0de;
+  }
+</style>
+
+{% if claim == True %}
+  <input type="checkbox" class="d-none" id="claimed-ticket-{{ticket.id}}" name="ticket-{{ticket.id}}"/>
+{% endif %}
+
+<!-- Card Wrapper -->
+<label class="card mb-2" style="width: 16rem;" for="claimed-ticket-{{ticket.id}}">
+  <a href="{% url 'check_mate:ticket_details' ticket.id %}">
+    <!-- Card Body -->
+    <div class="card-body">
+      <div class="card-title text-dark">{{ticket.ticket_name}}</div>
+      <p class="card-text ticket-description mb-2 text-muted">{{ticket.ticket_description}}</p>
+      {% progress_bar ticket.get_task_status.Total ticket.get_task_status.Complete ticket.get_task_status.Active %}
+      {% if ticket.get_due_date_status == "This ticket is past due" %}
+        <div class="card-text text-center text-danger ticket-description">{{ticket.get_due_date_status}}</div>
+      {% elif ticket.get_due_date_status == "This ticket is due today" %}
+        <div class="card-text text-center text-warning ticket-description">{{ticket.get_due_date_status}}</div>
+      {% endif %}
+    </div>
+    <!-- End Card Body -->
+  </a>
+  <!-- Card Footer -->
+  <div class="card-footer bg-transparent">
+    <div class="row">
+      <div class="col">
+      {% if user_initials %}
+        <div class="text-white initials-circle bg-info">{{user_initials}}</div>
+      {% endif %}
+      </div>
+      <div class="col text-right mt-0">
+        <a class="text-dark icon" href="{% url 'check_mate:ticket_edit' ticket.id %}"><i class="fas fa-pencil-alt"></i></a>
+        {% if ticket.delete_status == True %}
+          <a class="text-dark icon" href="{% url 'check_mate:ticket_delete' ticket.id %}"><i class="far fa-trash-alt"></i></a>
+        {% else %}
+          <i class="far fa-trash-alt text-muted icon"></i>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <!-- End Card Footer -->
+</label>
+<!-- End Card Body -->

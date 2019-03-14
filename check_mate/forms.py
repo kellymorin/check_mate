@@ -4,9 +4,10 @@ from django import forms
 
 from check_mate.models import *
 
-# TODO: Add docstrings to all methods
 
 class LogInForm(forms.ModelForm):
+    """Handles log in and authentication of existing users"""
+
     password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
@@ -15,6 +16,8 @@ class LogInForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
+    """Handles registration of new users"""
+
     password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
@@ -23,13 +26,18 @@ class UserForm(forms.ModelForm):
 
 
 class ProjectForm(forms.ModelForm):
+    """Handles displaying the add/edit form for projects"""
 
     class Meta:
         model = Project
-        fields = ("project_name", "project_description")
+        fields = ("project_name", "project_description", "project_due")
+        widgets = {
+            "project_due": forms.DateInput(attrs={"type": "date"})
+        }
 
 
 class TicketForm(forms.ModelForm):
+    """Handles displaying the add/edit form for tickets"""
 
     class Meta:
         model = Ticket
@@ -38,13 +46,17 @@ class TicketForm(forms.ModelForm):
             "ticket_due": forms.DateInput(attrs={"type": "date"})
         }
 
+
 class TicketStatusForm(forms.ModelForm):
+    """Handles displaying the ticket status for status updates during the edit process"""
 
     class Meta:
         model = Ticket
         fields = ("ticket_status",)
 
+
 class TaskForm(forms.ModelForm):
+    """Handles displaying the add/edit form for tasks"""
 
     class Meta:
         model = Task
@@ -53,7 +65,9 @@ class TaskForm(forms.ModelForm):
             "task_due": forms.DateInput(attrs={"type": "date"})
         }
 
+
 class TaskStatusForm(forms.ModelForm):
+    """Handles displaying the task status for status updates during the edit process"""
 
     class Meta:
         model = Task

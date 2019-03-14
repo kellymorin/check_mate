@@ -4,12 +4,13 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.contrib import messages
 
 from check_mate.models import *
 from check_mate.forms import TaskForm, TaskStatusForm
 from ..utils import __update_task_history, __update_ticket_history
 
-# TODO: Deploy the error messages functionality from django
+# V2: On task edit form, see if I can set limitations on when a due date can be set for, based on when the parent items due date is
 
 @login_required
 def task_add(request):
@@ -36,15 +37,11 @@ def task_add(request):
             project = Project.objects.filter(pk=project_id)[0]
 
             if task_name == "" or task_description == "":
-                # TODO: NEED TO UPDATE THIS SO IT AUTOPOPULATES FORM
                 context = {
-                    "error_message": "You must complete all fields in the form",
-                    "task_name": task_name,
-                    "task_description": task_description,
-                    "task_due": task_due,
-                    "task_form": task_form,
+                    "task_form": completed_task_form,
                     "ticket": ticket_id
                 }
+                messages.error(request, "You must complete all fields in the form")
 
             else:
                 new_task = Task(task_name=task_name, task_description=task_description, task_due=task_due, task_created=datetime.date.today(), task_status="Not Started", ticket=ticket)
@@ -71,13 +68,13 @@ def task_add(request):
                         project.project_status = "Active"
                         project.save()
 
+                messages.success(request, "Task successfully saved")
                 return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
     else:
         ticket = form_data["ticket"]
         context = {
             "task_form": task_form,
-            "ticket": ticket,
-            "add": True
+            "ticket": ticket
         }
     return render(request, "task_form.html", context)
 
@@ -96,9 +93,8 @@ def task_edit(request, task_id):
 
     task = Task.objects.get(pk=task_id)
     ticket_id = task.ticket.id
-    ticket = Ticket.objects.get(pk=ticket_id)
-    project_id = ticket.project.id
-    project = Project.objects.get(pk=project_id)
+    ticket = Ticket.objects.get(pk=task.ticket.id)
+    project = Project.objects.get(pk=ticket.project.id)
     form_data = request.POST
 
     if request.method == "GET":
@@ -108,8 +104,7 @@ def task_edit(request, task_id):
             "task": task,
             "task_form": task_form,
             "task_status": task_status,
-            "ticket": ticket_id,
-            "edit": True
+            "ticket": ticket_id
         }
 
         return render(request, "task_form.html", context)
@@ -161,6 +156,7 @@ def task_edit(request, task_id):
                 project.project_status = "Active"
                 project.save()
 
+        messages.success(request, "Changes successfully saved")
         return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
 
 
@@ -181,19 +177,12 @@ def task_delete(request, task_id):
         task = Task.objects.get(pk=task_id)
         ticket_id = task.ticket.id
         task.delete()
+        messages.success(request, "Task successfully deleted")
         return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
     else:
         task = Task.objects.get(pk=task_id)
-        ticket_id = task.ticket.id
 
-        if task.task_status == "Not Started":
-            context = {
-                "task": task,
-                "can_delete": True
-            }
-        else:
-            context={
-                "task": task,
-                "can_delete": False
-            }
+        context = {
+            "task": task,
+        }
         return render(request, "task_delete.html", context)

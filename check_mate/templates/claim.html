@@ -1,153 +1,133 @@
 {% extends 'index.html' %}
 
+{% load ticket_card %}
+{% load task_card %}
+
+<!-- V2: Add ability to view all items -->
+<!-- <a class="btn" href="{% url 'check_mate:claim-all' %}">View all Tickets</a> -->
+
 {% block content %}
-<div class="row">
-  <div class="col">
-    <form method="POST" action="{% url 'check_mate:claim' %}">
-      {% csrf_token %}
-      <button type="submit" value="claim">Claim</button>
-      <h4>Your assigned items</h4>
-      {% if assigned_tickets %}
-        <h6>Tickets</h6>
-        {% for ticket in assigned_tickets %}
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <input type="checkbox" name="ticket-{{ticket.id}}"/><h5 class="card-title">{{ticket.ticket_name}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{ticket.ticket_description}}</h6>
-              <div class="card-text">
-                  {% if ticket.get_due_date_status == "This ticket is past due" %}
-                    <div class="alert alert-danger" role="alert">
-                      {{ticket.get_due_date_status}}
-                    </div>
-                  {% elif ticket.get_due_date_status == "This ticket is due today" %}
-                    <div class="alert alert-warning" role="alert">
-                      {{ticket.get_due_date_status}}
-                    </div>
-                  {% endif %}
-                </div>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-
-      {% if assigned_tasks %}
-        <h6>Tasks</h6>
-        {% for task in assigned_tasks %}
-            <div class="card" style="width: 18rem;">
-              <div class="card-body">
-                <input type="checkbox" name="task-{{task.id}}"><h5 class="card-title">{{task.task_name}}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{task.task_description}}</h6>
-                <div class="card-text">
-                  {% if task.get_due_date_status == "This task is past due" %}
-                    <div class="alert alert-danger" role="alert">
-                      {{task.get_due_date_status}}
-                    </div>
-                  {% elif task.get_due_date_status == "This task is due today" %}
-                    <div class="alert alert-warning" role="alert">
-                      {{task.get_due_date_status}}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-        {% endfor %}
-      {% endif %}
-    </div>
+<form method="POST" action="{% url 'check_mate:claim' %}">
+  {% csrf_token %}
+  <!-- Header Section -->
+  <div class="row">
     <div class="col">
-      <h4>Past Due Items</h4>
-      {% if past_due_tickets %}
-        <h6>Tickets</h6>
-        {% for ticket in past_due_tickets %}
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <input type="checkbox" name="ticket-{{ticket.id}}"><h5 class="card-title">{{ticket.ticket_name}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{ticket.ticket_description}}</h6>
-              <div class="card-text">
-                {% if ticket.get_due_date_status == "This ticket is past due" %}
-                  <div class="alert alert-danger" role="alert">
-                    {{ticket.get_due_date_status}}
-                  </div>
-                {% elif ticket.get_due_date_status == "This ticket is due today" %}
-                  <div class="alert alert-warning" role="alert">
-                    {{ticket.get_due_date_status}}
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-      {% if past_due_tasks %}
-        <h6>Tasks</h6>
-        {% for task in past_due_tasks %}
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <input type="checkbox" name="task-{{task.id}}"> <h5 class="card-title">{{task.task_name}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{task.task_description}}</h6>
-              <div class="card-text">
-                {% if task.get_due_date_status == "This task is past due" %}
-                  <div class="alert alert-danger" role="alert">
-                    {{task.get_due_date_status}}
-                  </div>
-                {% elif task.get_due_date_status == "This task is due today" %}
-                  <div class="alert alert-warning" role="alert">
-                    {{task.get_due_date_status}}
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
+      <h2>Claim Tasks and Tickets for Today</h2>
     </div>
-    <div class="col">
-      <h4>Ready for Review</h4>
-      {% if review_tickets %}
-        <h6>Tickets</h6>
-        {% for ticket in review_tickets %}
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <input type="checkbox" name="ticket-{{ticket.id}}"><h5 class="card-title">{{ticket.ticket_name}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{ticket.ticket_description}}</h6>
-              <div class="card-text">
-                {% if ticket.get_due_date_status == "This ticket is past due" %}
-                  <div class="alert alert-danger" role="alert">
-                    {{ticket.get_due_date_status}}
-                  </div>
-                {% elif ticket.get_due_date_status == "This ticket is due today" %}
-                  <div class="alert alert-warning" role="alert">
-                    {{ticket.get_due_date_status}}
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-      {% if review_tasks %}
-        <h6>Tasks</h6>
-        {% for task in review_tasks %}
-        <div class="card" style="width: 18rem;">
-          <div class="card-body">
-            <input type="checkbox" name="task-{{task.id}}"> <h5 class="card-title">{{task.task_name}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{task.task_description}}</h6>
-            <div class="card-text">
-              {% if task.get_due_date_status == "This task is past due" %}
-                <div class="alert alert-danger" role="alert">
-                  {{task.get_due_date_status}}
-                </div>
-              {% elif task.get_due_date_status == "This task is due today" %}
-                <div class="alert alert-warning" role="alert">
-                  {{task.get_due_date_status}}
-                </div>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-        {% endif %}
-    </form>
+    <div class="col text-right">
+      <button class="mx-2 btn btn-info" type="submit" value="claim">Claim</button>
+    </div>
   </div>
-</div>
+  <!-- End Header Section -->
+  <!-- Ticket Display Section -->
+  <div class="row mt-3">
+    <!-- Assigned Items Section -->
+    <div class="col">
+      <div class="row bg-info pt-3">
+        <div class="col text-white flex-column text-center">
+          <h6>Your Assigned Items</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border shadow-sm pt-2 ticket-container">
+        {% if assigned_tickets %}
+          <h6 class="text-center">Tickets</h6>
+            {% for ticket in assigned_tickets %}
+              {% ticket_card ticket.id True %}
+            {% endfor %}
+        {% endif %}
 
+        {% if assigned_tasks %}
+          <h6 class="text-center">Tasks</h6>
+            {% for task in assigned_tasks %}
+              {% task_card task.id True %}
+            {% endfor %}
+        {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- End Assigned Items Section -->
+    <!-- Past Due Items Section -->
+    <div class="col">
+      <div class="row bg-info pt-3">
+        <div class="col text-white flex-column text-center">
+          <h6>Past Due Items</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border shadow-sm pt-2 ticket-container">
+        {% if past_due_tickets %}
+          <h6 class="text-center">Tickets</h6>
+            {% for ticket in past_due_tickets %}
+              {% ticket_card ticket.id True %}
+            {% endfor %}
+        {% endif %}
+
+        {% if past_due_tasks %}
+          <h6 class="text-center">Tasks</h6>
+            {% for task in past_due_tasks %}
+              {% task_card task.id True %}
+            {% endfor %}
+        {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- End Past Due Items Section -->
+    <!-- Ready for Review Items Section -->
+    <div class="col">
+      <div class="row bg-info pt-3">
+        <div class="col text-white flex-column text-center">
+          <h6>Ready for Review</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border shadow-sm pt-2 ticket-container">
+        {% if review_tickets %}
+          <h6 class="text-center">Tickets</h6>
+            {% for ticket in review_tickets %}
+              {% ticket_card ticket.id True %}
+            {% endfor %}
+        {% endif %}
+
+        {% if review_tasks %}
+          <h6 class="text-center">Tasks</h6>
+            {% for task in review_tasks %}
+              {% task_card task.id True %}
+            {% endfor %}
+        {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- End Ready for Review Items Section -->
+    <!-- All Other Open Tickets Section -->
+    {% if other_tickets or other_tasks %}
+    <div class="col">
+      <div class="row bg-info pt-3">
+        <div class="col text-white flex-column text-center">
+          <h6>Other</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border shadow-sm pt-2 ticket-container">
+        {% if other_tickets %}
+          <h6 class="text-center">Tickets</h6>
+            {% for ticket in other_tickets %}
+              {% ticket_card ticket.id True %}
+            {% endfor %}
+        {% endif %}
+
+        {% if other_tasks %}
+          <h6 class="text-center">Tasks</h6>
+            {% for task in other_tasks %}
+              {% task_card task.id True %}
+            {% endfor %}
+        {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- End All Other Items Section -->
+    {% endif %}
+  </div>
+  <!-- End Ticket Display Section -->
+</form>
 {% endblock content %}

@@ -2,7 +2,9 @@ import datetime
 
 from check_mate.models import *
 
-# TODO: Update task history posts to include comments, when functionality is available
+# Non-MVP Notes -------------------------------------------
+# V2: Update task history posts to include comments, when functionality is available
+# ----------------------------------------------------------
 
 def __update_task_history(task, user, activity_type, activity_details):
     if activity_type == "Status":

@@ -4,18 +4,22 @@
 
 {% block content %}
 
-  {% if error_message %}
-    <p class="alert alert-danger">{{error_message}}</p>
+{% for message in messages %}
+  {% if message.tags == "error" %}
+    <div class="alert-danger alert" role="alert">{{message}}</div>
+  {% else %}
+    <div class="alert-{{message.tags}} alert" role="alert">{{message}}</div>
   {% endif %}
+{% endfor%}
 
-  {% if edit == True %}
-    <h1>Edit Task</h1>
-    <form action="{% url 'check_mate:task_edit' task.id %}" method="POST">
-
-  {% elif add == True %}
-    <h1>Add Task</h1>
-    <form action="{% url 'check_mate:task_add' %}" method="POST">
-  {% endif %}
+{% if task %}
+  <h1>Edit Task</h1>
+  <form action="{% url 'check_mate:task_edit' task.id %}" method="POST">
+{% else %}
+  <h1>Add Task</h1>
+  <form action="{% url 'check_mate:task_add' %}" method="POST">
+    <input type="hidden" value="{{ticket}}" name="ticket"/>
+{% endif %}
 
     {% csrf_token %}
     {{task_form|crispy}}
@@ -23,8 +27,8 @@
     {% if task_status %}
       {{task_status|crispy}}
     {% endif %}
-    <input type="hidden" value="{{ticket}}" name="ticket"/>
-    <input class="btn btn-primary" type="submit" value="Save Task"/>
-  </form>
+
+    <input class="btn btn-info" type="submit" value="Save Task"/>
     <a class="btn btn-success" href="{% url 'check_mate:ticket_details' ticket %}">Go Back</a>
+  </form>
 {% endblock content %}
