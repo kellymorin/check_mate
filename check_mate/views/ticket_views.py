@@ -110,49 +110,67 @@ def ticket_add(request):
         [HttpResponseRedirect] -- when the request to POST a new ticket is successful, it will redirect to the project detail view with the new ticket added
     """
 
-    ticket_form = TicketForm()
+    ticket_form = TicketForm(user=request.user)
     form_data = request.POST
 
     if "first_request" not in form_data:
         completed_ticket_form = TicketForm(form_data)
 
-        if completed_ticket_form.is_valid():
-            ticket_name = form_data["ticket_name"]
-            ticket_description = form_data["ticket_description"]
-            ticket_due = form_data["ticket_due"]
-            project_id = form_data["project"]
-            project = Project.objects.get(pk=project_id)
+        # if completed_ticket_form.is_valid():
+        print(request.POST)
+        ticket_name = form_data["ticket_name"]
+        ticket_description = form_data["ticket_description"]
+        ticket_due = form_data["ticket_due"]
+        project_id = form_data["project"]
+        project = Project.objects.get(pk=project_id)
 
-            if ticket_name == "" or ticket_description == "":
-                context={
-                    "ticket_form": completed_ticket_form,
-                    "project": project_id
-                }
+        if ticket_name == "" or ticket_description == "":
+            context={
+                "ticket_form": completed_ticket_form,
+                "project": project_id
+            }
 
-                messages.error(request, "You must complete all fields in the form")
+            messages.error(request, "You must complete all fields in the form")
 
-            else:
-                new_ticket = Ticket(ticket_name=ticket_name, ticket_description=ticket_description, ticket_due= ticket_due, ticket_created = datetime.date.today(), ticket_status="Not Started", project=project)
+        else:
+            new_ticket = Ticket.objects.create(
+                ticket_name=ticket_name, ticket_description=ticket_description,
+                ticket_due= ticket_due,
+                ticket_created = datetime.date.today(), ticket_status="Not Started",
+                project=project
+            )
+
+            # Loop through submitted tags and add existing or create a new one
+            tags = form_data.getlist("tags")
+            print(tags)
+            for tag in tags:
+                print(tag)
+                try:
+                    new_ticket.tags.add(Tag.objects.get(pk=tag))
+                except ValueError:
+                    new_ticket.tags.add(Tag.objects.create(name=tag, user=request.user))
+
+
+            new_ticket.save()
+
+            __update_ticket_history(new_ticket, request.user, "Status", "Not Started")
+
+            if form_data["ticket_assigned_user"] != "":
+                assigned_user = User.objects.get(pk=form_data["ticket_assigned_user"])
+
+                __update_ticket_history(new_ticket, request.user, "Assignment", assigned_user)
+
+                new_ticket.ticket_assigned_user = assigned_user
+
                 new_ticket.save()
 
-                __update_ticket_history(new_ticket, request.user, "Status", "Not Started")
+            if project.project_status == "Complete":
+                project.project_status = "Active"
+                project.save()
 
-                if form_data["ticket_assigned_user"] != "":
-                    assigned_user = User.objects.get(pk=form_data["ticket_assigned_user"])
+            messages.success(request, "Ticket successfully saved")
 
-                    __update_ticket_history(new_ticket, request.user, "Assignment", assigned_user)
-
-                    new_ticket.ticket_assigned_user = assigned_user
-
-                    new_ticket.save()
-
-                if project.project_status == "Complete":
-                    project.project_status = "Active"
-                    project.save()
-
-                messages.success(request, "Ticket successfully saved")
-
-                return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
+            return HttpResponseRedirect(reverse("check_mate:project_details", args=(project_id,)))
 
     else:
         project = form_data["project"]
@@ -207,7 +225,7 @@ def ticket_edit(request, ticket_id):
     form_data = request.POST
 
     if request.method == "GET":
-        ticket_form = TicketForm(instance=ticket)
+        ticket_form = TicketForm(instance=ticket, user=request.user)
         ticket_status = TicketStatusForm(instance=ticket)
         context = {
             "ticket": ticket,
@@ -237,6 +255,16 @@ def ticket_edit(request, ticket_id):
             ticket.ticket_assigned_user = assigned_user
 
         ticket.save()
+
+        # Check if tags were changed. removew or add as needed
+        new_tags = form_data.getlist("tags")
+        old_tags = ticket.tags.all()
+
+        # Compare new list with old list
+        # If old tag is not in new list, remove the relation
+        # If old tag is in new list, remove it from the list, to be left with only new tags to add
+        for old_tag in old_tags:
+
 
         if form_data["ticket_status"] == "Active" and project.project_status == "Not Started":
             project.project_status = "Active"

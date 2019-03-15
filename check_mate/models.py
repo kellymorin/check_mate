@@ -69,6 +69,7 @@ class Ticket(models.Model):
     ticket_due = models.DateField(default=None, null=True, blank=True)
     ticket_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
     ticket_assigned_user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, default=None)
+    tags= models.ManyToManyField("Tag", blank=True)
 
     @property
     def get_task_status(self):
@@ -174,6 +175,7 @@ class Task(models.Model):
     task_due = models.DateField(default=None, null=True, blank=True)
     task_status = models.CharField(max_length=50, choices=STATUS_TYPE_CHOICES, default=None, blank=True, null=True )
     task_assigned_user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, default=None, blank=True)
+    tags = models.ManyToManyField("Tag", blank=True)
 
     @property
     def get_due_date_status(self):
@@ -260,3 +262,10 @@ class StandUpTasks(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} claimed {self.task.task_name} for {self.date}"
+
+class Tag(models.Model):
+    tag_name = models.CharField(max_length=200)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.tag_name}"
