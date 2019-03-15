@@ -33,14 +33,14 @@
         {% if assigned_tickets %}
           <h6 class="text-center">Tickets</h6>
             {% for ticket in assigned_tickets %}
-              {% ticket_card ticket.id True %}
+              {% ticket_card ticket.id True False %}
             {% endfor %}
         {% endif %}
 
         {% if assigned_tasks %}
           <h6 class="text-center">Tasks</h6>
             {% for task in assigned_tasks %}
-              {% task_card task.id True %}
+              {% task_card task.id True False %}
             {% endfor %}
         {% endif %}
         </div>
@@ -59,14 +59,14 @@
         {% if past_due_tickets %}
           <h6 class="text-center">Tickets</h6>
             {% for ticket in past_due_tickets %}
-              {% ticket_card ticket.id True %}
+              {% ticket_card ticket.id True False %}
             {% endfor %}
         {% endif %}
 
         {% if past_due_tasks %}
           <h6 class="text-center">Tasks</h6>
             {% for task in past_due_tasks %}
-              {% task_card task.id True %}
+              {% task_card task.id True False %}
             {% endfor %}
         {% endif %}
         </div>
@@ -85,14 +85,14 @@
         {% if review_tickets %}
           <h6 class="text-center">Tickets</h6>
             {% for ticket in review_tickets %}
-              {% ticket_card ticket.id True %}
+              {% ticket_card ticket.id True False %}
             {% endfor %}
         {% endif %}
 
         {% if review_tasks %}
           <h6 class="text-center">Tasks</h6>
             {% for task in review_tasks %}
-              {% task_card task.id True %}
+              {% task_card task.id True False %}
             {% endfor %}
         {% endif %}
         </div>
@@ -112,14 +112,14 @@
         {% if other_tickets %}
           <h6 class="text-center">Tickets</h6>
             {% for ticket in other_tickets %}
-              {% ticket_card ticket.id True %}
+              {% ticket_card ticket.id True False %}
             {% endfor %}
         {% endif %}
 
         {% if other_tasks %}
           <h6 class="text-center">Tasks</h6>
             {% for task in other_tasks %}
-              {% task_card task.id True %}
+              {% task_card task.id True False %}
             {% endfor %}
         {% endif %}
         </div>

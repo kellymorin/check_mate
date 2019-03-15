@@ -4,10 +4,11 @@ from django import template
 register = template.Library()
 
 @register.inclusion_tag('reusable_components/task_card.html')
-def task_card(task_id, claim_status):
+def task_card(task_id, claim_status, claim_edit_status):
     task_instance = Task.objects.get(pk=task_id)
     user_initials = ""
     claim = False
+    claim_edit = False
     if task_instance.task_assigned_user:
         first_initial = list(task_instance.task_assigned_user.first_name)[0]
         last_initial = list(task_instance.task_assigned_user.last_name)[0]
@@ -15,4 +16,6 @@ def task_card(task_id, claim_status):
         user_initials.upper()
     if claim_status == True:
         claim = True
-    return {'task': task_instance, "user_initials": user_initials, "claim": claim}
+    if claim_edit_status == True:
+        claim_edit = True
+    return {'task': task_instance, "user_initials": user_initials, "claim": claim, "claim_edit": claim_edit}

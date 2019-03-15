@@ -1,20 +1,19 @@
 {% load status_badge %}
 
-{% comment %}
-<!-- TODO: Fix select functionality -->
-{% endcomment %}
-
 <style>
   input:checked+label{
     border:2px solid #5bc0de;
   }
 </style>
+
 {% if claim == True %}
-  <input type="checkbox" id="claimed-task-{{task.id}}" name="task-{{task.id}}"/>
+  <input type="checkbox" class="d-none" id="claimed-task-{{task.id}}" name="task-{{task.id}}"/>
+{% elif claim_edit == True %}
+  <input type="checkbox" checked class="d-none" id="claimed-task-{{task.id}}" name="task-{{task.id}}"/>
 {% endif %}
 
 <!-- Card Wrapper -->
-<label class="card mb-2" style="width: 16rem;" for="claimed-task{{task.id}}">
+<label class="card mb-2" style="width: 16rem;" for="claimed-task-{{task.id}}">
   <!-- Card Body -->
   <div class="card-body">
     <div class="card-title text-dark">{{task.task_name}}</div>

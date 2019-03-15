@@ -98,6 +98,7 @@ def claim_tickets_tasks(request):
         review_tickets = Ticket.objects.filter(ticket_status = "Ready for Review").exclude(ticket_assigned_user = request.user.id)
         review_tasks = Task.objects.filter(task_status = "Ready for Review").exclude(task_assigned_user = request.user.id)
 
+        # Find tickets or tasks not assigned to the user, where the status is not Ready for Review or Complete, and the due date is in the future
         other_tickets = Ticket.objects.all().exclude(ticket_assigned_user = request.user.id).exclude(ticket_status = "Ready for Review").exclude(ticket_status = "Complete").exclude(ticket_due__lte=today)
         other_tasks = Task.objects.all().exclude(task_assigned_user = request.user.id).exclude(task_status = "Ready for Review").exclude(task_status = "Complete").exclude(task_due__lte=today)
 
@@ -134,42 +135,91 @@ def claim_tickets_tasks(request):
             "review_tasks": review_tasks
         }
 
-    # Find tickets or tasks the user has interacted with in the last 24 hours that are not closed
-    # Have an affordance to see all open tickets or tasks
-
 
     # IDEAL FEATURE: Once a ticket has been claimed for the day, it will not display in other users options to claim (unless it's a review)
 
     return render(request, "claim.html", context)
 
 def remove_claim(request):
-    # Create affordance to delete claimed tasks
-
     today = datetime.date.today()
 
     if request.method == "POST":
+        # Check if claimed items were changed. Remove or add as needed
+        today_claimed_tasks = StandUpTasks.objects.filter(user=request.user).filter(date=today)
+        new_claimed_tasks = list()
+
+        # Check if claimed tickets were changed. Remove or add as needed
+        today_claimed_tickets = StandUpTickets.objects.filter(user=request.user).filter(date=today)
+        new_claimed_tickets = list()
+
         for item in request.POST:
             if "task" in item or "ticket" in item:
                 if "task" in item:
                     task_id = item.split('-')[1]
-                    task = Task.objects.get(pk=task_id)
-                    claimed_task = StandUpTasks.objects.filter(task=task).filter(date=today)
-                    claimed_task.delete()
+                    new_claimed_tasks.append(task_id)
                 else:
                     ticket_id = item.split("-")[1]
-                    ticket = Ticket.objects.get(pk=ticket_id)
-                    claimed_ticket = StandUpTickets.objects.filter(ticket=ticket).filter(user = request.user).filter(date=today)
-                    claimed_ticket.delete()
+                    new_claimed_tickets.append(ticket_id)
+
+        # Compare new list with old list
+        for stand_up_task in today_claimed_tasks:
+            if str(stand_up_task.task.id) not in new_claimed_tasks:
+                instance = StandUpTasks.objects.get(pk=stand_up_task.id)
+                instance.delete()
+            elif str(stand_up_task.task.id) in new_claimed_tasks:
+                new_claimed_tasks.remove(str(stand_up_task.task.id))
+
+        # Add the remaining claimed tasks
+        for task in new_claimed_tasks:
+            StandUpTasks.objects.create(
+                task=Task.objects.get(pk=task),
+                user=request.user,
+                date=today
+            )
+
+        # Compare new list with old list
+        for stand_up_ticket in today_claimed_tickets:
+            if str(stand_up_ticket.ticket.id) not in new_claimed_tickets:
+                instance = StandUpTickets.objects.get(pk=stand_up_ticket.id)
+                instance.delete()
+            elif str(stand_up_ticket.ticket.id) in new_claimed_tickets:
+                new_claimed_tickets.remove(str(stand_up_ticket.ticket.id))
+
+        # Add the remaining claimed tickets
+        for ticket in new_claimed_tickets:
+            StandUpTickets.objects.create(
+                ticket= Ticket.objects.get(pk=ticket),
+                user=request.user,
+                date=today
+            )
+
 
         return HttpResponseRedirect(reverse("check_mate:stand-up"))
 
     else:
+        # Get all tickets that have been claimed by the user for today
         claimed_tickets = StandUpTickets.objects.filter(date = today).filter(user = request.user.id)
+
+        # Get a list of ticket IDs in the claimed tickets query set
+        ticket_id_list = list(StandUpTickets.objects.filter(date=today).filter(user=request.user.id).values_list("ticket", flat=True))
+
+        # Find all tickets that have been assigned to the user, are not complete, and are not currently claimed by the user for today
+        assigned_tickets = Ticket.objects.filter(ticket_assigned_user = request.user.id).exclude(ticket_status = "Complete").exclude(id__in=ticket_id_list)
+
+        # Get all tasks that have been claimed by the user for today
         claimed_tasks = StandUpTasks.objects.filter(date = today).filter(user = request.user.id)
+
+        # Get a list of all task IDs in the claimed tasks query set
+        id_list = list(StandUpTasks.objects.filter(date=today).filter(user = request.user.id).values_list("task", flat=True))
+
+        # Find all tasks that have been assigned to the user, are not complete, and are not currently claimed by the user for today
+        assigned_tasks = Task.objects.filter(task_assigned_user = request.user.id).exclude(task_status = "Complete").exclude(id__in=id_list)
 
         context ={
             "claimed_tickets": claimed_tickets,
-            "claimed_tasks": claimed_tasks
+            "claimed_tasks": claimed_tasks,
+            "assigned_tasks": assigned_tasks,
+            "assigned_tickets": assigned_tickets
         }
 
         return render(request, "claim_edit.html", context)

@@ -59,7 +59,7 @@
               </div>
               <!-- End Add Task Card -->
               {% for task in ticket_detail.task_set.all %}
-                {% task_card task.id False %}
+                {% task_card task.id False False %}
               {% endfor%}
             </div>
           {% endif %}
