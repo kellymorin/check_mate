@@ -46,7 +46,7 @@ class TicketForm(forms.ModelForm):
         fields = ("ticket_name", "ticket_description", "ticket_due", "ticket_assigned_user", "tags")
         widgets = {
             "ticket_due": forms.DateInput(attrs={"type": "date"}),
-            "tags": Select2MultipleWidget(attrs={"data=tags": "true", "data-token-separators": "[',']"})
+            "tags": Select2MultipleWidget(attrs={"data-tags": "true", "data-token-separators": "[',']"})
         }
     def __init__(self, user, *args, **kwargs):
         super(TicketForm, self).__init__(*args, **kwargs)

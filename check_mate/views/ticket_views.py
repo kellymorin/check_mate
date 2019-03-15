@@ -225,6 +225,7 @@ def ticket_edit(request, ticket_id):
     form_data = request.POST
 
     if request.method == "GET":
+        print(ticket.tags)
         ticket_form = TicketForm(instance=ticket, user=request.user)
         ticket_status = TicketStatusForm(instance=ticket)
         context = {
@@ -264,6 +265,18 @@ def ticket_edit(request, ticket_id):
         # If old tag is not in new list, remove the relation
         # If old tag is in new list, remove it from the list, to be left with only new tags to add
         for old_tag in old_tags:
+            if str(old_tag.id) not in new_tags:
+                instance = Tag.objects.get(pk=old_tag.id)
+                ticket.tags.remove(instance)
+            elif str(old_tag.id) in new_tags:
+                new_tags.remove(str(old_tag.id))
+
+        # Add the remaining tags
+        for tag in new_tags:
+            try:
+                ticket.tags.add(Tag.objects.get(pk=tag))
+            except ValueError:
+                ticket.tags.add(Tag.objects.create(tag_name=tag, user=request.user))
 
 
         if form_data["ticket_status"] == "Active" and project.project_status == "Not Started":

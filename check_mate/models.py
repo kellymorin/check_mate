@@ -104,7 +104,7 @@ class Ticket(models.Model):
         return can_delete
 
     def __str__(self):
-        return self.ticket_name
+        return f"{self.ticket_name} { tag.tag_name for tag in self.tags.all()}"
 
 
 class TicketHistory(models.Model):
