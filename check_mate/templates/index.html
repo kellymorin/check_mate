@@ -21,6 +21,7 @@
     <nav class="navbar navbar-expand-md navbar-light bg-info ">
       <a class="navbar-brand text-white" href="#">Check Mate</a>
       <ul class="navbar-nav nav ml-auto">
+        {% if user.is_authenticated %}
         <li class="nav-item"><a class="nav-link text-white" href="{% url 'check_mate:projects' %}">Projects</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="{% url 'check_mate:stand-up' %}">Stand Up</a></li>
         <li class="nav-item dropdown">
@@ -28,11 +29,12 @@
             Welcome, {{user.first_name}}
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
+            <a class="dropdown-item" href="{% url 'check_mate:logout' %}">Log Out</a>
           </div>
         </li>
+        {% else %}
+        <li class="nav-item"><a class="nav-link text-white" href="{% url 'check_mate:login'%}">Log In</a></li>
+        {% endif %}
       </ul>
     </nav>
     <!-- End Nav Bar -->
