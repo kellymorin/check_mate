@@ -2,6 +2,10 @@
 
 {% load crispy_forms_tags %}
 
+{% block css %}
+  {{task_form.media.css}}
+{% endblock css%}
+
 {% block content %}
 
 {% for message in messages %}
@@ -32,3 +36,7 @@
     <a class="btn btn-success" href="{% url 'check_mate:ticket_details' ticket %}">Go Back</a>
   </form>
 {% endblock content %}
+
+{% block js %}
+  {{task_form.media.js}}
+{% endblock js %}
