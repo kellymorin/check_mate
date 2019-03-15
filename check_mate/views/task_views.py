@@ -21,55 +21,70 @@ def task_add(request):
         [HttpResponseRedirect] -- when the request to POST a new task is successful, it will redirect to the ticket detail view with the new task added
     """
 
-    task_form = TaskForm()
+    task_form = TaskForm(user=request.user)
     form_data = request.POST
 
     if "first_request" not in form_data:
-        completed_task_form = TaskForm(form_data)
+        completed_task_form = TaskForm(data=form_data, user=request.user)
 
-        if completed_task_form.is_valid():
-            task_name = form_data["task_name"]
-            task_description = form_data["task_description"]
-            task_due = form_data["task_due"]
-            ticket_id = form_data["ticket"]
-            ticket = Ticket.objects.filter(pk=ticket_id)[0]
-            project_id = ticket.project.id
-            project = Project.objects.filter(pk=project_id)[0]
+        task_name = form_data["task_name"]
+        task_description = form_data["task_description"]
+        task_due = form_data["task_due"]
+        ticket_id = form_data["ticket"]
+        ticket = Ticket.objects.get(pk=ticket_id)
+        project_id = ticket.project.id
+        project = Project.objects.get(pk=project_id)
 
-            if task_name == "" or task_description == "":
-                context = {
-                    "task_form": completed_task_form,
-                    "ticket": ticket_id
-                }
-                messages.error(request, "You must complete all fields in the form")
+        if task_name == "" or task_description == "":
+            context = {
+                "task_form": completed_task_form,
+                "ticket": ticket_id
+            }
+            messages.error(request, "You must complete all fields in the form")
 
-            else:
-                new_task = Task(task_name=task_name, task_description=task_description, task_due=task_due, task_created=datetime.date.today(), task_status="Not Started", ticket=ticket)
+        else:
+            new_task = Task.objects.create(
+                task_name = task_name,
+                task_description = task_description,
+                task_due = task_due,
+                task_created = datetime.date.today(),
+                task_status = "Not Started",
+                ticket = ticket
+            )
+
+            # Loop through submitted tags and add existing or create a new one
+            tags = form_data.getlist("tags")
+            for tag in tags:
+                try:
+                    new_task.tags.add(Tag.objects.get(pk=tag))
+                except ValueError:
+                    new_task.tags.add(Tag.objects.create(tag_name=tag, user=request.user))
+
+            new_task.save()
+
+            __update_task_history(new_task, request.user, "Status", "Not Started")
+
+            if form_data["task_assigned_user"] != "":
+                assigned_user = User.objects.get(pk=form_data["task_assigned_user"])
+
+                __update_task_history(new_task, request.user, "Assignment", assigned_user)
+
+                new_task.task_assigned_user = assigned_user
+
                 new_task.save()
 
-                __update_task_history(new_task, request.user, "Status", "Not Started")
+            if ticket.ticket_status == "Complete":
+                ticket.ticket_status = "Active"
+                ticket.save()
 
-                if form_data["task_assigned_user"] != "":
-                    assigned_user = User.objects.get(pk=form_data["task_assigned_user"])
+                __update_ticket_history(ticket, request.user, "Status", "Active")
 
-                    __update_task_history(new_task, request.user, "Assignment", assigned_user)
+                if project.project_status == "Complete":
+                    project.project_status = "Active"
+                    project.save()
 
-                    new_task.task_assigned_user = assigned_user
-
-                    new_task.save()
-
-                if ticket.ticket_status == "Complete":
-                    ticket.ticket_status = "Active"
-                    ticket.save()
-
-                    __update_ticket_history(ticket, request.user, "Status", "Active")
-
-                    if project.project_status == "Complete":
-                        project.project_status = "Active"
-                        project.save()
-
-                messages.success(request, "Task successfully saved")
-                return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
+            messages.success(request, "Task successfully saved")
+            return HttpResponseRedirect(reverse("check_mate:ticket_details", args=(ticket_id,)))
     else:
         ticket = form_data["ticket"]
         context = {
@@ -98,7 +113,7 @@ def task_edit(request, task_id):
     form_data = request.POST
 
     if request.method == "GET":
-        task_form = TaskForm(instance=task)
+        task_form = TaskForm(instance=task, user=request.user)
         task_status = TaskStatusForm(instance=task)
         context = {
             "task": task,
@@ -129,6 +144,27 @@ def task_edit(request, task_id):
             task.task_assigned_user = assigned_user
 
         task.save()
+
+        # Check if tags were changes. remove or add as needed
+        new_tags = form_data.getlist("tags")
+        old_tags = task.tags.all()
+
+        # Compare new list with old list
+        # If old tag is not in new list, remove the relation
+        # if old tag is in new list, remove it from the list, to be left with only new tags to add
+        for old_tag in old_tags:
+            if str(old_tag.id) not in new_tags:
+                instance = Tag.objects.get(pk=old_tag.id)
+                task.tags.remove(instance)
+            elif str(old_tag.id) in new_tags:
+                new_tags.remove(str(old_tag.id))
+
+        # Add the remaining tags
+        for tag in new_tags:
+            try:
+                task.tags.add(Tag.objects.get(pk=tag))
+            except ValueError:
+                task.tags.add(Tag.objects.create(tag_name=tag, user=request.user))
 
         if form_data["task_status"] == "Active" and ticket.ticket_status == "Not Started":
             ticket.ticket_status = "Active"
