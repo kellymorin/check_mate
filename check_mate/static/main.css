@@ -1,3 +1,74 @@
+:root{
+  --main-dark: #34495e;
+  --secondary-purple: #9b59b6;
+  --secondary-blue: #3498db;
+  --secondary-green: #2ecc71;
+  --secondary-green-blue: #1abc9c;
+}
+
+.background-dark{
+  background-color: var(--main-dark)
+}
+
+.background-purple{
+  background-color: var(--secondary-purple)
+}
+
+.background-bright{
+  background-color: var(--secondary-green-blue)
+}
+
+.text-purple{
+  color: var(--secondary-purple)
+}
+
+.text-dark{
+  color: var(--main-dark)
+}
+
+.text-bright{
+  color: var(--secondary-green-blue)
+}
+
+.align-middle{
+  vertical-align: middle;
+}
+
+.white-hover:hover{
+  color: white;
+}
+
+.main-container{
+  height: 80vh;
+  overflow: scroll;
+}
+
+.project-cards{
+  box-shadow: 0 .5rem 1 rem rgba(0,0,0, .15)!important;
+}
+
+.project-cards:hover{
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+}
+
+
+#add-project{
+  border: 1px solid var(--secondary-purple);
+  background-color: white;
+}
+
+
+/* TODO: Figure out why hover isn't changing text color */
+#add-project:hover{
+  border: 1px solid var(--main-dark);
+  background-color: var(--secondary-purple);
+  cursor: pointer;
+}
+
+.main-nav-col{
+  height: 100vh;
+}
+
 .project_layout{
   height: 275px;
   width: 260px;
