@@ -5,7 +5,6 @@
 
 {% comment %}
 <!-- V2: put user's name in stand up -->
-<!-- TODO: Conditional render of edit vs claim makes it impossible to claim new tickets -->
 {% endcomment %}
 
 {% block content %}
@@ -34,7 +33,7 @@
           <h6 class="text-center">New Tickets</h6>
           {% if tickets %}
             {% for ticket in tickets %}
-              {% ticket_card ticket.id False%}
+              {% ticket_card ticket.id False False %}
             {% endfor %}
           {% else %}
           <div class="card" style="width:16rem;">
@@ -46,7 +45,7 @@
           <h6 class="text-center pt-2">New Tasks</h6>
           {% if tasks %}
             {% for task in tasks %}
-              {% task_card task.id False%}
+              {% task_card task.id False False %}
             {% endfor %}
           {% else %}
           <div class="card" style="width:16rem;">
@@ -100,13 +99,13 @@
           {% if claimed_tickets %}
           <h6 class="text-center">Tickets</h6>
             {% for ticket in claimed_tickets %}
-              {% ticket_card ticket.ticket_id False %}
+              {% ticket_card ticket.ticket_id False False %}
             {% endfor %}
           {% endif %}
           {% if claimed_tasks%}
           <h6 class="text-center pt-2">Tasks</h6>
             {% for task in claimed_tasks %}
-              {% task_card task.task_id False %}
+              {% task_card task.task_id False False %}
             {% endfor %}
           {% endif %}
         </div>
@@ -122,12 +121,12 @@
         <div class="col border shadow-sm pt-2 ticket-container">
           {% if road_blocked_tickets %}
             {% for ticket in road_blocked_tickets %}
-              {% ticket_card ticket.id False%}
+              {% ticket_card ticket.id False False %}
             {% endfor %}
           {% endif %}
           {% if road_blocked_tasks %}
             {% for task in road_blocked_tasks %}
-              {% task_card task.id False %}
+              {% task_card task.id False False %}
             {% endfor %}
           {% endif %}
         </div>

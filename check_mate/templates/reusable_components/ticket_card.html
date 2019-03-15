@@ -8,6 +8,8 @@
 
 {% if claim == True %}
   <input type="checkbox" class="d-none" id="claimed-ticket-{{ticket.id}}" name="ticket-{{ticket.id}}"/>
+{% elif claim_edit == True %}
+  <input type="checkbox" checked class="d-none" id="claimed-ticket-{{ticket.id}}" name="ticket-{{ticket.id}}"/>
 {% endif %}
 
 <!-- Card Wrapper -->

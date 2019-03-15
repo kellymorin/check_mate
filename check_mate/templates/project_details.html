@@ -44,7 +44,7 @@
         <!-- End Add Ticket Card  -->
         {% for ticket in tickets %}
           {% if ticket.ticket_status == "Not Started" %}
-            {% ticket_card ticket.id False %}
+            {% ticket_card ticket.id False False %}
           {% endif %}
         {% endfor %}
       </div>
@@ -62,7 +62,7 @@
       <div class="col border shadow-sm pt-2 ticket-container">
         {% for ticket in tickets %}
           {% if ticket.ticket_status == "Active" %}
-            {% ticket_card ticket.id False %}
+            {% ticket_card ticket.id False False %}
           {% endif %}
         {% endfor %}
       </div>
@@ -80,7 +80,7 @@
       <div class="col border shadow-sm ticket-container pt-2">
         {% for ticket in tickets %}
           {% if ticket.ticket_status == "Ready for Review" %}
-            {% ticket_card ticket.id False %}
+            {% ticket_card ticket.id False False%}
           {% endif %}
         {% endfor %}
       </div>
@@ -98,7 +98,7 @@
       <div class="col border shadow-sm pt-2 ticket-container">
         {% for ticket in tickets %}
           {% if ticket.ticket_status == "Road Block" %}
-            {% ticket_card ticket.id False %}
+            {% ticket_card ticket.id False False %}
           {% endif %}
         {% endfor %}
       </div>
@@ -116,7 +116,7 @@
       <div class="col ticket-container border shadow-sm pt-2">
         {% for ticket in tickets %}
           {% if ticket.ticket_status == "Complete" %}
-            {% ticket_card ticket.id False %}
+            {% ticket_card ticket.id False False%}
           {% endif %}
         {% endfor %}
       </div>

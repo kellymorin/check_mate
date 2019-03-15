@@ -3,10 +3,6 @@
 {% load task_card %}
 {% load ticket_card %}
 
-{% comment %}
-<!-- V2: Update default to checked and allow user to uncheck item -->
-{% endcomment %}
-
 {% block content %}
   <form method="POST" action="{% url 'check_mate:remove-claim' %}">
     {% csrf_token%}
@@ -33,7 +29,7 @@
           <div class="col border shadow-sm pt-2 ticket-container">
             {% if claimed_tickets %}
               {% for ticket in claimed_tickets %}
-                {% ticket_card ticket.ticket_id True %}
+                {% ticket_card ticket.ticket_id False True %}
               {% endfor %}
             {% endif %}
           </div>
@@ -51,13 +47,38 @@
           <div class="col border shadow-sm pt-2 ticket-container">
             {% if claimed_tasks %}
               {% for task in claimed_tasks %}
-                {% task_card task.task_id True %}
+                {% task_card task.task_id False True %}
               {% endfor %}
             {% endif %}
           </div>
         </div>
       </div>
       <!-- End Claimed Tasks Section -->
+      <!-- Your Assigned Items Tasks Section -->
+      <div class="col">
+          <div class="row bg-info pt-3">
+            <div class="col text-white flex-column text-center">
+              <h6>Your Assigned Items</h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col border shadow-sm pt-2 ticket-container">
+              {% if assigned_tickets %}
+                <h6 class="text-center">Tickets</h6>
+                  {% for ticket in assigned_tickets %}
+                    {% ticket_card ticket.id True False %}
+                  {% endfor %}
+              {% endif %}
+              {% if assigned_tasks %}
+                <h6 class="text-center">Tasks</h6>
+                  {% for task in assigned_tasks %}
+                    {% task_card task.id True False%}
+                  {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <!-- End Claimed Tasks Section -->
     </div>
     <!-- End Ticket Display Section -->
 </form>

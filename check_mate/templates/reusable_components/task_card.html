@@ -8,6 +8,8 @@
 
 {% if claim == True %}
   <input type="checkbox" class="d-none" id="claimed-task-{{task.id}}" name="task-{{task.id}}"/>
+{% elif claim_edit == True %}
+  <input type="checkbox" checked class="d-none" id="claimed-task-{{task.id}}" name="task-{{task.id}}"/>
 {% endif %}
 
 <!-- Card Wrapper -->
