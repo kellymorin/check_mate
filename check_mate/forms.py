@@ -50,7 +50,7 @@ class TicketForm(forms.ModelForm):
         }
     def __init__(self, user, *args, **kwargs):
         super(TicketForm, self).__init__(*args, **kwargs)
-        self.fields["tags"].queryset = Tag.objects.all()
+        self.fields["tags"].queryset = Tag.objects.filter(Q(user=user) | Q(user=None))
 
 
 class TicketStatusForm(forms.ModelForm):
@@ -66,10 +66,14 @@ class TaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ("task_name", "task_description", "task_due", "task_assigned_user")
+        fields = ("task_name", "task_description", "task_due", "task_assigned_user", "tags")
         widgets = {
-            "task_due": forms.DateInput(attrs={"type": "date"})
+            "task_due": forms.DateInput(attrs={"type": "date"}),
+            "tags": Select2MultipleWidget(attrs={"data-tags": "true", "data-token-separators": "[',']"})
         }
+    def __init__(self, user, *args, **kwargs):
+        super(TaskForm, self).__init__(*args, **kwargs)
+        self.fields["tags"].queryset = Tag.objects.filter(Q(user=user)| Q(user=None))
 
 
 class TaskStatusForm(forms.ModelForm):

@@ -114,10 +114,8 @@ def ticket_add(request):
     form_data = request.POST
 
     if "first_request" not in form_data:
-        completed_ticket_form = TicketForm(form_data)
+        completed_ticket_form = TicketForm(data=form_data, user=request.user)
 
-        # if completed_ticket_form.is_valid():
-        print(request.POST)
         ticket_name = form_data["ticket_name"]
         ticket_description = form_data["ticket_description"]
         ticket_due = form_data["ticket_due"]
@@ -142,13 +140,11 @@ def ticket_add(request):
 
             # Loop through submitted tags and add existing or create a new one
             tags = form_data.getlist("tags")
-            print(tags)
             for tag in tags:
-                print(tag)
                 try:
                     new_ticket.tags.add(Tag.objects.get(pk=tag))
                 except ValueError:
-                    new_ticket.tags.add(Tag.objects.create(name=tag, user=request.user))
+                    new_ticket.tags.add(Tag.objects.create(tag_name=tag, user=request.user))
 
 
             new_ticket.save()
@@ -225,7 +221,6 @@ def ticket_edit(request, ticket_id):
     form_data = request.POST
 
     if request.method == "GET":
-        print(ticket.tags)
         ticket_form = TicketForm(instance=ticket, user=request.user)
         ticket_status = TicketStatusForm(instance=ticket)
         context = {
