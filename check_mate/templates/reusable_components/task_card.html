@@ -46,5 +46,18 @@
     </div>
   </div>
   <!-- End Card Footer -->
+  <!-- Card Tag Display -->
+  {% if task.tags.all %}
+  <div class="card-footer bg-transparent">
+    <div class="row">
+      <div class="col">
+        {% for tag in task.tags.all %}
+          <span class="badge badge-secondary">{{tag.tag_name}}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <!-- End Card Tag Display -->
 </label>
 <!-- End Card Wrapper -->
