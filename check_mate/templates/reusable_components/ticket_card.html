@@ -1,10 +1,12 @@
 {% load progress_bar %}
 
+{% if claim or claim_edit == True %}
 <style>
   input:checked+label{
     border: 2px solid #5bc0de;
   }
 </style>
+{% endif %}
 
 {% if claim == True %}
   <input type="checkbox" class="d-none" id="claimed-ticket-{{ticket.id}}" name="ticket-{{ticket.id}}"/>
