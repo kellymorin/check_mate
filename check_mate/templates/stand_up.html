@@ -21,6 +21,34 @@
     </div>
   </div>
 
+  <!-- Filtering Section -->
+  <p>
+    <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+      Filter Results
+    </button>
+  </p>
+  <div class="collapse" id="collapseExample">
+    <div class="card card-body">
+      <form action="{% url 'check_mate:filter_stand_up' %}" method="POST">
+        {% csrf_token %}
+      <h6>Projects</h6>
+      {% for project in projects %}
+        <div class="form-group form-check">
+          {% if project in selected_projects %}
+            <input type="checkbox" checked class="form-check-input" id="project-{{project.id}}" name="project-{{project.id}}">
+          {% else %}
+            <input type="checkbox" class="form-check-input" id="project-{{project.id}}" name="project-{{project.id}}">
+          {% endif %}
+          <label class="form-check-label" for="project-{{project.id}}">{{project.project_name}}</label>
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-info">Filter</button>
+      <a href="{% url 'check_mate:stand-up' %}" class="btn btn-secondary">Clear</a>
+      </form>
+    </div>
+  </div>
+  <!-- End Filtering Section -->
+
   <div class="row mt-3 horizontal-container flex-nowrap">
     <div class="col-6">
       <div class="row bg-info pt-3">

@@ -7,7 +7,7 @@ from check_mate.models import *
 from dateutil.relativedelta import relativedelta, FR
 
 # Non-MVP Notes -----------------------------------------
-# V2: Allow users to customize stand up view by a specific project
+# TODO: Allow users to customize stand up view by a specific project
 # V2: Update stand up view so that if someone else has already claimed a ticket for the day, that displays on everyone else's view
 # -------------------------------------------------------
 
@@ -25,6 +25,7 @@ def stand_up_view(request):
     else:
         previous_date = today - datetime.timedelta(1)
 
+    projects = Project.objects.all()
     tasks = Task.objects.filter(task_created=previous_date).order_by('task_name')
     tickets = Ticket.objects.filter(ticket_created=previous_date).order_by('ticket_name')
     road_blocked_tickets = Ticket.objects.filter(ticket_status = "Road Block")
@@ -52,6 +53,7 @@ def stand_up_view(request):
             ticket_history[ticket.ticket.ticket_name].append(ticket)
 
     context={
+        'projects': projects,
         'task_activity': task_history,
         'tasks': tasks,
         'tickets': tickets,
@@ -61,6 +63,101 @@ def stand_up_view(request):
         'claimed_tickets': claimed_tickets,
         'claimed_tasks': claimed_tasks
     }
+
+    return render(request, "stand_up.html", context)
+
+@login_required
+def filter_stand_up(request):
+    today = datetime.date.today()
+    previous_date = ""
+
+    if today.weekday() == 0:
+        previous_date = today + relativedelta(weekday=FR(-1))
+
+    else:
+        previous_date = today - datetime.timedelta(1)
+
+    if request.method == "POST":
+        selected_projects = []
+        selected_tickets = []
+        selected_tasks = []
+
+        # Loop through the projects selected to filter by and append their ID's to the selected_project list
+        for item in request.POST:
+            if "project" in item:
+                selected_projects.append(item.split("-")[1])
+
+        # Find all projects that are part of the filtered projects
+        all_projects = Project.objects.filter(pk__in=selected_projects)
+
+        # Find all tickets that are assigned to those projects
+        all_tickets = Ticket.objects.filter(project__in=selected_projects)
+
+        # Loop through tickets that have been selected and append their ID's to the selected_tickets list
+        for ticket in all_tickets:
+            selected_tickets.append(ticket.id)
+
+        all_tasks = Task.objects.filter(ticket__in=selected_tickets)
+
+        # Loop through the tasks that have been selected and append their ID's to the selected_tasks list
+        for task in all_tasks:
+            selected_tasks.append(task.id)
+
+
+        # Get all tickets that were created yesterday and are part of selected projects
+        tickets = Ticket.objects.filter(ticket_created=previous_date).filter(project__in=selected_projects).order_by('ticket_name')
+
+        # Get all tasks that were created yesterday and are part of selected tickets
+        tasks = Task.objects.filter(task_created=previous_date).filter(ticket__in=selected_tickets).order_by('task_name')
+
+        # Get all tickets that are marked as road blocks and are part of the selected projects
+        road_blocked_tickets = Ticket.objects.filter(ticket_status = "Road Block").filter(project__in=selected_projects)
+
+        # Get all tasks that are marked as road blocks and are part of the selected tickets
+        road_blocked_tasks = Task.objects.filter(task_status = "Road Block").filter(ticket__in=selected_tickets)
+
+        # Get all tickets that have been claimed by the user and are part of the selected projects
+        claimed_tickets = StandUpTickets.objects.filter(date = today).filter(user = request.user.id).filter(ticket__in=selected_tickets)
+
+        # Get all tasks that have been claimed by the user and are part of the selected tickets
+        claimed_tasks = StandUpTasks.objects.filter(date=today).filter(user=request.user.id).filter(task__in=selected_tasks)
+
+        # Get all activity related to selected tickets
+        ticket_activity = TicketHistory.objects.filter(activity_date = previous_date).filter(ticket_active_user = request.user.id).filter(ticket__in=selected_tickets).order_by('ticket__ticket_name')
+
+        # Get all activity related to selected tasks
+        task_activity = TaskHistory.objects.filter(activity_date=previous_date).filter(task_active_user=request.user.id).filter(task__in=selected_tasks).order_by('task__task_name')
+
+        task_history = dict()
+        for task in task_activity:
+            try:
+                task_history[task.task.task_name].append(task)
+            except:
+                task_history[task.task.task_name] = list()
+                task_history[task.task.task_name].append(task)
+
+        ticket_history = dict()
+        for ticket in ticket_activity:
+            try:
+                ticket_history[ticket.ticket.ticket_name].append(ticket)
+            except:
+                ticket_history[ticket.ticket.ticket_name] = list()
+                ticket_history[ticket.ticket.ticket_name].append(ticket)
+
+        projects = Project.objects.all()
+
+        context = {
+            "projects": projects,
+            "selected_projects": all_projects,
+            "tickets": tickets,
+            "tasks": tasks,
+            "road_blocked_tickets": road_blocked_tickets,
+            "road_blocked_tasks": road_blocked_tasks,
+            "claimed_tickets": claimed_tickets,
+            "claimed_tasks": claimed_tasks,
+            "ticket_activity": ticket_history,
+            "task_activity": task_history,
+        }
 
     return render(request, "stand_up.html", context)
 
