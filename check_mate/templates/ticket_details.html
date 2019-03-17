@@ -17,6 +17,35 @@
     <!-- Header Section -->
     {% section_header "Ticket" ticket_detail %}
     <!-- End Header Section -->
+    <!-- Filtering Section -->
+    <p>
+      <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Filter Results
+      </button>
+    </p>
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body">
+        <form action="{% url 'check_mate:ticket_filter_tags' ticket_detail.id %}" method="POST">
+          {% csrf_token %}
+        <h6>Tags</h6>
+        {% for task in all_tasks %}
+          {% for tag in task.tags.all %}
+            <div class="form-group form-check">
+              {% if tag in selected_tags %}
+                <input type="checkbox" checked class="form-check-input" id="tag-{{tag.id}}" name="tag-{{tag.id}}">
+              {% else %}
+                <input type="checkbox" class="form-check-input" id="tag-{{tag.id}}" name="tag-{{tag.id}}">
+              {% endif %}
+              <label class="form-check-label" for="tag-{{tag.id}}">{{tag.tag_name}}</label>
+            </div>
+          {% endfor %}
+        {% endfor %}
+        <button type="submit" class="btn btn-info">Filter</button>
+        <a href="{% url 'check_mate:ticket_details' ticket_detail.id %}" class="btn btn-secondary">Clear</a>
+        </form>
+      </div>
+    </div>
+    <!-- End Filtering Section -->
     <div class="row">
       <div class="col">
         <!-- Related Tasks Section -->
@@ -28,7 +57,7 @@
           </div>
           <div class="card-body task-container">
           <!-- Prompt to add tasks section -->
-          {% if not ticket_detail.task_set.all %}
+          {% if not tasks %}
             <div class="jumbotron">
               <h6 class="display-4">No Tasks for {{ticket_detail.ticket_name}}</h6>
               <p class="lead">Add new tasks for this project</p>
@@ -39,7 +68,7 @@
                 <input type="hidden" name="first_request"/>
               </form>
             </div>
-            <!-- End Prompt to add tasks section -->
+          <!-- End Prompt to add tasks section -->
           <!-- Related Tasks Display -->
           {% else %}
             <div class="card-columns">
@@ -58,7 +87,7 @@
                 </div>
               </div>
               <!-- End Add Task Card -->
-              {% for task in ticket_detail.task_set.all %}
+              {% for task in tasks %}
                 {% task_card task.id False False %}
               {% endfor%}
             </div>

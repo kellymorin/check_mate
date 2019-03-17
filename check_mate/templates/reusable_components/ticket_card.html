@@ -1,10 +1,12 @@
 {% load progress_bar %}
 
+{% if claim or claim_edit == True %}
 <style>
   input:checked+label{
     border: 2px solid #5bc0de;
   }
 </style>
+{% endif %}
 
 {% if claim == True %}
   <input type="checkbox" class="d-none" id="claimed-ticket-{{ticket.id}}" name="ticket-{{ticket.id}}"/>
@@ -47,5 +49,18 @@
     </div>
   </div>
   <!-- End Card Footer -->
+  {% if ticket.tags.all %}
+  <!-- Card Tag Display -->
+  <div class="card-footer bg-transparent">
+    <div class="row">
+      <div class="col">
+        {% for tag in ticket.tags.all %}
+          <span class="badge badge-secondary">{{tag.tag_name}}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <!-- End Card Tag Display -->
+  {% endif %}
 </label>
 <!-- End Card Body -->

@@ -42,12 +42,38 @@ def project_details(request, project_id):
         [render] -- returns the project_details.html template with specific project details and all associated tickets passed in
     """
 
-    project_detail = Project.objects.filter(pk=project_id)[0]
+    project_detail = Project.objects.get(pk=project_id)
     tickets = Ticket.objects.filter(project=project_id)
+    ticket_tags = Ticket.objects.filter(project=project_id)
     context = {
         "project_detail": project_detail,
-        "tickets": tickets
+        "tickets": tickets,
+        "ticket_tags": ticket_tags
     }
+    return render(request, "project_details.html", context)
+
+@login_required
+def project_filter_tags(request, project_id):
+
+    if request.method == "POST":
+        project_detail = Project.objects.get(pk=project_id)
+        ticket_tags = Ticket.objects.filter(project=project_id)
+        tags = []
+
+        for item in request.POST:
+            if "tag" in item:
+                tags.append(item.split("-")[1])
+
+        tickets = Ticket.objects.filter(project=project_id).filter(tags__in=tags).distinct()
+        selected_tags = Tag.objects.filter(pk__in=tags)
+
+        context={
+            "project_detail": project_detail,
+            "tickets": tickets,
+            "ticket_tags": ticket_tags,
+            "selected_tags": selected_tags
+        }
+
     return render(request, "project_details.html", context)
 
 
