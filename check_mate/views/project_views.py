@@ -10,7 +10,6 @@ from check_mate.models import *
 from check_mate.forms import ProjectForm
 
 # Non-MVP Notes--------------------------------------------
-# V2: Add the ability to filter from all projects, current projects, previous projects
 # V2: Make sure every project has a status in fixtures
 # ----------------------------------------------------------
 
@@ -30,6 +29,31 @@ def projects(request):
     }
     return render(request, 'projects.html', context)
 
+@login_required
+def projects_filter(request):
+
+    if request.method == "POST":
+        # projects = Project.objects.all()
+        status = []
+
+        for item in request.POST:
+            if "status" in item:
+                if "_" in item.split("-")[1]:
+                    new_item = item.split("-")[1]
+                    status.append(" ".join(new_item.split("_")))
+                else:
+                    status.append(item.split("-")[1])
+
+        projects = Project.objects.filter(project_status__in=status)
+
+        # print(status)
+
+        context = {
+            "projects": projects,
+            "selected_status": status
+        }
+
+    return render(request, 'projects.html', context)
 
 @login_required
 def project_details(request, project_id):
