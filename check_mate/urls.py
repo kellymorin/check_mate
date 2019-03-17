@@ -29,7 +29,7 @@ urlpatterns=[
     # ex. /ticket/1
     path("ticket/<int:ticket_id>", views.ticket_detail, name="ticket_details"),
     # ex. /ticket/1/filter
-    # path("ticket/<int:ticket_id>/filter", views.ticket_filter_tags, name="ticket_filter_tags"),
+    path("ticket/<int:ticket_id>/filter", views.ticket_filter_tags, name="ticket_filter_tags"),
     # ex. /ticket/1/history
     path("ticket/<int:ticket_id>/history", views.ticket_detail, name="ticket_history"),
     # ex. /ticket/add
