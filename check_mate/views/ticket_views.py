@@ -8,7 +8,7 @@ from django.contrib import messages
 
 from check_mate.models import *
 from check_mate.forms import TicketForm, TicketStatusForm
-from ..utils import __update_ticket_history
+from ..utils import __update_ticket_history, __get_ticket_detail_history_descriptions
 
 # Automation Notes --------------------
 # when the first ticket is added to a project, set the project status to not started, set ticket status to not started
@@ -21,6 +21,10 @@ from ..utils import __update_ticket_history
 # Style Notes ----------------------------------------------------------
 # V2: On ticket edit form, see if I can set limitations on when a due date can be set for, based on when the parent items due date is
 # -----------------------------------------------------------------------
+
+# TODO: Need to be able to delete tags that are no longer being used
+# TODO: Ticket History should be updated with tag changes
+# TODO: Task History should be updated with tag changes
 
 
 
@@ -45,59 +49,44 @@ def ticket_detail(request, ticket_id):
     for task in tasks:
         task_history.append(TaskHistory.objects.filter(task=task.id))
 
-    all_history = []
-
-    for item in ticket_history:
-        ticket = {}
-        ticket["activity_date"] = item.activity_date
-        if item.activity_type == "Status":
-            if item.ticket_active_user == request.user:
-                ticket["description"] = f"You updated the status of {item.ticket.ticket_name} to {item.status}"
-            else:
-                ticket["description"] = f"{item.ticket_active_user.first_name} {item.ticket_active_user.last_name} updated the status of {item.ticket.ticket_name} to {item.status}"
-        elif item.activity_type == "Assignment":
-            if item.ticket_active_user == request.user:
-                if item.ticket_affected_user == request.user:
-                    ticket["description"] = f"You self-assigned {item.ticket.ticket_name} ticket"
-                else:
-                    ticket["description"] = f"You assigned {item.ticket.ticket_name} ticket to {item.ticket_affected_user.first_name} {item.ticket_affected_user.last_name}"
-            else:
-                if item.ticket_affected_user == request.user:
-                    ticket["description"] = f"{item.ticket_active_user.first_name} {item.ticket_active_user.last_name} assigned {item.ticket.ticket_name} ticket to you"
-                elif item.ticket_affected_user == item.ticket_active_user:
-                    ticket["description"] = f"{item.ticket_active_user.first_name} {item.ticket_active_user.last_name}  self-assigned {item.ticket.ticket_name} ticket"
-                else:
-                    ticket["description"] = f"{item.ticket_active_user.first_name} {item.ticket_active_user.last_name}  assigned {item.ticket.ticket_name} ticket to {item.ticket_affected_user.first_name} {item.ticket_affected_user.last_name}"
-        all_history.append(ticket)
-
-    for query_set in task_history:
-        for item in query_set:
-            task = {}
-            task["activity_date"] = item.activity_date
-            if item.activity_type == "Status":
-                if item.task_active_user == request.user:
-                    task["description"] = f"You updated the status of {item.task.task_name} to {item.status}"
-                else:
-                    task["description"] = f"{item.task_active_user.first_name} {item.task_active_user.last_name} updated the status of {item.task.task_name} to {item.status}"
-            elif item.activity_type == "Assignment":
-                if item.task_active_user == request.user:
-                    if item.task_affected_user == request.user:
-                        task["description"] = f"You self-assigned {item.task.task_name} task"
-                    else:
-                        task["description"] = f"You assigned {item.task.task_name} task to {item.task_affected_user.first_name} {item.task_affected_user.last_name}"
-                else:
-                    if item.task_affected_user == request.user:
-                        task["description"] = f"{item.task_active_user.first_name} {item.task_active_user.last_name} assigned {item.task.task_name} task to you"
-                    elif item.task_affected_user == item.task_active_user:
-                        task["description"] = f"{item.task_active_user.first_name} {item.task_active_user.last_name} self-assigned {item.task.task_name} task"
-                    else:
-                        task["description"] = f"{item.task_active_user.first_name} {item.task_active_user.last_name} assigned {item.task.task_name} task to {item.task_affected_user.first_name} {item.task_affected_user.last_name}"
-            all_history.append(task)
+    all_history = __get_ticket_detail_history_descriptions(ticket_history, task_history, request)
 
     context={
         "ticket_detail": ticket_detail,
-        "all_history": all_history
+        "all_history": all_history,
+        "tasks": tasks,
+        "all_tasks":tasks
     }
+    return render(request, "ticket_details.html", context)
+
+@login_required
+def ticket_filter_tags(request, ticket_id):
+
+    ticket_detail = Ticket.objects.get(pk=ticket_id)
+    ticket_history = TicketHistory.objects.filter(ticket=ticket_id).order_by('activity_date')
+    tasks = Task.objects.filter(ticket = ticket_id)
+    task_history = []
+    for task in tasks:
+        task_history.append(TaskHistory.objects.filter(task=task.id))
+
+    all_history = __get_ticket_detail_history_descriptions(ticket_history, task_history, request)
+
+    if request.method == "POST":
+        tags = []
+        for item in request.POST:
+            if "tag" in item:
+                tags.append(item.split("-")[1])
+
+        filtered_tasks = Task.objects.filter(ticket=ticket_id).filter(tags__in=tags).distinct()
+        selected_tags = Tag.objects.filter(pk__in=tags)
+
+        context = {
+            "ticket_detail": ticket_detail,
+            "all_history": all_history,
+            "tasks": filtered_tasks,
+            "selected_tags": selected_tags,
+            "all_tasks": tasks
+        }
     return render(request, "ticket_details.html", context)
 
 
