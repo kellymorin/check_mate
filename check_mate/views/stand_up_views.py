@@ -7,7 +7,6 @@ from check_mate.models import *
 from dateutil.relativedelta import relativedelta, FR
 
 # Non-MVP Notes -----------------------------------------
-# TODO: Allow users to customize stand up view by a specific project
 # V2: Update stand up view so that if someone else has already claimed a ticket for the day, that displays on everyone else's view
 # -------------------------------------------------------
 
