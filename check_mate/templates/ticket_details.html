@@ -112,3 +112,11 @@
   <!-- End Ticket History Section -->
 </div>
 {% endblock content %}
+
+{% block js%}
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+{% endblock js %}

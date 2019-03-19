@@ -185,3 +185,11 @@
 
   {% endif %}
 {% endblock content %}
+
+{% block js%}
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+{% endblock js %}
