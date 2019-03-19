@@ -7,6 +7,83 @@
 <!-- V2: put user's name in stand up -->
 {% endcomment %}
 
+{% block navfilter %}
+<!-- Filtering Section -->
+<div class="row ml-3 mt-3">
+  <div class="col">
+    <p class="collapse-text" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Filter Results<i class="ml-3 fas fa-angle-down"></i></p>
+  </div>
+</div>
+<div class="row ml-3 mt-3 collapse" id="collapseExample">
+  <div class="col">
+    <div class="row">
+      <div class="col">
+        <form action="{% url 'check_mate:filter_stand_up' %}" method="POST">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col">
+              <h6>Projects</h6>
+              {% for project in projects %}
+                <div class="form-group form-check">
+                  {% if project in selected_projects %}
+                    <input type="checkbox" checked class="form-check-input" id="project-{{project.id}}" name="project-{{project.id}}">
+                  {% else %}
+                    <input type="checkbox" class="form-check-input" id="project-{{project.id}}" name="project-{{project.id}}">
+                  {% endif %}
+                  <label class="form-check-label" for="project-{{project.id}}">{{project.project_name}}</label>
+                </div>
+              {% endfor %}
+            </div>
+            <div class="col">
+              <h6>Status</h6>
+                <div class="form-group form-check">
+                  {% if "Not Started" in selected_status %}
+                    <input type="checkbox" checked class="form-check-input" id="status-Not_Started" name="status-Not_Started">
+                  {% else %}
+                    <input type="checkbox" class="form-check-input" id="status-Not_Started" name="status-Not_Started">
+                  {% endif %}
+                  <label class="form-check-label" for="status-Not_Started">Not Started</label>
+                </div>
+                <div class="form-group form-check">
+                  {% if "Active" in selected_status %}
+                    <input type="checkbox" checked class="form-check-input" id="status-Active" name="status-Active">
+                  {% else %}
+                    <input type="checkbox" class="form-check-input" id="status-Active" name="status-Active">
+                  {% endif %}
+                  <label class="form-check-label" for="status-Active">Active</label>
+                </div>
+                <div class="form-group form-check">
+                  {% if "Road Block" in selected_status %}
+                    <input type="checkbox" checked class="form-check-input" id="status-Road_Block" name="status-Road_Block">
+                  {% else %}
+                    <input type="checkbox" class="form-check-input" id="status-Road_Block" name="status-Road_Block">
+                  {% endif %}
+                  <label class="form-check-label" for="status-Road_Block">Road Block</label>
+                </div>
+                <div class="form-group form-check">
+                  {% if "Complete" in selected_status %}
+                    <input type="checkbox" checked class="form-check-input" id="status-Complete" name="status-Complete">
+                  {% else %}
+                    <input type="checkbox" class="form-check-input" id="status-Complete" name="status-Complete">
+                  {% endif %}
+                  <label class="form-check-label" for="status-Complete">Complete</label>
+                </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button type="submit" class="btn btn-info">Filter</button>
+        <a href="{% url 'check_mate:stand-up' %}" class="btn btn-secondary">Clear</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Filtering Section -->
+{% endblock navfilter%}
+
 {% block content %}
   <div class="row">
     <div class="col">
@@ -20,35 +97,6 @@
       {% endif %}
     </div>
   </div>
-
-  <!-- Filtering Section -->
-  <p>
-    <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-      Filter Results
-    </button>
-  </p>
-  <div class="collapse" id="collapseExample">
-    <div class="card card-body">
-      <form action="{% url 'check_mate:filter_stand_up' %}" method="POST">
-        {% csrf_token %}
-      <h6>Projects</h6>
-      {% for project in projects %}
-        <div class="form-group form-check">
-          {% if project in selected_projects %}
-            <input type="checkbox" checked class="form-check-input" id="project-{{project.id}}" name="project-{{project.id}}">
-          {% else %}
-            <input type="checkbox" class="form-check-input" id="project-{{project.id}}" name="project-{{project.id}}">
-          {% endif %}
-          <label class="form-check-label" for="project-{{project.id}}">{{project.project_name}}</label>
-        </div>
-      {% endfor %}
-      <button type="submit" class="btn btn-info">Filter</button>
-      <a href="{% url 'check_mate:stand-up' %}" class="btn btn-secondary">Clear</a>
-      </form>
-    </div>
-  </div>
-  <!-- End Filtering Section -->
-
   <div class="row mt-3 horizontal-container flex-nowrap">
     <div class="col-6">
       <div class="row bg-info pt-3">
