@@ -77,3 +77,65 @@ def __get_ticket_detail_history_descriptions(ticket_history, task_history, reque
                         task["description"] = f"{item.task_active_user.first_name} {item.task_active_user.last_name} assigned {item.task.task_name} task to {item.task_affected_user.first_name} {item.task_affected_user.last_name}"
             all_history.append(task)
     return all_history
+
+def __filter_ticket_history(user, selected_tickets):
+    today = datetime.date.today()
+    previous_date = ""
+
+    if today.weekday() == 0:
+        previous_date = today + relativedelta(weekday=FR(-1))
+
+    else:
+        previous_date = today - datetime.timedelta(1)
+
+    ticket_activity = TicketHistory.objects.filter(activity_date = previous_date).filter(ticket_active_user= user).filter(ticket__in=selected_tickets).order_by('ticket__ticket_name')
+
+
+    ticket_history = dict()
+    for ticket in ticket_activity:
+        try:
+            ticket_history[ticket.ticket.ticket_name].append(ticket)
+        except:
+            ticket_history[ticket.ticket.ticket_name] = list()
+            ticket_history[ticket.ticket.ticket_name].append(ticket)
+
+    return ticket_history
+
+def __filter_task_history(user, selected_tickets):
+    selected_tasks = []
+
+    today = datetime.date.today()
+    previous_date = ""
+
+    if today.weekday() == 0:
+        previous_date = today + relativedelta(weekday=FR(-1))
+
+    else:
+        previous_date = today - datetime.timedelta(1)
+
+    all_tasks = Task.objects.filter(ticket__in=selected_tickets)
+
+    for task in all_tasks:
+        selected_tasks.append(task.id)
+
+    task_activity = TaskHistory.objects.filter(activity_date = previous_date).filter(task_active_user=user).filter(task__in=selected_tasks).order_by('task__task_name')
+
+    task_history = dict()
+    for task in task_activity:
+        try:
+            task_history[task.task.task_name].append(task)
+        except:
+            task_history[task.task.task_name] = list()
+            task_history[task.task.task_name].append(task)
+
+    return task_history
+
+def __filter_road_block_ticket(selected_projects):
+    road_blocked_tickets = Ticket.objects.filter(ticket_status = "Road Block").filter(project__in=selected_projects)
+
+    return road_blocked_tickets
+
+def __filter_road_block_task(selected_tickets):
+    road_blocked_tasks = Task.objects.filter(task_status = "Road Block").filter(ticket__in=selected_tickets)
+
+    return road_blocked_tasks

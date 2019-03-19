@@ -34,6 +34,10 @@
   font-size: 12px;
 }
 
+.collapse-text:hover{
+  cursor: pointer;
+}
+
 .icon{
   vertical-align: middle;
 }

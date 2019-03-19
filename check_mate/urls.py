@@ -46,6 +46,8 @@ urlpatterns=[
     path("task/<int:task_id>/delete", views.task_delete, name="task_delete"),
     # ex. /stand-up
     path("stand-up", views.stand_up_view, name="stand-up"),
+    # ex. /stand-up/filter
+    path("stand-up/filter", views.filter_stand_up, name="filter_stand_up"),
     # ex /stand-up/claim
     path("stand-up/claim", views.claim_tickets_tasks, name="claim"),
     # ex /stand-up/claim/edit
