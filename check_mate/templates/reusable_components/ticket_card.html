@@ -43,7 +43,7 @@
         {% if ticket.delete_status == True %}
           <a class="text-dark icon" href="{% url 'check_mate:ticket_delete' ticket.id %}"><i class="far fa-trash-alt"></i></a>
         {% else %}
-          <i class="far fa-trash-alt text-muted icon"></i>
+          <i class="far fa-trash-alt text-muted icon" data-toggle="tooltip" data-placement="top" title="You cannot delete a ticket with active tasks"></i>
         {% endif %}
       </div>
     </div>

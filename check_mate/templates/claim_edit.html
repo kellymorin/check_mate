@@ -83,3 +83,11 @@
     <!-- End Ticket Display Section -->
 </form>
 {% endblock %}
+
+{% block js%}
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+{% endblock js %}
