@@ -78,7 +78,7 @@
           {% if project.delete_status == True %}
             <a class="text-white mx-3" href="{% url 'check_mate:project_delete' project.id %}"><i class="far fa-trash-alt"></i></a>
           {% else %}
-            <i class="far fa-trash-alt text-muted mx-3"></i>
+            <i class="far fa-trash-alt text-muted mx-3" data-toggle="tooltip" data-placement="top" title="You cannot delete projects with existing tickets"></i>
           {% endif %}
             <a class="text-white" href="{% url 'check_mate:project_edit' project.id %}"><i class="fas fa-pencil-alt"></i></a>
         </div>
@@ -88,3 +88,11 @@
   {% endif %}
 </div>
 {% endblock content %}
+
+{% block js%}
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+{% endblock js %}

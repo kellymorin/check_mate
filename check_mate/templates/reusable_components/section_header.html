@@ -13,7 +13,7 @@
         {% if delete_status %}
           <a  class="mr-2 text-dark  mt-1 icon" href="{% url delete_link item_id %}"><i class="far fa-trash-alt"></i></a>
         {% else %}
-          <i class="far fa-trash-alt mr-2 mt-1 icon text-muted"></i>
+          <i class="far fa-trash-alt mr-2 mt-1 icon text-muted" data-toggle="tooltip" data-placement="top" title="This item cannot be deleted"></i>
         {% endif %}
       </div>
     </div>
