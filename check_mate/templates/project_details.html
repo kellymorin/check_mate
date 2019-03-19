@@ -3,6 +3,51 @@
 {% load ticket_card %}
 {% load section_header %}
 
+
+{% block navfilter %}
+<!-- Filtering Section -->
+<div class="row ml-3 mt-3">
+  <div class="col">
+    <p class="collapse-text" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Filter Results<i class="ml-3 fas fa-angle-down"></i></p>
+  </div>
+</div>
+<div class="row ml-3 mt-3 collapse" id="collapseExample">
+  <div class="col">
+    <div class="row">
+      <div class="col">
+        <form action="{% url 'check_mate:project_filter_tags' project_detail.id %}" method="POST">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col">
+              <h6>Tags</h6>
+              {% for ticket in ticket_tags %}
+                {% for tag in ticket.tags.all %}
+                  <div class="form-group form-check">
+                    {% if tag in selected_tags %}
+                      <input type="checkbox" checked class="form-check-input" id="tag-{{tag.id}}" name="tag-{{tag.id}}">
+                    {% else %}
+                      <input type="checkbox" class="form-check-input" id="tag-{{tag.id}}" name="tag-{{tag.id}}">
+                    {% endif %}
+                    <label class="form-check-label" for="tag-{{tag.id}}">{{tag.tag_name}}</label>
+                  </div>
+                {% endfor %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button type="submit" class="btn btn-info">Filter</button>
+          <a href="{% url 'check_mate:project_details' project_detail.id %}" class="btn btn-secondary">Clear</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- End Filtering Section -->
+{% endblock navfilter%}
+
 {% block content %}
 
 {% for message in messages %}
@@ -16,35 +61,6 @@
 <!-- Header Section -->
 {% section_header "Project" project_detail %}
 <!-- End Header Section -->
-<!-- Filtering Section -->
-<p>
-  <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-    Filter Results
-  </button>
-</p>
-<div class="collapse" id="collapseExample">
-  <div class="card card-body">
-    <form action="{% url 'check_mate:project_filter_tags' project_detail.id %}" method="POST">
-      {% csrf_token %}
-    <h6>Tags</h6>
-    {% for ticket in ticket_tags %}
-      {% for tag in ticket.tags.all %}
-        <div class="form-group form-check">
-          {% if tag in selected_tags %}
-            <input type="checkbox" checked class="form-check-input" id="tag-{{tag.id}}" name="tag-{{tag.id}}">
-          {% else %}
-            <input type="checkbox" class="form-check-input" id="tag-{{tag.id}}" name="tag-{{tag.id}}">
-          {% endif %}
-          <label class="form-check-label" for="tag-{{tag.id}}">{{tag.tag_name}}</label>
-        </div>
-      {% endfor %}
-    {% endfor %}
-    <button type="submit" class="btn btn-info">Filter</button>
-    <a href="{% url 'check_mate:project_details' project_detail.id %}" class="btn btn-secondary">Clear</a>
-    </form>
-  </div>
-</div>
-<!-- End Filtering Section -->
 <!-- Ticket Display Section -->
 <div class="row mt-3 horizontal-container flex-nowrap">
   <!-- Backlogged Tickets Section -->
