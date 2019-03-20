@@ -19,7 +19,7 @@ urlpatterns=[
     # ex. /projects/5
     path("projects/<int:project_id>", views.project_details, name="project_details"),
     # ex. /projects/5/filter
-    path("projects/<int:project_id>/filter", views.project_filter_tags, name="project_filter_tags"),
+    path("projects/<int:project_id>/filter", views.project_detail_filter, name="project_detail_filter"),
     # ex. /projects/add
     path("projects/add", views.project_add, name="project_add"),
     # ex. /projects/5/delete
