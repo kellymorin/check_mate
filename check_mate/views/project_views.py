@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib import messages
+from django.db.models import Q
 
 from check_mate.models import *
 from check_mate.forms import ProjectForm
@@ -33,7 +34,6 @@ def projects(request):
 def projects_filter(request):
 
     if request.method == "POST":
-        # projects = Project.objects.all()
         status = []
 
         for item in request.POST:
@@ -45,8 +45,6 @@ def projects_filter(request):
                     status.append(item.split("-")[1])
 
         projects = Project.objects.filter(project_status__in=status)
-
-        # print(status)
 
         context = {
             "projects": projects,
@@ -65,37 +63,78 @@ def project_details(request, project_id):
     Returns:
         [render] -- returns the project_details.html template with specific project details and all associated tickets passed in
     """
+    user_list = []
 
     project_detail = Project.objects.get(pk=project_id)
     tickets = Ticket.objects.filter(project=project_id)
     ticket_tags = Ticket.objects.filter(project=project_id)
+    tasks = Task.objects.filter(ticket__in=tickets)
+
+    for ticket in tickets:
+        if ticket.ticket_assigned_user is not None:
+            if ticket.ticket_assigned_user not in user_list:
+                user_list.append(ticket.ticket_assigned_user)
+
+    for task in tasks:
+        if task.task_assigned_user is not None:
+            if task.task_assigned_user not in user_list:
+                user_list.append(task.task_assigned_user)
+
     context = {
         "project_detail": project_detail,
         "tickets": tickets,
-        "ticket_tags": ticket_tags
+        "ticket_tags": ticket_tags,
+        "user_list": user_list
     }
     return render(request, "project_details.html", context)
 
 @login_required
-def project_filter_tags(request, project_id):
+def project_detail_filter(request, project_id):
 
     if request.method == "POST":
         project_detail = Project.objects.get(pk=project_id)
         ticket_tags = Ticket.objects.filter(project=project_id)
-        tags = []
+        tasks = Task.objects.filter(ticket__in=ticket_tags)
+        tag_list = []
+        users = []
+        user_list = []
+
+        for ticket in ticket_tags:
+            if ticket.ticket_assigned_user is not None:
+                if ticket.ticket_assigned_user not in user_list:
+                    user_list.append(ticket.ticket_assigned_user)
+
+        for task in tasks:
+            if task.task_assigned_user is not None:
+                if task.task_assigned_user not in user_list:
+                    user_list.append(task.task_assigned_user)
 
         for item in request.POST:
             if "tag" in item:
-                tags.append(item.split("-")[1])
+                tag_list.append(item.split("-")[1])
+            if "user" in item:
+                users.append(item.split("-")[1])
 
-        tickets = Ticket.objects.filter(project=project_id).filter(tags__in=tags).distinct()
-        selected_tags = Tag.objects.filter(pk__in=tags)
+        if user_list and tag_list:
+            selected_tags = Tag.objects.filter(pk__in=tag_list)
+            selected_users = User.objects.filter(pk__in=users)
+            tickets = Ticket.objects.filter(project=project_id).filter(Q(tags__in=selected_tags)| Q(ticket_assigned_user__in=selected_users)).distinct()
+        elif tag_list:
+            selected_tags = Tag.objects.filter(pk__in=tag_list)
+            tickets = Ticket.objects.filter(project=project_id).filter(tags__in=selected_tags).distinct()
+            selected_users = []
+        elif user_list:
+            selected_users = User.objects.filter(pk__in=users)
+            tickets = Ticket.objects.filter(project=project_id).filter(ticket_assigned_user__in=selected_users).distinct()
+            selected_tags = []
 
         context={
             "project_detail": project_detail,
             "tickets": tickets,
             "ticket_tags": ticket_tags,
-            "selected_tags": selected_tags
+            "selected_tags": selected_tags,
+            "selected_users": selected_users,
+            "user_list": user_list
         }
 
     return render(request, "project_details.html", context)

@@ -15,7 +15,7 @@
   <div class="col">
     <div class="row">
       <div class="col">
-        <form action="{% url 'check_mate:project_filter_tags' project_detail.id %}" method="POST">
+        <form action="{% url 'check_mate:project_detail_filter' project_detail.id %}" method="POST">
           {% csrf_token %}
           <div class="row">
             <div class="col">
@@ -32,6 +32,21 @@
                   </div>
                 {% endfor %}
               {% endfor %}
+            </div>
+            <div class="col">
+              {% if user_list %}
+              <h6>Assigned Users</h6>
+              {% for user in user_list %}
+                <div class="form-group form-check">
+                  {% if user in selected_users %}
+                    <input type="checkbox" checked class="form-check-input" id="user-{{user.id}}" name="user-{{user.id}}">
+                  {% else %}
+                    <input type="checkbox" class="form-check-input" id="user-{{user.id}}" name="user-{{user.id}}">
+                  {% endif %}
+                  <label class="form-check-label" for="user-{{user.id}}">{{user.first_name}} {{user.last_name}}</label>
+                </div>
+              {% endfor %}
+              {% endif %}
             </div>
           </div>
         </div>
