@@ -3,14 +3,21 @@
 Check Mate was developed out of necessity to streamline the project management process for software developers. The current tools available to manage the process of integrating new features into a project are cumbersome and not easy to work with. Most importantly, these options do not provide software developers with the most essential information to them so that they can easily communicate their priorities for the day during stand up meetings. By creating a more intuitive user flow, developers will be able to spend less time managing their projects and more time doing what they do best, solving problems.
 
 ## Table of Contents
-<!-- [Project Requirements and Features List](#project-requirements-and-features-list) -->
+* [Project Requirements and Features List](#project-requirements-and-features-list)
 * [Technologies Used](#technologies-used)
 * [Installing and Launching Check Mate](#instructions-for-installing-check-mate)
 * [Appendix: Planning Documentation](#appendix-planning-documentation)
   * [Entity Relationship Diagrams](#entity-relationship-diagram)
   * [Wireframes](#wireframes)
 
-<!-- ## Project Requirements and Features List -->
+## Project Requirements and Features List
+### Project Views
+From the project view the user can create new projects, edit existing projects, filter project results based on status or select a project to view more details. The project detail view allows users to see all tickets broken out by status, filter by tags or assigned user and select to see more details about the ticket and it's related tasks.
+![Project View GIF](src/gif/project-view.gif)
+
+### Stand-Up View
+From the stand-up view the user can view all tickets and tasks created yesterday, as well as their activity from the previous day, claimed tickets for the day and any tickets that have been marked as a road block. If the user does not have any tickets claimed for the day, they can select that option to view all tickets and tasks they can take ownership of and select the ones they'd like to claim for the day. From the edit view, the user can see the tickets they've claimed for the day, remove any as they'd like and add new claimed tickets.
+![Stand Up View GIF](src/gif/stand-up.gif)
 
 ## Technologies Used
   ### Development Languages and Libraries
